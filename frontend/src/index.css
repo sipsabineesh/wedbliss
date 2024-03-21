@@ -793,6 +793,21 @@
  .tab-content.active{
    display: block;
  }
+
+ .text-medium{
+  color:#dadac5
+ }
+
+ .text-link{
+  color: inherit;
+  text-decoration: inherit;
+  color:#1957f3;
+ }
+
+ .errorMsg{
+  color: #f30505;
+ }
+
  /*  
  .contact .signup-form .gender-details{
    position: absolute;

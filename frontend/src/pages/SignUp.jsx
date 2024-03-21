@@ -1,7 +1,42 @@
-import React from 'react'
-
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 export default function SignUp() {
-  return (
+    const [formData,setFormData] = useState({})
+    const [loading,setLoading] = useState(false)
+    const [error,setError] = useState(null)
+    const handleChange = (e) => {
+        setFormData({...formData,[e.target.id]:e.target.value})
+    }
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        try {
+            setLoading(true)
+            setError(false)
+            const res = await fetch ('/api/auth/signup',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify(formData),
+        })
+          const data = await res.json()
+          console.log(data)
+          setLoading(false)
+          if(data.success === false) {
+            setError(true)
+          }
+          else{
+            setError(false)
+          }
+          setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            setError(true)
+        }
+       
+      
+    }
+   return (
     <>
     <section id="contact" className="signup contact section_padding cover-bg">
         <div className="container">
@@ -13,34 +48,43 @@ export default function SignUp() {
 
                 <div className="col-md-12">
                     <div className="signup-form">
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <div className="row">
                                 <div className="col-md-6">
                                     <div className="form-group">
-                                        <input type="text" name="name" placeholder="Name" required />
+                                        <input type="text"
+                                               id="username" 
+                                               placeholder="Name" onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="col-md-6">
                                     <div className="form-group">
-                                        <input type="email" name="email" placeholder="Email" required />
-                                    </div>
-                                </div>
-                                      
-                          
-                             
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <input type="password" name="password" placeholder="Password" required />
+                                        <input type="email"
+                                               id="email"
+                                               placeholder="Email" onChange={handleChange}/>
                                     </div>
                                 </div>
                                 <div className="col-md-6">
                                     <div className="form-group">
-                                        <input type="password" name="re_password" placeholder="Re-Enter the Password" required />
+                                        <input type="password" 
+                                               id="password" 
+                                               placeholder="Password" onChange={handleChange}/>
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="form-group">
+                                        <input type="password" 
+                                               id="re_password" 
+                                               placeholder="Re-Enter the Password" onChange={handleChange}/>
                                     </div>
                                 </div>
                                 <div className="col-md-12">
-                                    <button type="submit" className="btns">Register</button>
+                                    <button type="submit" disabled={loading} className="btns">{loading ? "Loading... " : "Register"}</button>
                                 </div>
+                                <div className="col-md-12 mt-4">
+                                    <div className="text-medium"><p>Have an account? <Link to='/login' className='text-link'>Login</Link></p></div>
+                                </div>
+                                <p className='errorMsg'>{error ? "Something went wrong":""}</p>
                             </div>
                         </form>
                     </div>
