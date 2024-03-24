@@ -1,17 +1,36 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 export default function SignUp() {
     const [formData,setFormData] = useState({})
     const [loading,setLoading] = useState(false)
-    const [error,setError] = useState(null)
+    const [error,setError] = useState('')
+    const navigate =  useNavigate()
     const handleChange = (e) => {
         setFormData({...formData,[e.target.id]:e.target.value})
     }
     const handleSubmit = async(e) => {
         e.preventDefault();
         try {
+           if(!formData.username){
+                setLoading(false);
+                setError('Please enter the username');
+                return; 
+            }else if(!formData.email){
+                setLoading(false);
+                setError('Please enter the email');
+                return; 
+            }else if(!formData.password) {
+                setLoading(false);
+                setError('Please enter the password');
+                return; 
+            }else if(formData.password !== formData.re_password){
+                setLoading(false);
+                setError('Passwords dont match');
+                return; 
+            }
+         
             setLoading(true)
-            setError(false)
+            setError('')
             const res = await fetch ('/api/auth/signup',{
             method:'POST',
             headers:{
@@ -20,18 +39,19 @@ export default function SignUp() {
             body:JSON.stringify(formData),
         })
           const data = await res.json()
-          console.log(data)
           setLoading(false)
+         
           if(data.success === false) {
-            setError(true)
+            setError(data.message)
           }
           else{
-            setError(false)
+            setError('')
+            navigate('/login')
           }
           setLoading(false)
         } catch (error) {
             setLoading(false)
-            setError(true)
+            setError(error)
         }
        
       
@@ -84,7 +104,7 @@ export default function SignUp() {
                                 <div className="col-md-12 mt-4">
                                     <div className="text-medium"><p>Have an account? <Link to='/login' className='text-link'>Login</Link></p></div>
                                 </div>
-                                <p className='errorMsg'>{error ? "Something went wrong":""}</p>
+                                <p className='errorMsg'>{error ? error :""}</p>
                             </div>
                         </form>
                     </div>
