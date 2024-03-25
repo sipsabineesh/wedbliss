@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from "react-router-dom"
 
 const Home = () => {
+    const [user,setUser] = useState({})
     useEffect(() => {
         const handleScroll = () => {
           const scroll = window.scrollY;
@@ -27,8 +28,8 @@ const Home = () => {
               <div className="row align-items-center h-100">
                 <div className="col-12 caption text-center">
                   <div className="button col-lg-6 col-md-6 col-sm-12">
-                    <Link to="/signup" className="btn">Signup</Link>
-                    <Link to="/login" className="btn">Login</Link>
+                   <Link to="/signup" className="btn">Signup</Link>
+                   <Link to="/login" className="btn">Login</Link>
                   </div>
                   {/* <div className="social_icon text-center mt-4">
                     <a href="#"><span><i className="fa fa-facebook"></i></span></a>

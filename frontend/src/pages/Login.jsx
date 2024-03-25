@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import { Link ,useNavigate} from 'react-router-dom'
+import { loginStart,loginSuccess,loginFailure } from '../redux/user/userSlice'
+import { useDispatch, useSelector } from 'react-redux'
 export default function Login() {
     const [formData,setFormData] = useState({})
-    const [loading,setLoading] = useState(false)
-    const [error,setError] = useState('')
+    const { loading,error } =useSelector((state) => state.user)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const handleChange = (e) => {
         setFormData({...formData,[e.target.id]:e.target.value})
     }
     const handleSubmit = async(e) => {
         e.preventDefault();
         try {
-            setLoading(true)
-            setError('')
+            dispatch(loginStart())
             const res = await fetch ('/api/auth/login',{
             method:'POST',
             headers:{
@@ -22,22 +23,17 @@ export default function Login() {
         })
           const data = await res.json()
           console.log(data)
-          setLoading(false)
           if(data.success === false) {
-            setError(data.message)
+            dispatch(loginFailure(data.message))
+            return;
           }
           else{
-            setError('')
+            dispatch(loginSuccess(data))
             navigate('/')
           }
-          setLoading(false)
-         
         } catch (error) {
-            setLoading(false)
-            setError(data.message)
+            dispatch(loginFailure(error))
         }
-       
-      
     }
    return (
     <>
@@ -45,7 +41,7 @@ export default function Login() {
         <div className="container">
             <div className="row">
                 <div className="section_title text-center">
-                    {/* <p>Register For Free</p> */}
+                    <p>Let us start the journey</p>
                     <h3>Login</h3>
                 </div>
 
@@ -72,9 +68,9 @@ export default function Login() {
                                     <button type="submit" disabled={loading} className="btns">{loading ? "Loading... " : "Login"}</button>
                                 </div>
                                 <div className="col-md-12 mt-4">
-                                    <div className="text-medium"><p>Don't have an account? <Link to='/signup' className='text-link'>SignUp</Link></p></div>
+                                    <div className="text-medium"><p>Don't have an account? <Link to="/signup" className="text-link">SignUp</Link></p></div>
                                 </div>
-                                <p className='errorMsg'>{error ? error : ""}</p>
+                                <p className="errorMsg">{error ? error || "Something went wrong" : ""}</p>
                             </div>
                         </form>
                     </div>

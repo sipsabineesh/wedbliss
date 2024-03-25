@@ -4,13 +4,13 @@ import App from './App.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.min.css'
 import './index.css'
-// import { store } from './redux/store.js'
-// import { Provider } from 'react-redux'
+import { Provider } from 'react-redux'
+import { store } from './redux/store.js'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <Provider store={store}>
-  <React.StrictMode>
+  // <React.StrictMode>
+   <Provider store={store}>
     <App />
-  </React.StrictMode>,
-  // </Provider>
+   </Provider>
+  // </React.StrictMode>
 )
