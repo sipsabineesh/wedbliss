@@ -208,9 +208,10 @@
   line-height:1.14;
   letter-spacing:1.4px;
   padding-bottom:13px;
+  color:#fff;
  }
  
- .section_title h3:after {
+ /* .section_title h3:after {
   content:'';
   position:absolute;
   display:block;
@@ -220,7 +221,7 @@
   left:50%;
   background-color:#000;
   transform:translate(-50%,0);
- }
+ } */
   
   .banner{
   /* background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url(../images/bkgrnd.jpg); */
@@ -609,7 +610,11 @@
  {
   opacity:1;
  }
-            
+  
+ .login .section_title{
+  margin-bottom : 0 !important
+ }
+ 
   /*signup form css*/
   
   .signup .search

@@ -58,60 +58,50 @@ export default function SignUp() {
     }
    return (
     <>
-    <section id="contact" className="signup contact section_padding cover-bg">
-        <div className="container">
-            <div className="row">
-                <div className="section_title text-center">
+     <section className="login">
+      <div className="form-container">
+        <div className="section_title text-center">
                     <p>Register For Free</p>
                     <h3>Signup</h3>
                 </div>
-
-                <div className="col-md-12">
-                    <div className="signup-form">
-                        <form onSubmit={handleSubmit}>
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <input type="text"
-                                               id="username" 
-                                               placeholder="Name" onChange={handleChange} />
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <input type="email"
-                                               id="email"
-                                               placeholder="Email" onChange={handleChange}/>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <input type="password" 
-                                               id="password" 
-                                               placeholder="Password" onChange={handleChange}/>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <input type="password" 
-                                               id="re_password" 
-                                               placeholder="Re-Enter the Password" onChange={handleChange}/>
-                                    </div>
-                                </div>
-                                <div className="col-md-12">
-                                    <button type="submit" disabled={loading} className="btns">{loading ? "Loading... " : "Register"}</button>
-                                </div>
-                                <div className="col-md-12 mt-4">
-                                    <div className="text-medium"><p>Have an account? <Link to='/login' className='text-link'>Login</Link></p></div>
-                                </div>
-                                <p className='errorMsg'>{error ? error :""}</p>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <form onSubmit={handleSubmit}>
+          <div className="control">
+          {/* <label htmlFor="name">Name</label> */}
+          <input type="text"
+                 id="username" 
+                 placeholder="Name" onChange={handleChange} />
         </div>
-    </section>
+        <div className="control">
+          {/* <label htmlFor="password">Password</label> */}
+          <input type="email"
+                 id="email"
+                 placeholder="Email" onChange={handleChange}/>
+        </div>
+        
+        <div className="control">
+          {/* <label htmlFor="password">Password</label> */}
+          <input type="password"
+                 id="password" 
+                 placeholder="Password" 
+                 onChange={handleChange} />
+        </div>
+        <div className="control">
+          {/* <label htmlFor="password">Password</label> */}
+          <input type="password" 
+                id="re_password" 
+                placeholder="Re-Enter the Password" onChange={handleChange}/>
+        </div>
+       
+        <div className="control">
+          <button type="submit" disabled={loading} className="btns">{loading ? "Loading... " : "Register"}</button>
+        </div>
+        <p className="errorMsg">{error ? error || "Something went wrong" : ""}</p>
+        <div className="text-medium"><p>Have an account? <Link to='/login' className='text-link'>Login</Link></p></div>
+
+      </form>
+    
+    </div>
+  </section>
 </>
 
   )
