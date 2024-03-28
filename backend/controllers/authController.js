@@ -3,8 +3,8 @@ import bcryptjs from 'bcryptjs'
 import { errorHandler } from "../utils/error.js"
 import jwt from 'jsonwebtoken'
 import twilio from 'twilio'
-import nodemailer from 'nodemailer'
-
+import { sendEmail } from '../utils/email.js'
+import { generateOTP } from '../utils/otpGenerator.js'
 
 export const signup = async (req,res,next) => {
    try {
@@ -19,7 +19,7 @@ export const signup = async (req,res,next) => {
          }
          const client = new twilio(process.env.TWILIO_ACCOUNT_SID,process.env.TWILIO_AUTH_TOKEN)
          const otp = generateOTP()
-         const message = "Your OTP : "+otp
+         const message =  `Your OTP is ${otp}`
          sendEmail(email,message)
      //     client.messages.create({
      //      body: `Your OTP is ${otp}`,
@@ -45,37 +45,6 @@ export const signup = async (req,res,next) => {
    
 }
 
-const generateOTP = () => {
-     return Math.floor(100000 + Math.random() * 900000)
-    }
-
-const  sendEmail = async(email,message) => {
- 
-     let mailTransporter = nodemailer.createTransport({
-         service: 'gmail',
-         auth: {
-             user: 'sipsabineesh@gmail.com',
-             pass: 'bfqn ugjt gzmw kblg'
-         }
-     });
-      
-     let mailDetails = {
-         from: 'info@wedbliss.com',
-         to: 'sipsabineesh@gmail.com',
-         subject: 'OTP',
-         text:message
-     };
-     console.log(mailDetails) 
-    const info = mailTransporter.sendMail(mailDetails, function (err, data) {
-         console.log(info)
-         if (err) {
-              console.log('Error Occurs' + err.message)
-         } else {
-              console.log('Email sent successfully')
-         }
-    });
- }  
- 
     export const otpVerify = async (req,res,next) =>{
      try {
      const {otp} = req.body
