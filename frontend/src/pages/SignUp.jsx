@@ -19,6 +19,10 @@ export default function SignUp() {
                 setLoading(false);
                 setError('Please enter the email');
                 return; 
+            }else if(!formData.phoneNumber) {
+              setLoading(false);
+              setError('Please enter the phone number');
+              return; 
             }else if(!formData.password) {
                 setLoading(false);
                 setError('Please enter the password');
@@ -45,8 +49,9 @@ export default function SignUp() {
             setError(data.message)
           }
           else{
+            console.log("ALL GOOD")
             setError('')
-            navigate('/login')
+            navigate('/otpVerify')
           }
           setLoading(false)
         } catch (error) {
@@ -77,7 +82,12 @@ export default function SignUp() {
                  id="email"
                  placeholder="Email" onChange={handleChange}/>
         </div>
-        
+        <div className="control">
+          {/* <label htmlFor="password">Phone Number</label> */}
+          <input type="phoneNumber" 
+                id="phoneNumber" 
+                placeholder="Phone Number" onChange={handleChange}/>
+        </div>
         <div className="control">
           {/* <label htmlFor="password">Password</label> */}
           <input type="password"

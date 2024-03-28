@@ -2,11 +2,14 @@ import User from "../models/userModel.js"
 import bcryptjs from 'bcryptjs'
 import { errorHandler } from "../utils/error.js"
 import jwt from 'jsonwebtoken'
+import twilio from 'twilio'
+import nodemailer from 'nodemailer'
+
 
 export const signup = async (req,res,next) => {
    try {
-     const {username,email,password} = req.body
-     if (!username || !email || !password){
+     const {username,email,phoneNumber,password} = req.body
+     if (!username || !email || !phoneNumber || !password){
           next(errorHandler(404, 'Please enter the fields'));
      }
      else{
@@ -14,16 +17,91 @@ export const signup = async (req,res,next) => {
          if(userChk){
           next(errorHandler(400, 'User already exists'));
          }
+         const client = new twilio(process.env.TWILIO_ACCOUNT_SID,process.env.TWILIO_AUTH_TOKEN)
+         const otp = generateOTP()
+         const message = "Your OTP : "+otp
+         sendEmail(email,message)
+     //     client.messages.create({
+     //      body: `Your OTP is ${otp}`,
+     //      from:"+916282276137",
+     //      to:"+916282276137"
+     //     })
+     //     .then(() => {
+     //      res.send({success:true,otp:otp})
+     //     })
+     //     .catch(err =>{
+     //      console.log(err)
+     //      res.status(500).send({success:false,message:'failed to send OTP'})
+     //     })
           const hashedPassword = bcryptjs.hashSync(password,10) 
-          const newUser = new User( {username,email,password:hashedPassword})
+          const newUser = new User( {username,email,phoneNumber,password:hashedPassword,otp})
           await newUser.save()
-          res.json({status:201,message: 'Signup completed successfully'})
+          res.json({status:201,message: 'Preliminary data saved successfully'})
      }
         
    } catch (error) {
         next(errorHandler(300,"Something went wrong"))
    }
    
+}
+
+const generateOTP = () => {
+     return Math.floor(100000 + Math.random() * 900000)
+    }
+
+const  sendEmail = async(email,message) => {
+ 
+     let mailTransporter = nodemailer.createTransport({
+         service: 'gmail',
+         auth: {
+             user: 'sipsabineesh@gmail.com',
+             pass: 'bfqn ugjt gzmw kblg'
+         }
+     });
+      
+     let mailDetails = {
+         from: 'info@wedbliss.com',
+         to: 'sipsabineesh@gmail.com',
+         subject: 'OTP',
+         text:message
+     };
+     console.log(mailDetails) 
+    const info = mailTransporter.sendMail(mailDetails, function (err, data) {
+         console.log(info)
+         if (err) {
+              console.log('Error Occurs' + err.message)
+         } else {
+              console.log('Email sent successfully')
+         }
+    });
+ }  
+ 
+    export const otpVerify = async (req,res,next) =>{
+     try {
+     const {otp} = req.body
+     if (!otp){
+          next(errorHandler(404, 'Please enter the OTP'));
+         }
+      else {
+         const validUser = await User.findOne({otp})
+         console.log(validUser)
+         if(!validUser)  next(errorHandler(404,'OTP not matching'))
+         else{
+          User.updateOne({_id:validUser._id},{$set:{isVerifiedByOTP:true}})
+          .then(data =>{
+             if(!data){
+                 res.status(404).send({message:`Cannot update  with ${id}.May be user not found`})
+             }
+             else{
+               res.status(200).json(data)
+             }
+          })
+          }
+     }
+    } catch (error) {
+          next(error)
+    }
+  
 }
 
 export const login = async (req,res,next) =>{

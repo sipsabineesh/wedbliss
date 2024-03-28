@@ -14,8 +14,20 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true,
-        
     },
+    phoneNumber:{
+        type:Number,
+        required:true,
+    },
+    otp:{
+        type:Number,
+    },
+    isVerifiedByOTP:{
+        type:Boolean,
+    },
+    isVerifiedByAdmin:{
+        type:Boolean,
+    }
 }, {timestamp:true});
 
 const User = mongoose.model('User',userSchema);

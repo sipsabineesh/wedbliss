@@ -4,7 +4,8 @@ import { loginStart,loginSuccess,loginFailure } from '../redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 export default function Login() {
     const [formData,setFormData] = useState({})
-    const { loading,error } =useSelector((state) => state.user)
+    const [error,setError] = useState('')
+    const { loading } =useSelector((state) => state.user)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const handleChange = (e) => {
@@ -13,7 +14,7 @@ export default function Login() {
     const handleSubmit = async(e) => {
         e.preventDefault();
         try {
-            dispatch(loginStart())
+            // dispatch(loginStart())
             const res = await fetch ('/api/auth/login',{
             method:'POST',
             headers:{
@@ -24,15 +25,17 @@ export default function Login() {
           const data = await res.json()
           console.log(data)
           if(data.success === false) {
-            dispatch(loginFailure(data.message))
+            // dispatch(loginFailure(data.message))
+            setError(data.message);
             return;
           }
           else{
-            dispatch(loginSuccess(data))
+            // dispatch(loginSuccess(data))
             navigate('/')
           }
         } catch (error) {
-            dispatch(loginFailure(error))
+            // dispatch(loginFailure(error))
+            setError(error);
         }
     }
    return (
@@ -64,8 +67,8 @@ export default function Login() {
         <div className="control">
         <button type="submit" disabled={loading} className="btns">{loading ? "Loading... " : "Login"}</button>
         </div>
-        <p className="errorMsg">{error ? error || "Something went wrong" : ""}</p>
-        <div className="text-medium"><p>Don't have an account? <Link to='/signup' className='text-link'>Signup</Link></p></div>
+      <p className="errorMsg">{error ? error || "Something went wrong" : ""}</p>
+        <div className="text-medium"><p>Don't have an account? <Link to='/signup' className='text-link'>Signup</Link></p></div> 
 
       </form>
       {/* <p className="link">
