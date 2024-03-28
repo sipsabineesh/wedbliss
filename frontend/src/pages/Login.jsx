@@ -14,7 +14,7 @@ export default function Login() {
     const handleSubmit = async(e) => {
         e.preventDefault();
         try {
-            // dispatch(loginStart())
+            dispatch(loginStart())
             const res = await fetch ('/api/auth/login',{
             method:'POST',
             headers:{
@@ -25,16 +25,16 @@ export default function Login() {
           const data = await res.json()
           console.log(data)
           if(data.success === false) {
-            // dispatch(loginFailure(data.message))
+            dispatch(loginFailure(data.message))
             setError(data.message);
             return;
           }
           else{
-            // dispatch(loginSuccess(data))
+            dispatch(loginSuccess(data))
             navigate('/')
           }
         } catch (error) {
-            // dispatch(loginFailure(error))
+            dispatch(loginFailure(error))
             setError(error);
         }
     }
