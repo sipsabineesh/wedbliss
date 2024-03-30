@@ -1,30 +1,14 @@
 import React, { useState,useEffect } from 'react';
 import { Link } from "react-router-dom"
-import Header from '../components/Header';
+import Header from '../../components/Header';
+import AdminHeader from '../../components/AdminHeader';
 
-const Home = () => {
+export default function Home()  {
     const [user,setUser] = useState({})
-    useEffect(() => {
-        const handleScroll = () => {
-          const scroll = window.scrollY;
-          const navbar = document.querySelector(".navbar");
-          if (scroll >= 10) {
-            navbar.classList.add("nav-scroll");
-          } else {
-            navbar.classList.remove("nav-scroll");
-          }
-        };
-    
-        window.addEventListener('scroll', handleScroll);
-    
-        // Cleanup function to remove the event listener when component unmounts
-        return () => {
-          window.removeEventListener('scroll', handleScroll);
-        };
-      }, []);
+   
     return (
         <>
-        <Header/>
+        <AdminHeader/>
           <section id="home" className="banner cover-bg">
             <div className="container h-100">
               <div className="row align-items-center h-100">
@@ -171,4 +155,4 @@ const Home = () => {
     )
   }
   
-  export default Home
+  

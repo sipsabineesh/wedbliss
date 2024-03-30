@@ -31,7 +31,11 @@ export default function Login() {
           }
           else{
             dispatch(loginSuccess(data))
-            navigate('/')
+            console.log(data)
+            if(data.isAdmin == true)
+             navigate('/dashboard')
+            else           
+             navigate('/')
           }
         } catch (error) {
             dispatch(loginFailure(error))

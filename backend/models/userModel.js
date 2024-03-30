@@ -28,9 +28,15 @@ const userSchema = new mongoose.Schema({
     },
     isVerifiedByOTP:{
         type:Boolean,
+        default:false,
     },
     isVerifiedByAdmin:{
         type:Boolean,
+        default:false,
+    },
+    isBlocked:{
+        type:Boolean,
+        default:false,
     }
 }, {timestamp:true});
 

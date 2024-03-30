@@ -53,7 +53,7 @@ export const signup = async (req,res,next) => {
          }
       else {
          const validUser = await User.findOne({otp})
-         console.log(validUser)
+        
          if(!validUser)  next(errorHandler(404,'OTP not matching'))
          else{
           User.updateOne({_id:validUser._id},{$set:{isVerifiedByOTP:true}})
@@ -86,9 +86,13 @@ export const login = async (req,res,next) =>{
          next(errorHandler(404, 'Please enter the password'));
       }else {
          const validUser = await User.findOne({email})
+         console.log(validUser)
          if(!validUser)  next(errorHandler(404,'User not Found'))
          const validPassword = bcryptjs.compareSync(password,validUser.password)
          if(!validPassword)  next(errorHandler(401,'Wrong Credentials'))
+         if(!validUser.isVerifiedByOTP && !validUser.isAdmin)  next(errorHandler(401,'OTP Verification not completed'))
+         if(!validUser.isVerifiedByAdmin && !validUser.isAdmin)  next(errorHandler(401,'Not verified by the Admin'))
+         if(validUser.isBlocked === true && !validUser.isAdmin)  next(errorHandler(401,'You have been blocked by the Admin.Please contact the admin'))
          else{
                const token = jwt.sign({id:validUser._id,isAdmin:validUser.isAdmin},process.env.JWT_SECRET)
                const {password : hashedPassword,...rest} = validUser._doc

@@ -2,8 +2,9 @@ import express from 'express'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
- import userRoute from './routes/userRoute.js'
- import authRoute from './routes/authRoute.js'
+import userRoute from './routes/userRoute.js'
+import authRoute from './routes/authRoute.js'
+import adminRoute from './routes/adminRoute.js'
 
 
 const app = express();
@@ -19,6 +20,8 @@ app.use(bodyParser.urlencoded({
  app.use(express.json())
  app.use('/api/user',userRoute)
  app.use('/api/auth',authRoute)
+ app.use('/api/admin',adminRoute)
+ 
 
   app.use((err,req,res,next) => {
     const statusCode = err.statusCode || 500
