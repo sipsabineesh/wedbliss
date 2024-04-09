@@ -1,9 +1,9 @@
 import { useState,useEffect } from 'react'
 import { Link ,useNavigate} from 'react-router-dom'
-import { loginStart,loginSuccess,loginFailure } from '../redux/user/userSlice'
+import { loginStart,loginSuccess,loginFailure } from '../../redux/user/userSlice.js'
 import { useDispatch, useSelector } from 'react-redux'
 
-export default function Login() {
+export default function AdminLogin() {
     const [formData,setFormData] = useState({})
     const [error,setError] = useState('')
     const { loading } =useSelector((state) => state.user)
@@ -12,13 +12,12 @@ export default function Login() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-      console.log("current user in login")
       console.log(currentUser)
      if(currentUser){
-        navigate('/'); 
+        navigate('/dashboard'); 
       }
       else{
-        navigate('/login');
+        navigate('/adminLogin');
       }
     }, [currentUser, navigate]);
   
@@ -61,23 +60,22 @@ export default function Login() {
       <section className="login">
       <div className="form-container">
         <div className="section_title text-center">
-                    <p>Let us start the journey</p>
-                    <h3>Login</h3>
+                    <p></p>
+                    <h3>Admin Login</h3>
                 </div>
         <form onSubmit={handleSubmit}>
-          <div className="control ">
-            
+          <div className="control">
           {/* <label htmlFor="name">Name</label> */}
           <input type="email"
                  id="email"
-                 placeholder="Email" className="stylish-textbox"
+                 placeholder="Email" 
                  onChange={handleChange} />
         </div>
         <div className="control">
           {/* <label htmlFor="password">Password</label> */}
           <input type="password"
                  id="password" 
-                 placeholder="Password" className="stylish-textbox"
+                 placeholder="Password" 
                  onChange={handleChange} />
         </div>
         {/* <p className="link">

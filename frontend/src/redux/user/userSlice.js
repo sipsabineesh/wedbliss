@@ -5,7 +5,6 @@ const initialState = {
     loading:false,
     error:'',
 }
-console.log('USERSLICE ');
 
 const userSlice = createSlice({
     name:'user',
@@ -28,8 +27,16 @@ const userSlice = createSlice({
         state.loading=false;
         state.error = ''
      },
+     otpSuccess:(state) => {
+      state.loading = false;
+     },
+     editUserSuccess:(state,action) => {
+      state.currentUser = action.payload;
+      state.loading = false;
+      state.error = '';
+     }
     }
 })
-export const { loginStart,loginSuccess,loginFailure,logout } = userSlice.actions;
+export const { loginStart,loginSuccess,loginFailure,logout,otpSuccess,editUserSuccess } = userSlice.actions;
 
 export default userSlice.reducer

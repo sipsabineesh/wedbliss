@@ -14,20 +14,21 @@ export default function SignUp() {
            if(!formData.username){
                 setLoading(false);
                 setError('Please enter the username');
-                return; 
-            }else if(!formData.email){
+               return false; 
+           }if(!formData.email){
                 setLoading(false);
                 setError('Please enter the email');
-                return; 
-            }else if(!formData.phoneNumber) {
+               return false; 
+            }
+            if(!formData.phoneNumber) {
               setLoading(false);
               setError('Please enter the phone number');
               return; 
-            }else if(!formData.password) {
+            } if(!formData.password) {
                 setLoading(false);
                 setError('Please enter the password');
                 return; 
-            }else if(formData.password !== formData.re_password){
+            } if(formData.password !== formData.re_password){
                 setLoading(false);
                 setError('Passwords dont match');
                 return; 
@@ -73,32 +74,32 @@ export default function SignUp() {
           <div className="control">
           {/* <label htmlFor="name">Name</label> */}
           <input type="text"
-                 id="username" 
+                 id="username" className="stylish-textbox"
                  placeholder="Name" onChange={handleChange} />
         </div>
         <div className="control">
           {/* <label htmlFor="password">Password</label> */}
           <input type="email"
-                 id="email"
+                 id="email" className="stylish-textbox"
                  placeholder="Email" onChange={handleChange}/>
         </div>
         <div className="control">
           {/* <label htmlFor="password">Phone Number</label> */}
           <input type="phoneNumber" 
-                id="phoneNumber" 
+                id="phoneNumber" className="stylish-textbox"
                 placeholder="Phone Number" onChange={handleChange}/>
         </div>
         <div className="control">
           {/* <label htmlFor="password">Password</label> */}
           <input type="password"
                  id="password" 
-                 placeholder="Password" 
+                 placeholder="Password" className="stylish-textbox"
                  onChange={handleChange} />
         </div>
         <div className="control">
           {/* <label htmlFor="password">Password</label> */}
           <input type="password" 
-                id="re_password" 
+                id="re_password" className="stylish-textbox"
                 placeholder="Re-Enter the Password" onChange={handleChange}/>
         </div>
        

@@ -661,6 +661,10 @@
    width:30px;
   } 
    
+  .contact .signup-form .gender-row{
+    margin-left:15px;
+  }
+
  .signup-form .gender-title
  {
   color:#fff;
@@ -684,6 +688,7 @@
     line-height:18px;
     font-size:16px;
     width:100%;
+    margin-bottom:15px;
     border:1px solid #ccc; 
     border-radius:8px;
     -webkit-appearance:none;
@@ -813,6 +818,61 @@
   color: #f30505;
  }
 
+ .rounded-image-container {
+  align-items: center;
+  width: 225px; 
+  height: 225px;
+  overflow: hidden; 
+  border-radius: 50%; 
+  margin: 20px auto; 
+}
+
+.rounded-image {
+  width: 100%;
+  height: 100%;
+  display: block; 
+  /* background-image:url(./assets/images/icon_m.jpg);; */
+}
+
+.card-subbackground{
+  background-color: #f8f9fa;
+}
+
+.header {
+  height: 60px; /* Adjust the height as needed */
+  background-color: #333; /* Example background color */
+  color: #fff; /* Example text color */
+}
+
+.footer {
+  height: 60px; /* Adjust the height as needed */
+  background-color: #333; /* Example background color */
+  color: #fff; /* Example text color */
+}
+
+.content {
+  min-height: calc(100vh - 120px); /* Adjust the height considering header and footer heights */
+  padding: 20px; /* Example padding */
+}
+
+.remove-link {
+  text-decoration : none;
+}
+
+.stylish-textbox {
+  border: 2px solid #17a2b8;
+  border-radius: 8px;
+  padding: 10px;
+  color: #495057;
+  background-color: #f8f9fa;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.stylish-textbox:focus {
+  border-color: #0a768f;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(38, 143, 255, 0.25);
+}
  /*  
  .contact .signup-form .gender-details{
    position: absolute;
@@ -905,6 +965,8 @@
      .part_text li{
        list-style: none;
       }
+
+      
       
       /* Admin css */
       /* @import url('https://fonts.googleapis.com/css2?family=Barlow&family=PT+Sans&display=swap'); */

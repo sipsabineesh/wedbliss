@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { loginFailure, loginStart, loginSuccess } from '../redux/user/userSlice'
+import { loginFailure, loginStart, otpSuccess } from '../redux/user/userSlice'
 
 export default function OtpVerification() {
     const [formData,setFormData] = useState({})
@@ -29,7 +29,7 @@ export default function OtpVerification() {
             return;
           }
           else{
-            dispatch(loginSuccess(data))
+            dispatch(otpSuccess())
             navigate('/login')
           }
         } catch (error) {

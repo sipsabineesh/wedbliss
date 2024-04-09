@@ -37,7 +37,57 @@ const userSchema = new mongoose.Schema({
     isBlocked:{
         type:Boolean,
         default:false,
-    }
+    },
+    gender:{
+        type:String,
+    },
+    dob:{
+        type:Date,
+    },
+    profilePhoto:{
+        type:String,
+        default:"https://via.placeholder.com/225"
+    },
+    maritalStatus:{
+        type:String,
+    },
+    diet:{
+        type:String,
+    },
+    religion:{
+        type:String,
+    },
+    caste:{
+        type:String,
+    },
+    motherTongue:
+    {
+        type:String,
+    },
+    nativePlace:{
+        type:String,
+    },
+    height:{
+        type:Number,
+    },
+    weight:{
+        type:Number,
+    },
+    qualification:{
+        type:String,
+    },
+    workingStatus:{
+        type:String,
+    },
+    hobbies:{
+        type:String, 
+    },
+    countryLivingIn:{
+        type:String,
+    }, 
+    about:{
+        type:String,
+    },                      
 }, {timestamp:true});
 
 const User = mongoose.model('User',userSchema);

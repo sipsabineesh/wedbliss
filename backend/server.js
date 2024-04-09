@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
+import cloudinary from "cloudinary";
 import userRoute from './routes/userRoute.js'
 import authRoute from './routes/authRoute.js'
 import adminRoute from './routes/adminRoute.js'
@@ -18,6 +19,13 @@ app.use(bodyParser.urlencoded({
     extended: true
   }));
  app.use(express.json())
+
+ cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
  app.use('/api/user',userRoute)
  app.use('/api/auth',authRoute)
  app.use('/api/admin',adminRoute)

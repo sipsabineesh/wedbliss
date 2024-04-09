@@ -18,6 +18,7 @@ export default function AdminUserList()  {
             console.error('Error fetching user data:', error);
         }
     };
+    
 
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 5;
