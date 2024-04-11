@@ -60,9 +60,9 @@ console.log(currentUser)
           <div className="col-lg-9 col-xl-7 w-100">
             <div className="card">
               <div className="rounded-top text-white d-flex flex-row" style={{ backgroundColor: '#000', height: '200px' }}>
-                <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
+                <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px'}}>
                   <img src={currentUser.profilePhoto !== null ? currentUser.profilePhoto : 'https://via.placeholder.com/225'}
-                     alt="Generic placeholder image" className="mt-4 mb-2 img-thumbnail" style={{ width: '150px', zIndex: '1' }} /> 
+                     alt="Profile Picture" className="mt-4 mb-2 img-thumbnail" style={{ width: '150px', height: '150px', zIndex: '1' }} /> 
                 </div>
                 <div className="ms-3" style={{ marginTop: '130px' }}>
                   <h5>{currentUser.username}</h5>
@@ -92,40 +92,40 @@ console.log(currentUser)
               
               <div className="card-body text-black p-4">
                 <div className="mb-5">
-                  <p className="lead fw-normal mb-1">About</p>
+                  <p className="lead fw-normal mb-1 text-black">About</p>
                   <div className="p-4 card-subbackground">
-                    <p className="font-italic mb-1">{currentUser.about}</p>
+                    <p className="font-italic mb-1 text-black">{currentUser.about}</p>
                   </div>
                 </div>
                
 
                 <div className="row mb-5">
-                    <p className="lead fw-normal mb-1">Personal Details</p>
+                    <p className="lead fw-normal mb-1 text-black">Personal Details</p>
                     <div className="col">
                     <div className="p-4 card-subbackground">
-                      <p className="font-italic mb-1">Age : {age ? age : ''}</p>
-                      <p className="font-italic mb-1">Weight : {currentUser.weight ? currentUser.weight : ''}Kg</p>
-                      <p className="font-italic mb-0">Height : {currentUser.height ? currentUser.height: ''}cm</p>
-                      <p className="font-italic mb-0">Marital Status : {currentUser.maritalStatus ? currentUser.maritalStatus : 'N/A'}</p>
-                      <p className="font-italic mb-0">Diet : {currentUser.diet ? currentUser.diet : 'N/A'}</p>
+                      <p className="font-italic mb-1 text-black">Age : {age ? age : ''}</p>
+                      <p className="font-italic mb-1 text-black">Weight : {currentUser.weight ? currentUser.weight : ''}Kg</p>
+                      <p className="font-italic mb-0 text-black">Height : {currentUser.height ? currentUser.height: ''}cm</p>
+                      <p className="font-italic mb-0 text-black">Marital Status : {currentUser.maritalStatus ? currentUser.maritalStatus : 'N/A'}</p>
+                      <p className="font-italic mb-0 text-black">Diet : {currentUser.diet ? currentUser.diet : 'N/A'}</p>
                     </div>
                   </div>
                   <div className="col">
                     <div className="p-4 card-subbackground">
-                      <p className="font-italic mb-1">Mother Tongue : {currentUser.motherTongue ? currentUser.motherTongue : ''}</p>
-                      <p className="font-italic mb-1">Religion : {currentUser.religion ? currentUser.religion : ''}</p>
-                      <p className="font-italic mb-0">Caste : {currentUser.caste ? currentUser.caste: ''}</p>
-                      <p className="font-italic mb-0">Native Place : {currentUser.nativePlace ? currentUser.nativePlace : 'N/A'}</p>
-                      <p className="font-italic mb-0">Hobbies : {currentUser.hobbies ? currentUser.hobbies : 'N/A'}</p>
+                      <p className="font-italic mb-1 text-black">Mother Tongue : {currentUser.motherTongue ? currentUser.motherTongue : ''}</p>
+                      <p className="font-italic mb-1 text-black">Religion : {currentUser.religion ? currentUser.religion : ''}</p>
+                      <p className="font-italic mb-0 text-black">Caste : {currentUser.caste ? currentUser.caste: ''}</p>
+                      <p className="font-italic mb-0 text-black">Native Place : {currentUser.nativePlace ? currentUser.nativePlace : 'N/A'}</p>
+                      <p className="font-italic mb-0 text-black">Hobbies : {currentUser.hobbies ? currentUser.hobbies : 'N/A'}</p>
                     </div>
                   </div>
                 </div>
 
                  <div className="mb-5">
-                  <p className="lead fw-normal mb-1">Education & Profession</p>
+                  <p className="lead fw-normal mb-1 text-black">Education & Profession</p>
                   <div className="p-4 card-subbackground">
-                    <p className="font-italic mb-1">Qualification : {currentUser.qualification ? currentUser.qualification : 'N/A'}</p>
-                    <p className="font-italic mb-1">Working Status : {currentUser.workingStatus ? currentUser.workingStatus : 'N/A'}</p>
+                    <p className="font-italic mb-1 text-black">Qualification : {currentUser.qualification ? currentUser.qualification : 'N/A'}</p>
+                    <p className="font-italic mb-1 text-black">Working Status : {currentUser.workingStatus ? currentUser.workingStatus : 'N/A'}</p>
                   </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-4">

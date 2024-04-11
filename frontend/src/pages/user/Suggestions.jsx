@@ -52,14 +52,14 @@ export default function Suggestions() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ requestedTo: id }),
+        body: JSON.stringify({ requestedTo: id }), 
       });
   
       if (!res.ok) {
         throw new Error('Network response was not ok');
       }
   
-      console.log(await res.json()); // if you want to log the response data
+      console.log(await res.json());
     } catch (error) {
       console.error('Error handling interest:', error);
     }

@@ -20,8 +20,8 @@ export default function EditProfile() {
   const navigate = useNavigate()
   const { currentUser } = useSelector(state => state.user);
   useEffect(() => {
-    // console.log("current user in edit")
-    // console.log(currentUser)
+    console.log("current user in edit")
+    console.log(currentUser)
     if(imageFile){
       uploadImage(imageFileURL)
     }
@@ -106,6 +106,7 @@ const handleSubmit = async(e) => {
     if(data.success === false)
     {
       dispatch(logout())
+      setError('You have been blocked by Admin. Please Contact the Admin')
       navigate('/login')
     }else{
       setLoading(false)

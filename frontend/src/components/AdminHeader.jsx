@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { Link,Navigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { logout } from '../redux/user/userSlice';
-import { useDispatch } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
+import { logout } from '../redux/admin/adminSlice';
 
 export default function AdminHeader() {
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useDispatch()
+    const {adminUser} = useSelector(state => state.admin)
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
+ 
     const handleLogout = async() => {
       try {
         const res = await fetch ('/api/auth/logout',{
@@ -23,7 +24,7 @@ export default function AdminHeader() {
         console.log(error)
       }
     }
-    const {currentUser} = useSelector(state => state.user)
+   
   return (
     <nav className="navbar navbar-expand-lg navbar-dark fixed-top nav-scroll">
       <div className="container">
@@ -42,20 +43,20 @@ export default function AdminHeader() {
           <li className="nav-item ml-2"><Link className='nav-link' to={'/dashboard'}>Subscriptions</Link></li>
           <li className="nav-item ml-2"><Link className='nav-link' to={'/dashboard'}>Search</Link></li>
           {/* <li className="nav-item ml-2">{currentUser ?<div className="nav-item ml-2"> <Link className="nav-link" to={'/profile'}><i className="fa fa-user" aria-hidden="true"></i></Link> <Link className="nav-link" to={'/profile'}><i className="fa fa-sign-out" aria-hidden="true"></i></Link></div> : <Link className="nav-link" to={'/login'}><i className="fa fa-sign-in" aria-hidden="true"></i></Link> }</li>  */}
-          {currentUser ? (
+          <li className="nav-item ml-2">
+         
+          {adminUser ? (
                                 <div className="nav-item ml-2 d-flex align-items-center">
-                                    <Link className="nav-link" to={'/profile'}>
-                                        <i className="fa fa-user mr-2" aria-hidden="true"></i>
-                                    </Link>
                                     <Link className="nav-link" onClick={handleLogout}>
                                         <i  className="fa fa-sign-out" aria-hidden="true"></i>Logout
                                     </Link>
                                 </div>
-                            ) : (
-                                <Link className="nav-link" to={'/login'}>
+                             ) : ( 
+                                 <Link className="nav-link" to={'/adminLogin'}>
                                     <i className="fa fa-sign-in" aria-hidden="true"></i>Login
-                                </Link>
+                                </Link> 
                             )}
+              </li>
         </ul>
       </div>
     </div>

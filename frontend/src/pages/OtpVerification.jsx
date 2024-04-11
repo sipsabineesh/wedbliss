@@ -49,7 +49,7 @@ export default function OtpVerification() {
           {/* <label htmlFor="name">Name</label> */}
           <input type="text"
                  id="otp"
-                 placeholder="Enter your OTP" 
+                 placeholder="Enter your OTP" className="stylish-textbox"
                  onChange={handleChange} />
         </div>
               

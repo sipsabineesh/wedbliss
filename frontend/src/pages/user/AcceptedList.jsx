@@ -12,7 +12,7 @@ export default function AcceptedList() {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-            },
+            }, 
             //body: JSON.stringify({ id: id }),
           });
           if (!response.ok) {
