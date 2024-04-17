@@ -1083,6 +1083,11 @@
           background-color:var(--dark);
           border-color:#32383e;
       }
+      .add-button-container {
+        text-align: left;
+        margin-bottom: 20px; 
+    }
+
       @media only screen and(max-width:1024px){
           table,thead,tbody,th,tr,td{
               display:block;

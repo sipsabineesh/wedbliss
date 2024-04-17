@@ -17,24 +17,30 @@ import AdminLogin from './pages/admin/AdminLogin';
 import Suggestions from './pages/user/Suggestions';
 import Interests from './pages/user/Interests';
 import AcceptedList from './pages/user/AcceptedList';
-import AdminPlans from './pages/admin/AdminPlans';
+import Example from './pages/Example';
+import AdminPlanList from './pages/admin/AdminPlanList';
+import AdminCreatePlan from './pages/admin/AdminCreatePlan';
+import AdminEditPlan from './pages/admin/AdminEditPlan';
 
 
 export default function App() {
   return <Router>
     {/* <Header/> */}
+    <ToastContainer position="top-right" />
     <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="otpVerify" element={<OtpVerify/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/adminLogin" element={<AdminLogin/>}/>
-
+        <Route path="/example" element={<Example/>}/>
         
         <Route element={<AdminPrivateRoute/>}>
          <Route path="/dashboard" element={<AdminDashboard/>}/>
          <Route path="/userList" element={<AdminUserList/>}/>
-         <Route path="/planList" element={<AdminPlans/>}/>
+         <Route path="/planList" element={<AdminPlanList/>}/>
+         <Route path="/createPlan" element={<AdminCreatePlan/>}/>
+         <Route path="/editPlan/:id" element={<AdminEditPlan/>}/>
         </Route>
         <Route element={<PrivateRoute/>}>
          <Route path="/profile" element={<Profile/>}/>

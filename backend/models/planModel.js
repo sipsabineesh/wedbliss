@@ -1,17 +1,12 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    planId:{
-        type:String,
-        required:true,
-        unique:true,
-    },
+const planSchema = new mongoose.Schema({
     planName:{
         type:String,
         required:true,
         unique:true,
     },
-    planValidation:{
+    planValidity:{
         type:String,
         required:true,
     },
@@ -19,7 +14,15 @@ const userSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    isValid:{
+    noOfContacts:{
+        type:Number,
+        default:0,
+    },
+    noOfMessages:{
+        type:Number,
+        default:0,
+    },
+    isDeleted:{
         type:Boolean,
         default:false,
     },
@@ -27,6 +30,6 @@ const userSchema = new mongoose.Schema({
 
 }, {timestamp:true});
 
-const User = mongoose.model('User',userSchema);
+const Plan = mongoose.model('Plan',planSchema);
 
-export default User;     
+export default Plan;     

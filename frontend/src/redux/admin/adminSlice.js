@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     adminUser :null,
+    plans:[],
     loading:false,
     error:'',
 }
@@ -17,7 +18,6 @@ const adminSlice = createSlice({
         state.adminUser = action.payload;
         state.loading = false;
         state.error = '';
-        console.log('Login Success Payload:', state.adminUser);
      },
      loginFailure : (state,action) => {
         state.loading = false;
@@ -31,8 +31,11 @@ const adminSlice = createSlice({
      otpSuccess:(state) => {
       state.loading = false;
      },
+     getPlanList: (state, action) => {
+      state.plans = action.payload;
+    },
     }
 })
-export const { loginStart,loginSuccess,loginFailure,logout,otpSuccess} = adminSlice.actions;
+export const { loginStart,loginSuccess,loginFailure,logout,otpSuccess,getPlanList} = adminSlice.actions;
 
 export default adminSlice.reducer

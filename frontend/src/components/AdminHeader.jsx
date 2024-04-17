@@ -39,7 +39,7 @@ export default function AdminHeader() {
         <ul className="navbar-nav ml-auto">
           <li className="nav-item ml-2"><Link className='nav-link' to={'/dashboard'}>Home</Link></li>
           <li className="nav-item ml-2"><Link className='nav-link' to={'/userList'}>Users</Link></li>
-          <li className="nav-item ml-2"><Link className='nav-link' to={'/dashboard'}>Packages</Link></li>
+          <li className="nav-item ml-2"><Link className='nav-link' to={'/planList'}>Packages</Link></li>
           <li className="nav-item ml-2"><Link className='nav-link' to={'/dashboard'}>Subscriptions</Link></li>
           <li className="nav-item ml-2"><Link className='nav-link' to={'/dashboard'}>Search</Link></li>
           {/* <li className="nav-item ml-2">{currentUser ?<div className="nav-item ml-2"> <Link className="nav-link" to={'/profile'}><i className="fa fa-user" aria-hidden="true"></i></Link> <Link className="nav-link" to={'/profile'}><i className="fa fa-sign-out" aria-hidden="true"></i></Link></div> : <Link className="nav-link" to={'/login'}><i className="fa fa-sign-in" aria-hidden="true"></i></Link> }</li>  */}

@@ -1,13 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import userReducer from './user/userSlice';
 import adminReducer from './admin/adminSlice';
-
+import { apiSlice } from '../redux/apiSlice';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const rootReducer = combineReducers({
   user: userReducer,
   admin: adminReducer,
+  [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
 const persistConfig = {
@@ -20,10 +21,16 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    // devTools: true,
-    serializableCheck: false,
-  })
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(
+  {  devTools: true,
+     serializableCheck: false,
+  }
+  ).concat(apiSlice.middleware),
+  
+
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+  //   // devTools: true,
+  // })
 });
 
 export const persistor = persistStore(store);
