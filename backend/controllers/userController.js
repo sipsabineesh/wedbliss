@@ -1,5 +1,5 @@
 import { Mongoose } from 'mongoose';
-import Interests from '../models/interestModel.js';
+import Interests from '../models/interestModel.js'
 import User from '../models/userModel.js'
 import { errorHandler } from "../utils/error.js"
 import cloudinary from "cloudinary";

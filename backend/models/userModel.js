@@ -87,7 +87,11 @@ const userSchema = new mongoose.Schema({
     }, 
     about:{
         type:String,
-    },                      
+    }, 
+    isSubscribed:{
+        type:Boolean,
+        default:false,
+    }                     
 }, {timestamp:true});
 
 const User = mongoose.model('User',userSchema);

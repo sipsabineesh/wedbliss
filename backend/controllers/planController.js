@@ -62,6 +62,19 @@ export const getPlans = async(req,res,next) => {
 
  }
 
+ 
+ export const getPlansForUser = async(req,res,next) => {
+  console.log("IN CONTROLLER")
+  const  plans = await Plan.find({isDeleted:false})
+  .then(plan => {
+   //res.send(user) 
+   res.json({plan})
+})
+ .catch(err => {
+   next(errorHandler(500, 'Error occured while retrieving data'));
+})
+}
+
  export const createPlan = async(req,res,next) => {
   const { planName,planValidity,planPrice,noOfContacts,noOfMessages } = req.body
   const planExists = await Plan.findOne({planName})
@@ -127,7 +140,6 @@ export const editPlan = async(req,res,next) => {
 
 export const deletePlan = async(req,res,next) => {
   try {
-    console.log("deletiiiiiiiiiiiiing")
     const plan = await Plan.findById(req.body.id);
     if(plan){
         plan.isDeleted = true;

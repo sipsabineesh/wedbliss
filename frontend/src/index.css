@@ -966,6 +966,68 @@
        list-style: none;
       }
 
+      .modal-close { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 3px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-right: 29px;
+      }
+
+      .modal-overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      
+      .modal-summary {
+        width: 50%;
+        height: 75%;
+        top: 50%;
+        left: 28%;
+        background-color: #ffffff;
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+        border: 1px solid #ccc;
+      }
+      .payment-success-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+      }
+      
+      .payment-success-card {
+        max-width: 400px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      
+      .payment-success-header {
+        background-color: #5cdb95;
+        color: #fff;
+        padding: 20px;
+      }
+      
+      .payment-success-title {
+        font-size: 24px;
+        margin: 0;
+      }
+      
+      .payment-success-content {
+        padding: 20px;
+      }
+      
+      .payment-success-content p {
+        margin-bottom: 10px;
+      }
+      
+      
+
       
       
       /* Admin css */
@@ -1262,4 +1324,15 @@
      .search{
      height:100%;
      }
+  }
+
+        
+  @media screen and (max-width: 600px) {
+    .payment-success-title {
+      font-size: 1.5rem;
+    }
+  
+    .payment-success-content {
+      max-width: 90%;
+    }
   }

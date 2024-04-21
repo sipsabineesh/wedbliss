@@ -21,6 +21,10 @@ import Example from './pages/Example';
 import AdminPlanList from './pages/admin/AdminPlanList';
 import AdminCreatePlan from './pages/admin/AdminCreatePlan';
 import AdminEditPlan from './pages/admin/AdminEditPlan';
+import Plans from './pages/user/Plans';
+import Success from './pages/user/Success';
+import Cancel from './pages/user/Cancel';
+import AdminSubscriptionList from './pages/admin/AdminSubscriptionList';
 
 
 export default function App() {
@@ -41,6 +45,7 @@ export default function App() {
          <Route path="/planList" element={<AdminPlanList/>}/>
          <Route path="/createPlan" element={<AdminCreatePlan/>}/>
          <Route path="/editPlan/:id" element={<AdminEditPlan/>}/>
+         <Route path="/subscriptionlist" element={<AdminSubscriptionList/>}/>
         </Route>
         <Route element={<PrivateRoute/>}>
          <Route path="/profile" element={<Profile/>}/>
@@ -48,7 +53,9 @@ export default function App() {
          <Route path="/suggestions" element={<Suggestions/>}/>
          <Route path="/interests" element={<Interests/>}/>
          <Route path="/acceptedList" element={<AcceptedList/>}/>
-
+         <Route path="/plans" element={<Plans/>}/>
+         <Route path="/success" element={<Success/>}/>
+         <Route path="/cancel" element={<Cancel/>}/>
         </Route>
     </Routes>
   

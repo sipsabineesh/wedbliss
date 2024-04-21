@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
+import cors  from 'cors';
 import bodyParser from 'body-parser'
 import cloudinary from "cloudinary";
 import userRoute from './routes/userRoute.js'
@@ -10,7 +11,8 @@ import adminRoute from './routes/adminRoute.js'
 
 const app = express();
 dotenv.config()
-
+app.use(cors());
+ 
 mongoose.connect(process.env.MONGO_URI).then(() =>{
     console.log('Connected to MongoDB')
 })

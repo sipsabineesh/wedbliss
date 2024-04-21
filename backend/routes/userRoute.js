@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { getUsers,
         editUser,
         suggestionCount,
@@ -8,6 +9,10 @@ import { getUsers,
         getAllinterests,
         acceptinterests,
         acceptedInterestList } from '../controllers/userController.js';
+   import { getPlansForUser } from '../controllers/planController.js';
+   import { getCheckOutSession } from '../controllers/subscriptionController.js';
+   
+
 import { verifyToken } from '../middleware/verifyUser.js';
 import { verifyBlocked } from '../middleware/blockedUserMiddleware.js';
 const router = express.Router();
@@ -21,6 +26,10 @@ router.get('/checkInterest/:id',verifyBlocked,interestCount)
 router.get('/getInterests/:id',verifyBlocked,getAllinterests)
 router.put('/acceptInterest/:id',verifyBlocked,acceptinterests)
 router.get('/getAcceptList/:id',verifyBlocked,acceptedInterestList)
+router.get('/getPlans',getPlansForUser)
+router.post('/createCheckoutSession',getCheckOutSession)
+
+
 
 
 export default router;
