@@ -25,6 +25,10 @@ const subscriptionSchema = new mongoose.Schema({
         type:Boolean,
         default:false,
     },
+    isApproved:{
+        type:Boolean,
+        default:false,
+    },
     isDeleted:{
         type:Boolean,
         default:false,

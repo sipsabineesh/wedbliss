@@ -35,7 +35,14 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             body:data
         }),
     }), 
-      
+    approveSubscription:builder.mutation({
+        query : (data) => ({
+            url:'/api/admin/approveSubscription/',
+            method:'PUT',
+            body:data
+        }),
+    }), 
+    
         // logout:builder.mutation({
         //     query : () => ({
         //         url:'http://localhost:8000/api/users/logout',
@@ -49,4 +56,5 @@ export const {
     useCreatePlanMutation,
     useEditPlanMutation,
     useDeletePlanMutation,
+    useApproveSubscriptionMutation,
  } = adminApiSlice;

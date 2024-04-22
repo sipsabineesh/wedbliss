@@ -9,7 +9,7 @@ import { useDeletePlanMutation } from '../../redux/admin/adminApiSlice';
 export default function AdminPlanList() {
     
  const dispatch = useDispatch();
- const [deleteUser,{isLoading}] = useDeletePlanMutation();
+ const [deletePlan,{isLoading}] = useDeletePlanMutation();
 
  useEffect(() => {
     const fetchData = async() =>{
@@ -18,7 +18,7 @@ export default function AdminPlanList() {
         console.log(response.data)
         dispatch(getPlanList(response.data))
       } catch (err) {
-        
+        console.log(err)
       }
     }
     fetchData();
@@ -28,7 +28,7 @@ export default function AdminPlanList() {
    const confirmation = confirm("Do you really want to delete?")
    if(confirmation){
      try {
-       const res = await deleteUser({id}).unwrap()
+       const res = await deletePlan({id}).unwrap()
        window.location.reload(false);
      } catch (error) {
        console.log(error)

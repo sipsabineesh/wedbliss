@@ -3,10 +3,11 @@ import Plan from '../models/planModel.js'
 import { errorHandler } from "../utils/error.js"
 
 export const getPlans = async(req,res,next) => {
-  
+  console.log("plan CCCCCCCCCCCOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONTROLLER")
     const  plans = await Plan.find({isDeleted:false})
     .then(plan => {
      //res.send(user) 
+     console.log(plan)
      res.json({plan})
  })
    .catch(err => {
@@ -64,7 +65,7 @@ export const getPlans = async(req,res,next) => {
 
  
  export const getPlansForUser = async(req,res,next) => {
-  console.log("IN CONTROLLER")
+ 
   const  plans = await Plan.find({isDeleted:false})
   .then(plan => {
    //res.send(user) 

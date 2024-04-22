@@ -56,3 +56,91 @@ export const getCheckOutSession = async(req,res,next) => {
     console.log(error)
    } 
 }
+
+const listSubscriptionsWithDetails = async () => {
+    try {
+      const subscriptions = await Subscription.aggregate([
+        {
+          $lookup: {
+            from: 'plans',
+            localField: 'planId',
+            foreignField: '_id',
+            as: 'plan',
+          },
+        },
+        
+        { $unwind: '$plan' },
+       
+        {
+          $lookup: {
+            from: 'users', 
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user',
+          },
+        },
+       
+        { $unwind: '$user' },
+      
+        {
+          $project: {
+            _id: 1,
+            stripeSessionId: 1,
+            remainingValidity: 1,
+            remainingContacts: 1,
+            remainingMessages: 1,
+            isPaid: 1,
+            isDeleted: 1,
+            isApproved:1,
+            'plan.planName': 1,
+            'plan.planPrice': 1,
+            'user.username': 1,
+          },
+        },
+      ]);
+  
+      return subscriptions;
+    } catch (error) {
+      console.error('Error listing subscriptions with details:', error);
+      throw error;
+    }
+  };
+
+export const getSubscriptions = async(req,res,next) => {
+
+ listSubscriptionsWithDetails()
+  .then((subscriptions) => {
+    res.json({subscriptions})
+   // console.log('Subscriptions with details:', subscriptions);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+
+
+}
+
+export const approveSubscription = async(req,res,next) => {
+console.log("approveSubscription")
+try {
+    const subscription = await Subscription.findById(req.body.id);
+    if(subscription){
+        subscription.isApproved = true;
+        const approved =await subscription.save();
+        res.status(200).json({
+            _id: approved._id,
+            success: true,
+            message: 'Subscription Approved Successfully',
+        })
+    }
+    else{
+        res.status(404)
+        throw new Error("User not found")
+    }
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+ 
+}
+  
