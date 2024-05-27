@@ -17,8 +17,7 @@ const userSchema = new mongoose.Schema({
     },
     phoneNumber:{
         type:Number,
-        required:true,
-    },
+      },
     isAdmin:{
         type:Boolean,
         default:false,
@@ -46,7 +45,7 @@ const userSchema = new mongoose.Schema({
     },
     profilePhoto:{
         type:String,
-        default:"https://via.placeholder.com/225"
+        default:"https://static-00.iconduck.com/assets.00/avatar-default-light-icon-512x512-6c79fqub.png"
     },
     maritalStatus:{
         type:String,
@@ -91,7 +90,18 @@ const userSchema = new mongoose.Schema({
     isSubscribed:{
         type:Boolean,
         default:false,
-    }                     
+    },
+    reasonForBlocking: {
+        type:String,
+    },
+    // hasDetails:{
+    //     type:Boolean,
+    //     default:false,
+    // },
+    // hasPreference:{
+    //     type:Boolean,
+    //     default:false,
+    // }                
 }, {timestamp:true});
 
 const User = mongoose.model('User',userSchema);

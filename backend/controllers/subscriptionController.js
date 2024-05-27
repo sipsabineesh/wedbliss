@@ -25,36 +25,112 @@ export const getCheckOutSession = async(req,res,next) => {
         success_url:"http://localhost:5173/success",
         cancel_url:"http://localhost:5173/cancel"
     })
-    if(session.id) {
-        
-       const updatedData = {"isSubscribed" : true}
+    console.log("session")
+     console.log(session.url)
+    // if(session.id) {
+    
+    //    const updatedData = {"isSubscribed" : true}
+    //    const id = plan.userId
+    //     const updatedUser = await User.findByIdAndUpdate(
+    //         id, 
+    //         {
+    //           $set:updatedData
+    //         },
+    //         { new: true }
+    //       )
+    //       const {_id,planName,planValidity,planPrice,noOfContacts,noOfMessages,userId}  = plan
+    //       const sessionId = session.id
+    //       const newSubscription = new Subscription(
+    //              {
+    //                 userId,
+    //                 "planId":_id,
+    //                 "remainingValidity":planValidity,
+    //                 "stripeSessionId":sessionId,
+    //                 "remainingContacts":noOfContacts,
+    //                 "remainingMessages":noOfMessages,
+    //                 "isPaid":true
+    //             })
+    //            await newSubscription.save()
+    //         //   res.json({status:201,message: 'Subscription data saved successfully'})
+    //         console.log("updatedUser")
+    //         console.log(updatedUser)
+    //         const {password, ...rest} = updatedUser._doc
+    //         console.log("REST")
+    //         console.log(rest)
+            res.status(200).json({id:session.id,url:session.url})
+    // }
+   
+   } catch (error) {
+    console.log(error)
+   } 
+}
+
+function monthsToDays(months) {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1; 
+  let days = 0;
+
+  for (let i = 0; i < months; i++) {
+      const month = (currentMonth + i) % 12; 
+      const yearOffset = Math.floor((currentMonth + i) / 12); 
+      const year = currentYear + yearOffset; 
+      const daysInMonth = new Date(year, month, 0).getDate(); 
+      days += daysInMonth;
+  }
+
+  return days;
+}
+
+function calculateRemainingValidity(creationDate, currentDate, initialValidity) {
+  const creationTime = creationDate.getTime();
+  const currentTime = currentDate.getTime();
+  const difference = currentTime - creationTime;
+  const daysDifference = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const remainingValidity = initialValidity - daysDifference;
+  return remainingValidity >= 0 ? remainingValidity : 0;
+}
+
+export const addSubscription = async(req,res,next) => {
+  try {
+console.log("req.bodddddddddy")
+    console.log(req.body)
+    const plan = req.body.selectedPlan
+    const updatedData = {"isSubscribed" : true}
        const id = plan.userId
         const updatedUser = await User.findByIdAndUpdate(
             id, 
             {
               $set:updatedData
-            },
+            }, 
             { new: true }
           )
-          const {_id,planName,planValidity,planPrice,noOfContacts,noOfMessages,userId}  = plan
-          const sessionId = session.id
+       const {_id,planValidity,planPrice,noOfContacts,noOfMessages,userId}  = plan
+       console.log(_id+"  "+planValidity+"  "+planPrice+"  "+noOfContacts+"  "+noOfMessages+"  "+userId)   
+       const months = parseInt(planValidity.match(/\d+/)[0]);
+       const days = monthsToDays(months);
+       console.log(`${months} months is equivalent to ${days} days.`);
+       // const sessionId = session.id
+       console.log("updatedUser")
+       console.log(updatedUser)
           const newSubscription = new Subscription(
                  {
                     userId,
                     "planId":_id,
-                    "remainingValidity":planValidity,
-                    "stripeSessionId":sessionId,
+                    "remainingValidity":days,
+                    // "stripeSessionId":sessionId,
                     "remainingContacts":noOfContacts,
                     "remainingMessages":noOfMessages,
                     "isPaid":true
                 })
                await newSubscription.save()
-            //   res.json({status:201,message: 'Subscription data saved successfully'})
-    }
-    res.json({id:session.id})
-   } catch (error) {
-    console.log(error)
-   } 
+            const {password, ...rest} = updatedUser._doc
+          
+            res.status(200).json({user:rest})
+
+  } catch (error) {
+    
+  } 
 }
 
 const listSubscriptionsWithDetails = async () => {
@@ -92,13 +168,22 @@ const listSubscriptionsWithDetails = async () => {
             isPaid: 1,
             isDeleted: 1,
             isApproved:1,
+            timestamp:1,
             'plan.planName': 1,
             'plan.planPrice': 1,
             'user.username': 1,
           },
         },
       ]);
+
   
+      // const creationDate = subscriptions[0].timeestamp; 
+      // const currentDate = new Date();
+      // const initialValidity = subscriptions[0].validity;
+
+      // const remainingValidity = calculateRemainingValidity(creationDate, currentDate, initialValidity);
+      // console.log(`Remaining validity: ${remainingValidity} days`);
+
       return subscriptions;
     } catch (error) {
       console.error('Error listing subscriptions with details:', error);

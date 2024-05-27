@@ -1,8 +1,49 @@
-import React from 'react'
+import {useState,useEffect } from 'react'
+import Header from '../../components/Header'
+import { useDispatch,useSelector } from 'react-redux';
+import { selectPlan,clearPlan } from '../../redux/user/userSlice';
+import { useAddSubscriptionMutation } from '../../redux/user/userApiSlice';
+import { toast } from 'react-toastify'
 
 export default function Success() {
+  const selectedPlan = useSelector(selectPlan);
+  const dispatch = useDispatch()
+  console.log(selectedPlan)
+  
+  // const [selectedPlan, setSelectedPlan] = useState(null);
+
+  // useEffect(() => {
+  //     const storedPlan = localStorage.getItem('selectedPlan');
+  //     console.log("storedPlan")
+  //     console.log(storedPlan)
+  //     if (storedPlan) {
+  //         setSelectedPlan(JSON.parse(storedPlan));
+  //         console.log("SELECTED PLAN")
+  //         console.log(selectedPlan)
+  //         localStorage.removeItem('selectedPlan');
+  //     }
+  // }, []);
+
+  const [addSubscription, { isLoading, isError, error }] = useAddSubscriptionMutation();
+
+  const handleAddSubscription = async () => {
+     try {
+        const response = await addSubscription({selectedPlan});
+        console.log(response)
+        toast.success("Subscription added successfully!");
+        dispatch(clearPlan());
+    } catch (error) {
+  //     console.error("Error occurred while adding subscription:", error);
+      toast.error("An error occurred while adding subscription.");
+    }
+  };
+
+  useEffect(() => {
+    handleAddSubscription();
+  }, []); 
   return (
     <>
+     <Header/>
      <div className="payment-success-container">
       <div className="payment-success-card">
         <div className="payment-success-header">

@@ -37,40 +37,84 @@ export default function Header() {
       <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
         <ul className="navbar-nav ml-auto">
           <li className="nav-item ml-2"><Link className='nav-link' to={'/'}>Home</Link></li>
+          {currentUser ? (
+    <>
+        <li className="nav-item ml-2">
+            <Link className="nav-link" to={'/suggestions'}>Suggestions</Link>
+        </li>
+        <li className="nav-item ml-2">
+            <Link className="nav-link" to={'/acceptedList'}>Accepted Interests</Link>
+        </li>
+        {currentUser.isSubscribed && (
+            <li className="nav-item ml-2">
+                <Link className="nav-link" to={'/plans'}>My Package</Link>
+            </li>
+        )}
+    </>
+) : (
+    <li className="nav-item ml-2">
+        <Link className='nav-link' to={'/'}>Search</Link>
+    </li>
+)}
+
+          </ul>
+          </div>
           {/* <li className="nav-item ml-2"><Link className='nav-link' to={'/'}>About Us</Link></li>
           <li className="nav-item ml-2"><Link className='nav-link' to={'/'}>Packages</Link></li>
           <li className="nav-item ml-2"><Link className='nav-link' to={'/'}>Contact Us</Link></li>
           <li className="nav-item ml-2"><Link className='nav-link' to={'/'}>Search</Link></li> */}
           {/* <li className="nav-item ml-2">{currentUser ?<div className="nav-item ml-2"> <Link className="nav-link" to={'/profile'}><i className="fa fa-user" aria-hidden="true"></i></Link> <Link className="nav-link" to={'/profile'}><i className="fa fa-sign-out" aria-hidden="true"></i></Link></div> : <Link className="nav-link" to={'/login'}><i className="fa fa-sign-in" aria-hidden="true"></i></Link> }</li>  */}
-          {currentUser ? (
-                                <div className="nav-item ml-2 d-flex">
-                                  
-                                    <Link className="nav-link" to={'/suggestions'} >
-                                        <i aria-hidden="true"></i>Suggestions
-                                    </Link> 
-                                    <Link className="nav-link" to={'/acceptedList'}>
-                                        <i aria-hidden="true"></i>Accepted Interests
-                                    </Link>
-                                     <Link className="nav-link" to={'/profile'}>
-                                        <i className="fa fa-user mr-2" aria-hidden="true"></i>
-                                    </Link>
-                                    <Link className="nav-link" onClick={handleLogout}>
-                                        <i  className="fa fa-sign-out" aria-hidden="true"></i>Logout
-                                    </Link>
-
-                                    <div>
-                    <p className="mb-1 h5"><Link to='/suggestions'>{}</Link></p>
-                    <p className="small text-muted mb-0"><Link className="text-black remove-link"></Link></p>
-                 </div>
-                                </div>
-                            ) : (
-                                <Link className="nav-link" to={'/login'}>
-                                    <i className="fa fa-sign-in" aria-hidden="true"></i>Login
+          <ul className="navbar-nav ml-auto">
+                    {currentUser ? (
+                        <>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/profile">
+                                    <i className="fa fa-user mr-1">{currentUser.username}</i>
                                 </Link>
-                            )}
-        </ul>
-      </div>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" onClick={handleLogout}>
+                                    <i className="fa fa-sign-out mr-1"></i> 
+                                </Link>
+                            </li>
+                        </>
+                    ) : (
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/login">
+                                <i className="fa fa-sign-in mr-1"></i> Login
+                            </Link>
+                        </li>
+                    )}
+                </ul>
+
+
+       
+      
     </div>
   </nav>
   )
 }
+
+
+ 
+// {currentUser ? (
+  // <div className="nav-item ml-2 d-flex">
+    
+
+  //      <Link className="nav-link" to={'/profile'}>
+  //         <i className="fa fa-user mr-2"></i>
+  //     </Link>
+  //     <Link className="nav-link" onClick={handleLogout}>
+  //         <i  className="fa fa-sign-out"></i>Logout
+  //     </Link>
+
+  //     <div>
+{/* <p className="mb-1 h5"><Link to='/suggestions'>{}</Link></p>
+<p className="small text-muted mb-0"><Link className="text-black remove-link"></Link></p> */}
+// </div>
+//   </div>
+// ) : (
+  // <Link className="nav-link" to={'/login'}>
+  //     <i className="fa fa-sign-in"></i>Login
+  // </Link>
+// )}

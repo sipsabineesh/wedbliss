@@ -81,11 +81,11 @@
     }
     
  .navbar-dark .navbar-nav .nav-link.active{
-   color:#1957f3 !important;
+   color:#dba514 !important;
   }
   
  .navbar-dark .navbar-nav .nav-link:hover{
-   color:#1957f3;
+   color:#dba514;
   }
     
  .navbar {
@@ -225,12 +225,21 @@
   
   .banner{
   /* background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url(../images/bkgrnd.jpg); */
-  background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url(./assets/images/bkgrnd.jpg);
+  /* background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url(https://res.cloudinary.com/dcsdqiiwr/image/upload/v1715494333/login_img_yfqr6e.jpg); */
+  /* background-image:url(https://res.cloudinary.com/dcsdqiiwr/image/upload/v1715494333/login_img_yfqr6e.jpg); */
   background-attachment:fixed;
   height:100vh;
   width:100%;
   }
-   
+  .home-banner{
+    background-image:url(https://res.cloudinary.com/dcsdqiiwr/image/upload/v1715494333/login_img_yfqr6e.jpg) !important;
+  }
+  
+  .admin-banner{
+  background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url(https://res.cloudinary.com/dcsdqiiwr/image/upload/v1715494333/login_img_yfqr6e.jpg) !important;
+    
+  }
+
   .banner .caption h4{
   color:#fff;
   font-size:20px; 
@@ -278,7 +287,7 @@
   transform:translate(-50%,-50%);
   }
   
-  .btn
+  /* .btn
   {
   text-decoration:none; 
   color:#fff;
@@ -292,24 +301,24 @@
    color:#000;
    background-color:#fff;
    box-shadow:inset 12em 0 0 0 #fff;
-  }
+  } */
  
   .btns
   {
   background-color:#000;
   text-decoration:none; 
-  color:#fff;
+  color:#dba514 !important;
   padding:10px 30px;
-  border:1px solid #000;
+  border:1px solid #dba514;
   transition:0.6s ease;
   }
   
   .btns:hover
   {
-   box-shadow:inset 12em 0 0 0 #fff;
+   /* box-shadow:inset 12em 0 0 0 #dba514; */
    text-decoration:none; 
-   color:#000;
-   background-color:#fff;
+   color:#000 !important;
+   background-color:#dba514;
   }
   
   /** about section css **/
@@ -343,8 +352,16 @@
    } 
    
   /**package section css**/
+.package{
+  background-image:url(./assets/images/showcontact_img.jpg);
+  background-attachment:fixed;
+  min-height: 100vh;
+  width:100%;
+}
+
   .package .package_box{
-    border:1px solid #fafafa;
+    background-color: #fff;
+    border:1px solid #e0c40e;
     transition:all 0.5s;
     }
  
@@ -400,7 +417,9 @@
   /**Contact Section css**/
   .contact
   {
-   background-image:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url(./assets/images/contact.jpeg);
+   /* background-image:url(./assets/images/contact.jpeg); */
+   background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)),url(./assets/images/contact.jpeg);
+   /* url(https://img2.shaadi.com/assests/2023/images/shaadi-desktop-banner-v1.webp) */
    background-attachment:fixed;
   }
    
@@ -623,26 +642,27 @@
    background-attachment:fixed;
   }
   .contact .signup-form {
-  background:linear-gradient(to right,transparent,rgba(200,200,200,0.1),transparent);
+  background:linear-gradient(to right,transparent,rgba(0,0,0),transparent);
   padding:30px;
   }
   
+
   .contact .signup-form input,
   .contact .signup-form textarea{
-    color:#fff;
-    background:transparent;
+    color:#000;
+    background:#fff;
     padding:10px 15px;
-    border-radius:0;
+    border-radius:8px;
     width:100%;
     border:1px solid rgba(0,0,0,0.28);
-    margin-bottom:15px;
-    font-size:12px;
+    margin-bottom:25px;
+    font-size:14px;
     transition:0.3s all;
    }
    
   .contact .signup-form input::placeholder,
   .contact .signup-form textarea::placeholder{
-    color:#fff;
+    color:#000;
   }
   
   .contact .signup-form input:focus,
@@ -680,13 +700,14 @@
  .signup-form .select-box {
     width:100%;
     position:relative;
+    margin-bottom:12px;
   }
   
   .signup-form .select-box select{
     height:42px;
     padding:10px 15px;
     line-height:18px;
-    font-size:16px;
+    font-size:14px;
     width:100%;
     margin-bottom:15px;
     border:1px solid #ccc; 
@@ -873,6 +894,17 @@
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(38, 143, 255, 0.25);
 }
+
+.custom-carousel .carousel-inner {
+  height: 25%; 
+}
+
+.custom-carousel .carousel-item img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
  /*  
  .contact .signup-form .gender-details{
    position: absolute;
@@ -1026,6 +1058,53 @@
         margin-bottom: 10px;
       }
       
+      .profile-width{
+        width:75%;
+      }
+
+      .profile-button{
+        width:221px;
+        margin-left:15%;
+      }
+
+      .gradient-custom-2 {
+          /* fallback for old browsers */
+          background: #000;
+      
+      
+        /* fallback for old browsers */
+        /* background: #fccb90; */
+      
+        /* Chrome 10-25, Safari 5.1-6 */
+        /* background: -webkit-linear-gradient(to right, #b78628, #c69320, #dba514, #fcc201); */
+      
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        /* background: linear-gradient(to right, #b78628, #c69320, #dba514, #fcc201); */
+      }
+      
+      .preference-form-section {
+        background: linear-gradient(to right, #f8f9fa, #e9ecef); /* Adjust the gradient colors as needed */
+        padding: 50px 0;
+      }
+      
+      .preference-form {
+        background-color: rgba(255, 255, 255, 0.9); /* Transparent background */
+        padding: 20px;
+        border-radius: 10px;
+      }
+      
+      .preference-form input[type="text"],
+      .preference-form select {
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      
+      .preference-form button {
+        border-radius: 5px;
+        padding: 10px 20px;
+      }
       
 
       
@@ -1265,7 +1344,72 @@
       }
       
       
+      .text-margin {
+        margin-bottom: 75px;
+      }
+
+      .forgot-password-button {
+        border: none;
+        background-color: #fff;
+      }
       
+      .forgot-password-margin, .change-password-margin {
+        margin-top: 14%;
+      }
+
+      .card-mid{
+       height:50%;
+      }
+
+      /* Pagination styles */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+
+  .pagination li {
+    margin: 0 5px;
+  }
+
+  .pagination a {
+    display: block;
+    padding: 10px 15px;
+    background-color :#000;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #dba514;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .pagination a:hover {
+    background-color: #dba514;
+    color: #000;
+  }
+
+  .pagination .active a {
+    background-color: #dba514;
+    color: #000 !important;
+    border-color: #dba514;
+    border: 1px solid #ddd;
+  }
+
+  #home {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-responsive {
+    flex: 1;
+}
+.table th, .table td {
+  vertical-align: middle;
+}
+
  @media only screen and (max-width:991px){
  
    .navbar .container{
@@ -1336,3 +1480,92 @@
       max-width: 90%;
     }
   }
+
+  @media (min-width: 768px) {
+    .gradient-form {
+      height: 100vh !important;
+    }
+  }
+  @media (min-width: 769px) {
+    .gradient-custom-2 {
+      border-top-right-radius: .3rem;
+      border-bottom-right-radius: .3rem;
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    .profile-button {
+      width: 180px;
+      margin-left: 24%;
+    }
+  }
+  
+  @media screen and (max-width: 992px) {
+    .profile-button {
+      width: 160px;
+      margin-left: 2%;
+      margin-top: 40px; 
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .profile-button {
+      /* width: 140px; */
+      margin-left:26%;
+      margin-top: 40px; 
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    .profile-button {
+      /* width: 120px; */
+      margin-left: 18%;
+      margin-top: 40px; 
+    }
+  }
+  
+  @media screen and (max-width: 400px) {
+    .profile-button {
+      /* width: 75%; */
+      margin-left: 12%;
+      margin-top: 30px; 
+    }
+  }
+  
+  @media screen and (max-width: 320px) {
+    .profile-button {
+      /* width: 80%; */
+      margin-left: 10%;
+      margin-top: 20px;
+    }
+  }
+  
+@media (max-width: 575.98px) {
+  #home-title {
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  #home-title {
+    margin-top: 5%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  #home-title {
+    margin-top: 10%;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  #home-title {
+    margin-top: 15%;
+  }
+}
+
+@media (min-width: 1200px) {
+  #home-title {
+    margin-top: 30%;
+  }
+}

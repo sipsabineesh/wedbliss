@@ -3,7 +3,6 @@ import Plan from '../models/planModel.js'
 import { errorHandler } from "../utils/error.js"
 
 export const getPlans = async(req,res,next) => {
-  console.log("plan CCCCCCCCCCCOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONTROLLER")
     const  plans = await Plan.find({isDeleted:false})
     .then(plan => {
      //res.send(user) 
@@ -11,6 +10,7 @@ export const getPlans = async(req,res,next) => {
      res.json({plan})
  })
    .catch(err => {
+    console.log(err)
      next(errorHandler(500, 'Error occured while retrieving data'));
  })
   

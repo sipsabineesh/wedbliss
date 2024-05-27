@@ -1,173 +1,215 @@
-import React, { useState,useEffect } from 'react';
-import { Link } from "react-router-dom"
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom"
+import { useDispatch,useSelector } from 'react-redux'
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import Plans from './Plans';
+import Suggestions from './Suggestions';
 
-export default function Home()  {
-    const [user,setUser] = useState({})
-    useEffect(() => {
-        const handleScroll = () => {
-          const scroll = window.scrollY;
-          const navbar = document.querySelector(".navbar");
-          if (scroll >= 10) {
-            navbar.classList.add("nav-scroll");
-          } else {
-            navbar.classList.remove("nav-scroll");
+import { useGetUserQuery } from '../../redux/user/userApiSlice';
+import { Carousel } from 'react-bootstrap';
+import { setPreference } from '../../redux/user/userSlice';
+
+export default function Home() {
+    const [user, setUser] = useState({});
+    const { currentUser } = useSelector(state => state.user);
+    const  dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [formData, setFormData] = useState({})
+
+    // const { data: userData, error, isLoading } = useGetUserQuery(currentUser?._id);
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value});
+      }
+
+    const handleSubmit = async(e) => {
+        e.preventDefault()
+        console.log("formData")
+
+        console.log(formData)
+     dispatch(setPreference(formData))
+     navigate('/signup')
+    }
+  useEffect(() => {
+      async function fetchSubscriptionStatus() {
+          try {
+            const response = await fetch(`/api/user/getUser/${currentUser._id}`); 
+            const data = await response.json();
+            setUser(data.user);
+          } catch (error) {
+              console.error('Error fetching subscription status:', error);
           }
-        };
-    
-        window.addEventListener('scroll', handleScroll);
-    
-        return () => {
-          window.removeEventListener('scroll', handleScroll);
-        };
-      }, []);
+      }
+
+      if (currentUser) {
+          fetchSubscriptionStatus();
+      }
+  }, [currentUser]);
+
+   
     return (
         <>
         <Header/>
-          <section id="home" className="banner cover-bg">
-            <div className="container h-100">
-              <div className="row align-items-center h-100">
-                <div className="col-12 caption text-center">
-                  <div className="button col-lg-6 col-md-6 col-sm-12">
-                   {/* <Link to="/signup" className="btn">Signup</Link>
-                   <Link to="/login" className="btn">Login</Link> */}
+
+        {currentUser ? ( 
+                // user.hasDetailsAndPreferences ? (
+                  user.isSubscribed ? (
+                        <Suggestions />
+                    ) : (
+                        <Plans />
+                    )
+                // ) : (
+                //     <>
+                //         <EditProfile />
+                //         <PreferenceEntry />
+                //     </>
+                // )
+            ) : (
+               
+                <div>
+            {/* <Carousel className="custom-carousel">
+            <Carousel.Item>
+              <img
+                className="d-block w-100"
+                src="https://res.cloudinary.com/dcsdqiiwr/image/upload/v1715485767/banner1_npcujk.jpg"
+                alt="First slide"
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="d-block w-100"
+                src="https://res.cloudinary.com/dcsdqiiwr/image/upload/v1715486294/mari-lezhava-egz7W1zHYbU-unsplash_dohexs.jpg"
+                alt="Second slide"
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="d-block w-100"
+                src="https://res.cloudinary.com/dcsdqiiwr/image/upload/v1715487561/nathan-dumlao-8Lq-EsfI9Po-unsplash_guwis4.jpg"
+                alt="Third slide"
+              />
+            </Carousel.Item>
+          </Carousel> */}
+       <section id="home" className="home-banner banner signup contact section_padding cover-bg">
+  <div className="container">
+    <div className="row">
+      <div className="section_title text-center">
+        <p></p>
+        <h3></h3>
+      </div>
+
+      <div className="col-md-12" id="home-title">
+        <h3 className="text-white">Creating bonds that last a lifetime</h3>
+        <div className="">
+          <form onSubmit={handleSubmit} className="signup-form">
+            <div className="row">
+              <div className="col-md-3">
+                <div className="form-group">
+                <label className="text-white">Religion</label>
+                  <div className="select-box">
+                    <select id="gender" style={{ width: "100%" }} placeholder="Gender" onChange={handleChange}>
+                      <option disabled selected hidden>Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
                   </div>
-                  {/* <div className="social_icon text-center mt-4">
-                    <a href="#"><span><i className="fa fa-facebook"></i></span></a>
-                    <a href="#"><span><i className="fa fa-twitter"></i></span></a>
-                    <a href="#"><span><i className="fa fa-instagram"></i></span></a>
-                    <a href="#"><span><i className="fa fa-youtube-play"></i></span></a>
-                  </div> */}
                 </div>
               </div>
-            </div>
-          </section>
-          <section id="about" className="about section_padding pb-0">
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-lg-12 section_title text-center">
-                  <p>Who We Are</p>
-                  <h3>About Us</h3>
-                </div>
-                <div className="col-lg-6 col-md-6 col-sm-12">
-                  <div className="part_photo">
-                    <img className="img-fluid pb-100 about-pic" />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-6 col-sm-12">
-                  <div className="part_text">
-                    <h4 className="mb-30">Your soulmate is waiting for you</h4>
-                    <p className="pb-35">Welcome to the most trusted Matrimonial site in South India.</p>
-                    <a href="#" className="btns mr-2">Subscribe</a>
-                    <a href="#" className="btns">Get your Soulmate</a>
+              <div className="col-md-3">
+                <div className="form-group">
+                  <label className="text-white">Age Range</label>
+                  <div className="row">
+                    <div className="col">
+                      <input type="number" id="ageFrom" style={{ width: "100%" }} placeholder="From" onChange={handleChange} />
+                    </div>
+                    <div className="col">
+                      <input type="number" id="ageTo" style={{ width: "100%" }} placeholder="To" onChange={handleChange} />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-          <section className="showContact section_padding text-center cover-bg">
-            <div className="container">
-              <h2>If you are interested</h2>
-              <a href="#" className="btns mt-20">More Details</a>
-            </div>
-          </section>
-          <section id="package" className="package section_padding">
-            <div className="container">
-              <div className="row">
-                <div className="section_title text-center">
-                  <p>What We Do</p>
-                  <h3>Packages</h3>
+              <div className="col-md-3">
+                <div className="form-group">
+                  <label className="text-white">Religion</label>
+                  <div className="select-box">
+                    <select id="religion" style={{ width: "100%" }} placeholder="Religion" onChange={handleChange}>
+                      <option disabled selected hidden>Religion</option>
+                      <option value="hindu">Hindu</option>
+                      <option value="christain">Christian</option>
+                      <option value="muslim">Muslim</option>
+                    </select>
+                  </div>
                 </div>
-                <div className="col-lg-4 col-md-6 col-sm-12 py-15">
-                  <div className="package_box box">
+              </div>
+              <div className="col-md-3">
+                <div className="form-group">
+                  <label className="text-white">Mother Tongue</label>
+                  <input type="text" id="motherTongue" style={{ width: "100%" }} placeholder="Mother Tongue" onChange={handleChange} />
+                  {/* {errors.motherTongue && <span className="errorMsg">{errors.motherTongue}</span>} */}
+                </div>
+              </div>
+              <div className="col-md-12">
+                <button type="submit" className="btns">Let's Begin</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+         
+                   <section id="package" className="package section_padding">
+    <div className="container">
+        <div className="row">
+            <div className="section_title text-center">
+                <p></p>
+                <h3>Features</h3>
+            </div>
+            <div className="col-lg-4 col-md-6 col-sm-12 py-15">
+                <div className="package_box box">
                     <div className="icon">
-                      <i className="fa fa-star-half-o"></i>
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
                     </div>
                     <div className="text">
-                      <h4 className="box_title mb-20">1 Month Package</h4>
-                      <p>hvjyftydtestfghghyty</p>
+                        <h4 className="box_title mb-20">Verified Profiles</h4>
+                        <p>hvjyftydtestfghghyty</p>
                     </div>
-                  </div>
                 </div>
-                {/* More package boxes */}
-              </div>
             </div>
-          </section>
-          <section id="contact" className="contact section_padding cover-bg">
-            <div className="container">
-                <div className="row">
-                    <div className="section_title text-center">
-                        <p>Get In Touch</p>
-                        <h3>Contact</h3>
+            <div className="col-lg-4 col-md-6 col-sm-12 py-15">
+                <div className="package_box box">
+                    <div className="icon">
+                    <i class="fa fa-shield" aria-hidden="true"></i>
                     </div>
-                    <div className="col-md-12">
-                        <div className="part_info">
-                            <div className="row">
-                                <div className="col-md-4 xs-md-30">
-                                    <div className="info-block text-center">
-                                        <div className="icon">
-                                            <i className="fa fa-map-marker"></i>
-                                        </div>
-                                        <h5>Location</h5>
-                                        <p>India</p>
-                                    </div>
-                                </div>
-                                <div className="col-md-4 xs-md-30">
-                                    <div className="info-block text-center">
-                                        <div className="icon">
-                                            <i className="fa fa-mobile"></i>
-                                        </div>
-                                        <h5>Phone</h5>
-                                        <p>987654321</p>
-                                    </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="info-block text-center">
-                                        <div className="icon">
-                                            <i className="fa fa-envelope"></i>
-                                        </div>
-                                        <h5>Email Address</h5>
-                                        <p>info@wedbliss.online</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="text">
+                        <h4 className="box_title mb-20">Enhanced Privacy Settings</h4>
+                        <p>hvjyftydtestfghghyty</p>
                     </div>
+                </div>
+            </div>
+            <div className="col-lg-4 col-md-6 col-sm-12 py-15">
+                <div className="package_box box">
+                    <div className="icon">
+                    <i class="fa fa-handshake-o" aria-hidden="true"></i>
+                    </div>
+                    <div className="text">
+                        <h4 className="box_title mb-20">Trustworthy</h4>
+                        <p>hvjyftydtestfghghyty</p>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</section>
+{/* <Footer/>    */}
+                </div>
+                 
+           
+            )}
 
-                    <div className="col-md-12">
-                        <div className="contact-form">
-                            <form>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <input type="text" name="name" placeholder="Name" required />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <input type="email" name="email" placeholder="Email" required />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-12">
-                                        <div className="form-group">
-                                            <input type="text" name="subject" placeholder="Subject" required />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-12">
-                                        <textarea placeholder="Type Your Message" required></textarea>
-                                    </div>
-                                    <div className="col-md-12">
-                                        <button type="submit" className="btns">Send Message</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <Footer/>
      </>
     )
   }

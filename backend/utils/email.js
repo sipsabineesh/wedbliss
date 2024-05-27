@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer'
 
-export const  sendEmail = async(email,message) => {
- 
+export const  sendEmail = async(email,subject,message) => {
     let mailTransporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -12,8 +11,8 @@ export const  sendEmail = async(email,message) => {
      
     let mailDetails = {
         from: 'info@wedbliss.com',
-        to: 'sipsabineesh@gmail.com',
-        subject: 'OTP',
+        to: 'sipsabineesh@gmail.com',//email
+        subject: subject,
         text:message
     };
     console.log(mailDetails) 
@@ -22,7 +21,7 @@ export const  sendEmail = async(email,message) => {
         if (err) {
              console.log('Error Occurs' + err.message)
         } else {
-             console.log('Email sent successfully')
+            return
         }
    });
 }  

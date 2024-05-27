@@ -1,8 +1,10 @@
 import express from 'express'
-import { signup,login,logout, otpVerify } from '../controllers/authController.js';
+import { signup,google,login,logout, otpVerify,resendOTP } from '../controllers/authController.js';
 const router = express.Router();
 router.post('/signup',signup)
+router.post('/google',google)
 router.post('/otpVerify',otpVerify)
+router.post('/resendotp',resendOTP)
 router.post('/login',login)
 router.get('/logout',logout)
 

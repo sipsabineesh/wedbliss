@@ -2,6 +2,7 @@ import { useState,useEffect } from 'react';
 import { Link ,useNavigate } from 'react-router-dom';
 import {useGetPlansQuery } from '../../redux/user/userApiSlice';
 import OrderSummary from './OrderSummary';
+import Header from '../../components/Header';
 
 export default function Plans() {
     const navigate = useNavigate();
@@ -19,13 +20,14 @@ export default function Plans() {
   };
 
     const { data: planList, isLoading, isError, error } = useGetPlansQuery();
-
+console.log(planList)
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error: {error.message}</div>;
  
     
   return (
     <>
+    <Header/>
               <section id="package" className="package section_padding">
             <div className="container">
               <div className="row">

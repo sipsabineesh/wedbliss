@@ -1,6 +1,5 @@
 import express from 'express'
-import { getUsers } from '../controllers/userController.js'
-import { verifyUser,blockUnblockUser } from '../controllers/adminController.js';
+import { getUsers,verifyUser,blockUnblockUser } from '../controllers/adminController.js';
 import { getPlans,createPlan,editPlan,deletePlan } from '../controllers/planController.js'
 import { getSubscriptions,approveSubscription } from '../controllers/subscriptionController.js';
 const router = express.Router();

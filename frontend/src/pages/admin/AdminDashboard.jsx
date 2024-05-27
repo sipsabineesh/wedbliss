@@ -8,7 +8,7 @@ export default function Home()  {
     return (
         <>
         <AdminHeader/>
-          <section id="home" className="banner cover-bg">
+          <section id="home" className="admin-banner banner cover-bg">
             <div className="container h-100">
               <div className="row align-items-center h-100">
                 <div className="col-12 caption text-center">

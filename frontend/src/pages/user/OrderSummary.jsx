@@ -1,40 +1,49 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { useSelector } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
+import { setPlan } from '../../redux/user/userSlice';
 import {loadStripe} from '@stripe/stripe-js'
 Modal.setAppElement('#root');
 
-const makePayment = async(selectedPlan,userId) => { 
-  selectedPlan.userId = userId
- const stripe = await loadStripe("pk_test_51P7BB4J1myCpgaSJHfkOMqHjwpMGlveAFJNoqLN6msEhwDdA36x2a79fGFiDLdtUxgPJGiIZUPhKfCC4uS1hYXXT00SlDlHENm")
-
- const body = {
-    plan:selectedPlan
- }
- const header = {
-    "Content-Type": "application/json"
-}
-const response = await fetch(`http://localhost:3000/api/user/createCheckoutSession`,{
-    method : "POST",
-    headers:header,
-    body:JSON.stringify(body)
-})
-
-const session = await response.json()
-const result = stripe.redirectToCheckout({
-    sessionId :session.id
-})
-
-if(await result.error){
-    console.log(result.error)
-}
-
-}
 
 const OrderSummary = ({ isOpen, closeModal, selectedPlan  }) => {
   const { currentUser } = useSelector(state => state.user);
+  const dispatch = useDispatch()
   console.log(currentUser)
   console.log("currentUser---------------------")
+
+
+  const makePayment = async(selectedPlan,userId) => { 
+    selectedPlan.userId = userId
+    dispatch(setPlan(selectedPlan));
+    
+    const stripe = await loadStripe("pk_test_51P7BB4J1myCpgaSJHfkOMqHjwpMGlveAFJNoqLN6msEhwDdA36x2a79fGFiDLdtUxgPJGiIZUPhKfCC4uS1hYXXT00SlDlHENm")
+
+    const body = {
+        plan:selectedPlan
+    }
+    const header = {
+        "Content-Type": "application/json"
+    }
+    const response = await fetch(`http://localhost:3000/api/user/createCheckoutSession`,{
+        method : "POST",
+        headers:header,
+        body:JSON.stringify(body)
+    })
+
+    const session = await response.json()
+    // selectedPlan.sessionId = session.id
+    // dispatch(setPlan(selectedPlan));
+    const result = stripe.redirectToCheckout({
+        sessionId :session.id
+    })
+   
+    if(await result.error){
+        console.log(result.error)
+    }
+
+}
+
   return (
     <Modal
       isOpen={isOpen}
@@ -60,10 +69,8 @@ const OrderSummary = ({ isOpen, closeModal, selectedPlan  }) => {
               <p className="text-black"><strong>Plan Name:</strong> {selectedPlan.planName}</p>
               <p className="text-black"><strong>Validity:</strong> {selectedPlan.planValidity}</p>
               <p className="text-black"><strong>Price:</strong> {selectedPlan.planPrice}</p>
-              <p className="text-black"><strong>Plan Name:</strong> {selectedPlan.planName}</p>
-              <p className="text-black"><strong>Validity:</strong> {selectedPlan.planValidity}</p>
-              <p className="text-black"><strong>Price:</strong> {selectedPlan.planPrice}</p>
-           
+              <p className="text-black"><strong>No.Of Contacts:</strong> {selectedPlan.noOfContacts}</p>
+              <p className="text-black"><strong>No.Of Messages:</strong> {selectedPlan.noOfMessages}</p>
             </>
           )}
         </div>

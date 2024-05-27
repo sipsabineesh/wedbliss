@@ -13,7 +13,7 @@ const subscriptionSchema = new mongoose.Schema({
         type:String,
     },
     remainingValidity:{
-        type: String, 
+        type: Number, 
     },
     remainingContacts:{
         type:Number,
