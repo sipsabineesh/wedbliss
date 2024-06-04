@@ -42,7 +42,6 @@ export const signup = async (req,res,next) => {
           console.log(req.body.preference)
           const userId = userData._id
           if(req.body.preference){
-               console.log("inside ifffffffffffffffffffffffffff"+userId)
                const { gender, ageFrom, ageTo, religion, motherTongue } = req.body.preference;
                const newUserPreference = new Preference( {userId,gender,ageFrom,ageTo,religion,motherTongue})
                await newUserPreference.save()
@@ -74,7 +73,7 @@ export const signup = async (req,res,next) => {
                  res.status(404).send({message:`Cannot update  with ${id}.May be user not found`})
              }
              else{
-               res.status(200).json(data)
+               res.status(200).json({userId:validUser._id})
              }
           })
           }

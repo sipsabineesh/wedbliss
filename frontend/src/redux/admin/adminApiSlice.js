@@ -42,7 +42,9 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             body:data
         }),
     }), 
-    
+    getUser:builder.query({
+        query : (id) =>`/api/admin/getUser/${id}`,
+    }),
         // logout:builder.mutation({
         //     query : () => ({
         //         url:'http://localhost:8000/api/users/logout',
@@ -57,4 +59,6 @@ export const {
     useEditPlanMutation,
     useDeletePlanMutation,
     useApproveSubscriptionMutation,
+    useGetUserQuery,
+
  } = adminApiSlice;

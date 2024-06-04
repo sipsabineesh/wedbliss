@@ -4,6 +4,7 @@ const initialState = {
     currentUser :null,
     selectedPlan: null,
     currentUserPreference:null,
+    userId:'',
     loading:false,
     error:'',
 }
@@ -29,8 +30,9 @@ const userSlice = createSlice({
         state.loading=false;
         state.error = ''
      },
-     otpSuccess:(state) => {
+     otpSuccess:(state,action) => {
       state.loading = false;
+      state.userId = action.payload
      },
      editUserSuccess:(state,action) => {
       state.currentUser = action.payload;

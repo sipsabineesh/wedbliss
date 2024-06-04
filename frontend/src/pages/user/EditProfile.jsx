@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { editUserSuccess, logout } from '../../redux/user/userSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
+// import axios from 'axios'; 
 import { toast } from 'react-toastify';
 import Header from '../../components/Header.jsx';
 
@@ -11,7 +12,7 @@ import Header from '../../components/Header.jsx';
 const indianLanguages = [
   'Assamese', 'Bengali', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kannada',
   'Kashmiri', 'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali',
-  'Odia', 'Punjabi', 'Sanskrit', 'Santali', 'Sindhi', 'Tamil', 'Telugu', 'Urdu'
+  'Odia', 'Punjabi', 'Sanskrit', 'Santali', 'Sindhi', 'Tamil', 'Tulu','Telugu', 'Urdu'
 ];
 
 const validationSchema = Yup.object({
@@ -45,28 +46,22 @@ export default function EditProfile() {
   const [dob, setDOB] = useState('');
 
   useEffect(() => {
-    if (imageFile) {
-      uploadImage(imageFileURL);
-    }
+    // if (imageFile) {
+    //   uploadImage(imageFileURL);
+    // }
     setEmail(currentUser.email);
     setDOB(convertDateFormat(currentUser.dob));
   }, [currentUser, imageFileURL]);
 
-  const uploadImage = (base6Encode) => {
-    try {
-      // Image upload logic here
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
+        setImageFile(file);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
         setImageFileURL(reader.result);
       };
     }
@@ -116,16 +111,16 @@ export default function EditProfile() {
                   validationSchema={validationSchema}
                   onSubmit={async (values, { setSubmitting, setErrors }) => {
                     try {
-                      if (imageFile) {
-                        uploadImage();
+                      let imageUrl = '';
+                      if (imageFileURL) {
+                           imageUrl =  imageFileURL
                       }
-
                       const res = await fetch(`/api/user/editProfile/${currentUser._id}`, {
                         method: 'PUT',
                         headers: {
                           'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(values),
+                        body: JSON.stringify({...values, profilePhoto: imageUrl}),
                       });
 
                       const data = await res.json();

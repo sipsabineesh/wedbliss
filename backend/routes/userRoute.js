@@ -6,6 +6,7 @@ import { getUsers,
         sendChangeEmailOTP,
         changeEmailAddress,
         getUser,
+        addUser,
         editUser,
         suggestionCount,
         suggestUsers,
@@ -27,7 +28,8 @@ router.get('/',getUsers)
 router.post('/sendChangePasswordLink',sendChangePasswordLink)
 router.post('/changePassword',changePassword)
 router.post('/sendChangeEmailOTP',sendChangeEmailOTP)
-router.post('/changeEmailAddress',changeEmailAddress)
+router.post('/changeEmailAddress',changeEmailAddress)  
+router.post('/addProfile',addUser)
 router.get('/getUser/:id',verifyBlocked,getUser)
 router.put('/editProfile/:id',verifyBlocked,editUser)
 router.get('/getSuggestionsCount/:id',verifyBlocked,suggestionCount)

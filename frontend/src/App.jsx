@@ -37,6 +37,8 @@ import VerifyEmailAddress from './pages/user/VerifyEmailAddress';
 import UpdateProfile from './pages/user/UpdateProfile';
 import UserHome from './pages/user/UserHome';
 import HomePage from './pages/user/HomePage';
+import AddProfile from './pages/user/AddProfile';
+import AdminViewProfile from './pages/admin/AdminViewProfile'
 
 
 export default function App() {
@@ -59,7 +61,7 @@ export default function App() {
         <Route path="/otpVerify" element={<UserOTPVerification/>}/>
         <Route path="/forgotPassword" element={<ForgotPassword/>}/>
         <Route path="/changePassword/:email" element={<ChangePassword/>}/>
-        
+        <Route path="/addProfile" element={<AddProfile/>}/>
       
         <Route element={<AdminPrivateRoute/>}>
          <Route path="/dashboard" element={<AdminDashboard/>}/>
@@ -68,7 +70,8 @@ export default function App() {
          <Route path="/createPlan" element={<AdminCreatePlan/>}/>
          <Route path="/editPlan/:id" element={<AdminEditPlan/>}/>
          <Route path="/subscriptionlist" element={<AdminSubscriptionList/>}/>
-
+         <Route path="/viewProfile/:id" element={<AdminViewProfile/>}/>
+         
         </Route>
         <Route element={<PrivateRoute/>}>
          <Route path="/profile" element={<Profile/>}/>

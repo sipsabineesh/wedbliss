@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
     },
     profilePhoto:{
         type:String,
-        default:"https://static-00.iconduck.com/assets.00/avatar-default-light-icon-512x512-6c79fqub.png"
+        default:"https://res.cloudinary.com/dcsdqiiwr/image/upload/v1717406174/ava_xlfouh.png"
     },
     maritalStatus:{
         type:String,

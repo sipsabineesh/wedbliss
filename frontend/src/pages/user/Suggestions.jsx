@@ -108,6 +108,7 @@ export default function Suggestions() {
         throw new Error('Network response was not ok');
       } else {
         toast.success("Interest Sent");
+        setInterestsSent(prev => [...prev, id]);
       }
       console.log(await res.json());
     } catch (error) {
@@ -117,7 +118,7 @@ export default function Suggestions() {
 
   const handleAccept =(async (id) => {
     try {
-      
+    alert(id)  
       const res = await fetch(`/api/user/acceptInterest/${currentUser._id}`, {
         method: 'PUT',
         headers: {
@@ -125,15 +126,16 @@ export default function Suggestions() {
         },
         body: JSON.stringify({ id: id }),
       });
-  
+  console.log(res)
       if (!res.ok) {
         throw new Error('Network response was not ok');
       }
       else{
         toast.success('Interest Accepted')
+        setAcceptedInterests(prev => [...prev, { interestId: id, acceptedBy: currentUser._id }]);
       }
   
-      console.log(await res.json()); // if you want to log the response data
+      console.log(await res.json()); 
     } catch (error) {
       console.error('Error handling interest:', error);
     }
@@ -154,7 +156,7 @@ export default function Suggestions() {
                   <div className="flex-shrink-0">
                     <img
                       style={{ width: '180px', height: '180px', borderRadius: '10px', objectFit: 'cover' }}
-                      src={newInterestUser.profilePhoto ? newInterestUser.profilePhoto : 'https://static-00.iconduck.com/assets.00/avatar-default-light-icon-512x512-6c79fqub.png'}
+                      src={newInterestUser.profilePhoto ? newInterestUser.profilePhoto : 'https://res.cloudinary.com/dcsdqiiwr/image/upload/v1717406174/ava_xlfouh.png'}
                       alt='Profile Photo'
                       className="img-fluid"
                     />
@@ -224,13 +226,21 @@ export default function Suggestions() {
                         </div>
                       </div>
                       <div className="d-flex pt-1">
-                        <button className="btns me-2" id={user._id} onClick={() => handleInterest(user._id)}>Send Interest</button>
+                        {/* <button className="btns me-2" id={user._id} onClick={() => handleInterest(user._id)}>Send Interest</button> */}
+                        <button
+                          className="btns me-2"
+                          id={user._id}
+                          onClick={() => handleInterest(user._id)}
+                          disabled={interestsSent.includes(user._id) || acceptedInterests.some(interest => interest.interestId === user._id)}
+                        >
+                          {acceptedInterests.some(interest => interest.interestId === user._id) ? 'Interest Accepted' : interestsSent.includes(user._id) ? 'Interest Sent' : 'Send Interest'}
+                        </button>
                         {/* <button className="btns">Message</button> */}
-                        {acceptedInterests.some(interest => interest.interestId === user._id) && (
+                        {/* {acceptedInterests.some(interest => interest.interestId === user._id) && (
                         <div className="alert alert-success mt-2" role="alert">
                           Interest Accepted
                         </div>
-                      )}
+                      )} */}
                       </div>
                     </div>
                   </div>

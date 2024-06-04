@@ -3,28 +3,13 @@ import { useNavigate} from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
 import { loginFailure,logout} from '../../redux/user/userSlice';
 import Header from '../../components/Header';
-import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
 
-const socket = io('http://localhost:3000');
-
 export default function Interests() {
-  const [newInterestUser, setNewInterestUser] = useState(null);
   const [interests,setInterests] = useState({})
   const { currentUser } = useSelector(state => state.user);
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  useEffect(() => { 
-    socket.on('newInterest', (userData) => {
-      console.log('New interest received from:', userData);
-      setNewInterestUser(userData);
-      toast.success(`You have received a new interest from ${userData.username}`);
-    });
-
-    return () => {
-      socket.off('newInterest');
-    };
-  },newInterestUser);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -100,45 +85,6 @@ export default function Interests() {
 
       <div className="package vh-100 content">
         <div className="container">
-        {newInterestUser && (
-          <div className="new-interest">
-            <h2>New Interest Received</h2>
-            <h4>Newly Received Interest</h4>
-            <div className="card" style={{ borderRadius: '15px' }}>
-              <div className="card-body p-4">
-                <div className="d-flex text-black mb-3">
-                  <div className="flex-shrink-0">
-                    <img
-                      style={{ width: '180px', height: '180px', borderRadius: '10px', objectFit: 'cover' }}
-                      src={newInterestUser.profilePhoto ? newInterestUser.profilePhoto : 'https://static-00.iconduck.com/assets.00/avatar-default-light-icon-512x512-6c79fqub.png'}
-                      alt='Profile Photo'
-                      className="img-fluid"
-                    />
-                  </div>
-                  <div className="flex-grow-1 ms-3">
-                    <h5 className="card-title">{newInterestUser.username}</h5>
-                    <p className="card-text">{newInterestUser.nativePlace || 'Unknown'}</p>
-                  </div>
-                </div>
-                <div className="d-flex justify-content-start rounded-3 p-2 mb-3"
-                  style={{ backgroundColor: '#efefef' }}>
-                  <div>
-                    <p className="small text-muted mb-1">Age</p>
-                    <p className="mb-0">{calculateAge(newInterestUser.dob)}</p>
-                  </div>
-                  <div className="px-3">
-                    <p className="small text-muted mb-1">Height</p>
-                    <p className="mb-0">{newInterestUser.height || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <p className="small text-muted mb-1">Qualification</p>
-                    <p className="mb-0">{newInterestUser.qualification || 'N/A'}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
           <div className="row justify-content-center">
             <div className="col-md-9 col-lg-7 col-xl-5 mt-5 w-100">
 

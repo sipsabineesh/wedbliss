@@ -116,7 +116,9 @@ export const getUser = async(req,res,next) => {
    const userId = req.params.id
   const  users =  await User.findOne({ _id: userId, isAdmin: false })
   .then(user => {
-   //res.send(user) 
+  console.log("USER")
+
+  console.log(user)
    res.json({user})
 })
  .catch(err => {
@@ -124,6 +126,35 @@ export const getUser = async(req,res,next) => {
    // res.status(500).send({message:err.message||"Error occured while retrieving data"})
 })
  
+}
+
+export async function addUser(req, res, next) {   try{
+  const userData = req.body
+  console.log(req.body)
+  try {
+  
+    if (userData.profilePhoto) {
+console.log("userData.profilePhoto")
+console.log(userData.profilePhoto)
+
+      const image = userData.profilePhoto ?  userData.profilePhoto : 'https://res.cloudinary.com/dcsdqiiwr/image/upload/v1717406174/ava_xlfouh.png';
+      const uploadResponse = await cloudinary.v2.uploader.upload(image);
+      updatedData.profilePhoto= uploadResponse.url ? uploadResponse.url :'https://res.cloudinary.com/dcsdqiiwr/image/upload/v1717406174/ava_xlfouh.png';
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+console.log("userData>>>>>>>>>>>:")
+console.log(userData)
+const newUser = new User(userData)
+const addUser = await newUser.save()
+  const {password, ...rest} = addUser._doc
+  res.status(200).json(rest)
+}
+catch(error){
+  next(error)
+}
 }
 
 export const editUser = async(req,res,next) => {
@@ -134,18 +165,21 @@ export const editUser = async(req,res,next) => {
   try{
     const id = req.params.id
     const updatedData = req.body
-    try {
     
-      if (updatedData.profilePhoto) {
-        const image = updatedData.profilePhoto;
-        const uploadResponse = await cloudinary.v2.uploader.upload(image);
-        updatedData.profilePhoto= uploadResponse.url;
-      }
+    try {
+      console.log("PROFILE iMAGE ===========")
+   console.log(updatedData.profilePhoto) 
+   if (updatedData.profilePhoto && typeof updatedData.profilePhoto === 'string') {
+    const uploadResponse = await cloudinary.v2.uploader.upload(updatedData.profilePhoto);
+    updatedData.profilePhoto = uploadResponse.url;
+  } else {
+    updatedData.profilePhoto = 'https://res.cloudinary.com/dcsdqiiwr/image/upload/v1717406174/ava_xlfouh.png';
+  }
     } catch (error) {
       console.log(error)
     }
 
-console.log("updatedData:")
+console.log("updatedData IIIIIIIIIIIIIIIIIIIMAGE>>>>>>>>>>>:")
 console.log(updatedData.profilePhoto)
     const updatedUser = await User.findByIdAndUpdate(
       id, 
@@ -154,6 +188,8 @@ console.log(updatedData.profilePhoto)
       },
       { new: true }
     )
+    console.log("updatedUser")
+    console.log(updatedUser)
     const {password, ...rest} = updatedUser._doc
     res.status(200).json(rest)
   }

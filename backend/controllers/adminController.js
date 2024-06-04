@@ -44,6 +44,23 @@ export const logout = async (req,res,next) =>{
 }
 
 
+
+
+export const getUser = async(req,res,next) => {
+    const userId = req.params.id
+   const  users =  await User.findOne({ _id: userId, isAdmin: false })
+   .then(user => {
+    //res.send(user) 
+    res.json({user})
+ })
+  .catch(err => {
+    next(errorHandler(500, 'Error occured while retrieving data'));
+    // res.status(500).send({message:err.message||"Error occured while retrieving data"})
+ })
+  
+ }
+ 
+
 export const getUsers = async(req,res,next) => {
    
     const  users = await  User.find({isAdmin:false,isVerifiedByOTP:true}).sort({_id:-1})

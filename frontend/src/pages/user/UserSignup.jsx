@@ -71,7 +71,8 @@ console.log(preference)
           setLoading(false)
          
           if(data.success === false) {
-            setError(data.message)
+            console.log("EEEEEEEEEERRRRRRRRROR")
+            setError(data)
           }
           else{
             console.log("ALL GOOD")
@@ -189,8 +190,8 @@ console.log(preference)
             {error.re_password && <span className="errorMsg">{error.re_password}</span>}
 
             <div className="text-center pt-1 mb-5 pb-1">
-              <div className="control">
-                <p className="errorMsg">{error ? error.message || "Something went wrong" : ""}</p>
+              <div className="control">{console.log("err------------or")}{console.log(error)}
+                <p className="errorMsg">{error ? error.message : ""}</p>
                 <button type="submit" disabled={loading} className="btns mb-4 w-100">{loading ? "Loading... " : "Register"}</button>
                 <OAuth />
               </div>

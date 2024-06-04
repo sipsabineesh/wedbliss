@@ -1,5 +1,5 @@
 import express from 'express'
-import { getUsers,verifyUser,blockUnblockUser } from '../controllers/adminController.js';
+import { getUser,getUsers,verifyUser,blockUnblockUser } from '../controllers/adminController.js';
 import { getPlans,createPlan,editPlan,deletePlan } from '../controllers/planController.js'
 import { getSubscriptions,approveSubscription } from '../controllers/subscriptionController.js';
 const router = express.Router();
@@ -13,6 +13,6 @@ router.put('/editPlan',editPlan)
 router.put('/deletePlan',deletePlan);
 router.get('/viewSubscription',getSubscriptions)
 router.put('/approveSubscription',approveSubscription)
-
+router.get('/getUser/:id',getUser)
 
 export default router
