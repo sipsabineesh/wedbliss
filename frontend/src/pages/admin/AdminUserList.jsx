@@ -231,7 +231,7 @@ export default function AdminUserList() {
                                                                     </button>
                                                                 </div>
                                                             </td>
-                                                            <td>
+                                                            {/* <td>
                                                                 {!user.isVerifiedByAdmin && (
                                                                     <div className="control">
                                                                         <button
@@ -243,7 +243,7 @@ export default function AdminUserList() {
                                                                         </button>
                                                                     </div>
                                                                 )}
-                                                            </td>
+                                                            </td> */}
                                                             <td>
                                                                 <div className="control">
                                                                     <button

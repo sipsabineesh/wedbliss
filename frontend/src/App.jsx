@@ -25,7 +25,7 @@ import Plans from './pages/user/Plans';
 import Success from './pages/user/Success';
 import Cancel from './pages/user/Cancel';
 import AdminSubscriptionList from './pages/admin/AdminSubscriptionList';
-import ChatWindow from './pages/user/ChatWindow';
+// import ChatWindow from './pages/user/ChatWindow';
 import Userlogin from './pages/user/Userlogin';
 import UserSignup from './pages/user/UserSignup';
 import UserOTPVerification from './pages/user/UserOTPVerification';
@@ -39,6 +39,11 @@ import UserHome from './pages/user/UserHome';
 import HomePage from './pages/user/HomePage';
 import AddProfile from './pages/user/AddProfile';
 import AdminViewProfile from './pages/admin/AdminViewProfile'
+import ShowContact from './pages/user/ShowContact';
+import Notifications from './pages/user/Notifications';
+// import { ChatProvider } from './context/ChatContext';
+import Messenger from './pages/user/Messenger';
+import MemberProfile from './pages/user/MemberProfile';
 
 
 export default function App() {
@@ -46,7 +51,7 @@ export default function App() {
     {/* <Header/> */}
     <ToastContainer position="top-right" />
     <Routes>
-      
+    {/* <ChatProvider> */}
         <Route path="/" element={<Home/>}/>
         {/* <Route path="/home" element={<UserHome/>}/> */}
         <Route path="/home" element={<HomePage/>}/>
@@ -86,8 +91,15 @@ export default function App() {
          <Route path="/plans" element={<Plans/>}/>
          <Route path="/success" element={<Success/>}/>
          <Route path="/cancel" element={<Cancel/>}/>
-         <Route path="/chat" element={<ChatWindow/>}/>
+         <Route path="/showContact" element={<ShowContact/>}/>
+         <Route path="/notifications/:notificationId" element={<Notifications/>} />
+         <Route path="/messenger" element={<Messenger/>}/>
+         <Route path="/memberProfile/:id" element={<MemberProfile/>}/>
+
+         
         </Route>
+    {/* </ChatProvider> */}
+
     </Routes>
   
   </Router>

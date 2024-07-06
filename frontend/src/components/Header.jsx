@@ -1,30 +1,79 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link,Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { logout } from '../redux/user/userSlice';
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
+import io from 'socket.io-client';
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
     const dispatch = useDispatch()
+    const {currentUser} = useSelector(state => state.user)
+
+    useEffect(() => {
+        if (currentUser) {
+            fetchNotifications();
+        }
+    }, [currentUser]);
+
+    // useEffect(() => {
+    //     const socket = io.connect('http://localhost:3000');
+    // console.log(socket)
+    //     socket.on('subscriptionRenewal', (notification) => {
+    //         console.log("NEW NOTFY : ",notification)
+    //         if (notification.userId === currentUser.id) {
+    //             setNotifications(prevNotifications => [...prevNotifications, notification]);
+    //             console.log('New Notification: ',notifications)
+    //         }
+    //     });
+    
+    //     return () => {
+    //         socket.disconnect();
+    //     };
+    // }, []);
+
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
+
+    const toggleDropdown = () => {
+      setIsDropdownVisible(!isDropdownVisible);
+    };
+
+  
+    const fetchNotifications = async () => {
+        try {
+            const res = await fetch(`/api/user/getRenewalNotification/${currentUser._id}`);
+            const data = await res.json();
+            if (res.ok) {
+                setNotifications(data.notifications); // Ensure this matches the response structure
+                console.log("Fetched notifications:", notifications);
+            } else {
+                console.error("Error fetching notifications:", data.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleLogout = async() => {
       try {
         const res = await fetch ('/api/auth/logout',{
           method:'GET',
           headers:{
               'Content-Type':'application/json',
-          },
+          }, 
       })
       dispatch(logout())
       } catch (error) {
         console.log(error)
       }
     }
-    const {currentUser} = useSelector(state => state.user)
-  return (
+   
+  return  (
     <nav className="header navbar navbar-expand-lg navbar-dark fixed-top">
       <div className="container">
       <div className="logo">
@@ -45,9 +94,14 @@ export default function Header() {
         <li className="nav-item ml-2">
             <Link className="nav-link" to={'/acceptedList'}>Accepted Interests</Link>
         </li>
-        {currentUser.isSubscribed && (
+        {/* {currentUser.isSubscribed && (
             <li className="nav-item ml-2">
                 <Link className="nav-link" to={'/plans'}>My Package</Link>
+            </li>
+        )} */}
+         {currentUser.isSubscribed && (
+            <li className="nav-item ml-2">
+                <Link className="nav-link" to={'/messenger'}>Messenger</Link>
             </li>
         )}
     </>
@@ -69,9 +123,29 @@ export default function Header() {
                         <>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/profile">
-                                    <i className="fa fa-user mr-1">{currentUser.username}</i>
+                                    <i className="C">{currentUser.username}</i>
                                 </Link>
                             </li>
+                            <div className="notification-wrapper">
+                                <Link className="nav-link"  onClick={toggleDropdown}>
+                                    <i className="fa fa-solid fa-bell"></i>
+                                     {notifications.length > 0 && (
+                                        <span className="notification-badge">{notifications.length}</span>
+                                     )}
+                                </Link>
+                              
+                                   {isDropdownVisible && (
+                                    <div className="notification-dropdown">
+                                        <ul>
+                                            {notifications.map((notification, index) => (
+                                                <li className="text-black" key={index}>
+                                                 <Link to={`/notifications/${notification._id}`}  className="remove-link">{notification.title}</Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
                             <li className="nav-item">
                                 <Link className="nav-link" onClick={handleLogout}>
                                     <i className="fa fa-sign-out mr-1"></i> 
@@ -118,3 +192,131 @@ export default function Header() {
   //     <i className="fa fa-sign-in"></i>Login
   // </Link>
 // )}
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import { Link } from 'react-router-dom';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { logout } from '../redux/user/userSlice';
+// import io from 'socket.io-client';
+
+// export default function Header() {
+//     const [isOpen, setIsOpen] = useState(false);
+//     const [notifications, setNotifications] = useState([]);
+//     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+//     const dispatch = useDispatch();
+//     const { currentUser } = useSelector(state => state.user);
+
+//     useEffect(() => {
+//         // Fetch notifications when the component mounts or when currentUser changes
+//         if (currentUser) {
+//             fetchNotifications();
+//         }
+//     }, [currentUser]);
+
+//     useEffect(() => {
+//         // Connect to Socket.IO server
+//         const socket = io.connect('http://localhost:3000'); // Change URL to your server URL
+
+//         // Listen for 'subscriptionRenewal' event
+//         socket.on('subscriptionRenewal', (notification) => {
+//             setNotifications(prevNotifications => [...prevNotifications, notification]);
+//         });
+
+//         return () => {
+//             // Disconnect from Socket.IO server when component unmounts
+//             socket.disconnect();
+//         };
+//     }, []);
+
+//     const toggleMenu = () => {
+//         setIsOpen(!isOpen);
+//     };
+
+//     const toggleDropdown = () => {
+//         setIsDropdownVisible(!isDropdownVisible);
+//     };
+
+//     const handleLogout = async () => {
+//         try {
+//             const res = await fetch('/api/auth/logout', {
+//                 method: 'GET',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//             });
+//             dispatch(logout());
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     };
+
+//     const fetchNotifications = async () => {
+//         try {
+//             // Fetch notifications for the current user
+//             const res = await fetch(`/api/notifications/${currentUser.id}`);
+//             const data = await res.json();
+//             setNotifications(data.notifications);
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     };
+
+//     return (
+//         <nav className="header navbar navbar-expand-lg navbar-dark fixed-top">
+//             <div className="container">
+//                 <div className="logo">
+//                     <Link className='nav-link' to={'/'}>
+//                         <a className="navbar-brand custom_logo"><span>WedBliss</span></a>
+//                     </Link>
+//                 </div>
+
+//                 <button className="navbar-toggler" type="button" onClick={toggleMenu}>
+//                     <span className="fa fa-bars"></span>
+//                 </button>
+//                 <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
+//                     <ul className="navbar-nav ml-auto">
+//                         {/* Navigation links */}
+//                     </ul>
+//                 </div>
+
+//                 {/* Notification icon and dropdown */}
+//                 <ul className="navbar-nav ml-auto">
+//                     {currentUser && (
+//                         <>
+//                             <li className="nav-item">
+//                                 <Link className="nav-link" to="/profile">
+//                                     <i className="fa fa-user mr-1">{currentUser.username}</i>
+//                                 </Link>
+//                             </li>
+//                             <div className="notification-wrapper">
+//                                 <Link className="nav-link" onClick={toggleDropdown}>
+//                                     <i className="fa fa-solid fa-bell"></i>
+//                                     <span className="notification-badge">{notifications.length}</span>
+//                                 </Link>
+//                                 {isDropdownVisible && (
+//                                     <div className="notification-dropdown">
+//                                         <ul>
+//                                             {notifications.map((notification, index) => (
+//                                                 <li className="text-black" key={index}>
+//                                                     {notification.message}
+//                                                 </li>
+//                                             ))}
+//                                         </ul>
+//                                     </div>
+//                                 )}
+//                             </div>
+//                             <li className="nav-item">
+//                                 <Link className="nav-link" onClick={handleLogout}>
+//                                     <i className="fa fa-sign-out mr-1"></i>
+//                                 </Link>
+//                             </li>
+//                         </>
+//                     )}
+//                 </ul>
+//             </div>
+//         </nav>
+//     );
+// }

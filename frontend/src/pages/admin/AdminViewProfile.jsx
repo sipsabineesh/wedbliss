@@ -123,9 +123,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 export default function AdminViewProfile() {
     const [data, setData] = useState(null);
+   
     const [dob, setDOB] = useState('');
     const [age, setAge] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -162,7 +164,28 @@ console.log(response)
             setAge(ageDifference);
         }
     };
-
+    const handleVerify = async (userId) => {
+        try {
+            const response = await fetch(`/api/admin/verifyUser`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: userId })
+            });
+            if (response.ok) {
+                if (response.ok) {
+                    setData(prevData => ({
+                        ...prevData,
+                        isVerifiedByAdmin: true
+                    }));
+                    toast.success("User Verification Successful");
+                }
+            }
+        } catch (error) {
+            console.error('Error verifying user:', error);
+        }
+    };
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -191,7 +214,22 @@ console.log(response)
                                     <p>Lives in {data.countryLivingIn}</p>
                                 </div>
                             </div>
-                      
+                            <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
+                              <div className="row mb-5">
+                              {!data.isVerifiedByAdmin && (
+                                                                    <div className="control">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btns"
+                                                                            onClick={() => handleVerify(data._id)}
+                                                                        >
+                                                                            Verify
+                                                                        </button>
+                                                                    </div>
+                                                                )}
+                              </div>
+                            </div>
+                           
                             <div className="card-body text-black p-4">
                                 <div className="mb-5">
                                     <p className="lead fw-normal mb-1 text-black text-capitalize">About</p>

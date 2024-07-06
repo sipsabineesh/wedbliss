@@ -331,11 +331,11 @@ export default function EditProfile() {
                             <div className="select-box">
                               <Field as="select" id="qualification" name="qualification" className="form-control">
                               <option value="" label="Select Qualification" />
-//                            <option value="Higher Secondary">Higher Secondary</option>
-//                           <option value="Diploma">Diploma</option>
-//                           <option value="Graduation">Graduation</option>
-//                           <option value="Post Graduation">Post Graduation</option>
-//                           <option value="Other">Other</option>
+                                  <option value="Higher Secondary">Higher Secondary</option>
+                                  <option value="Diploma">Diploma</option>
+                                  <option value="Graduation">Graduation</option>
+                                  <option value="Post Graduation">Post Graduation</option>
+                                  <option value="Other">Other</option>
                               </Field>
                               <ErrorMessage name="qualification" component="div" className="errorMsg" />
                             </div>

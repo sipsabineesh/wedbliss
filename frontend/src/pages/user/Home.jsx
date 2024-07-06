@@ -225,10 +225,11 @@ import Suggestions from './Suggestions';
 import { useGetUserQuery } from '../../redux/user/userApiSlice';
 import { Carousel } from 'react-bootstrap';
 import { setPreference } from '../../redux/user/userSlice';
+import Sidebar from '../../components/Sidebar';
 
 export default function Home() {
     const [user, setUser] = useState({});
-    const [loading, setLoading] = useState(true); // Loading state
+    const [loading, setLoading] = useState(true); 
     const { currentUser } = useSelector(state => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -255,14 +256,14 @@ export default function Home() {
             } catch (error) {
                 console.error('Error fetching subscription status:', error);
             } finally {
-                setLoading(false); // Set loading to false after fetch completes
+                setLoading(false); 
             }
         }
 
         if (currentUser) {
             fetchSubscriptionStatus();
         } else {
-            setLoading(false); // Set loading to false if no current user
+            setLoading(false); 
         }
     }, [currentUser]);
 
@@ -282,7 +283,7 @@ export default function Home() {
     return (
         <>
             <Header />
-
+            {/* <Sidebar/> */}
             {currentUser ? (
                 user.isSubscribed ? (
                     <Suggestions />

@@ -4,7 +4,9 @@ const initialState = {
     currentUser :null,
     selectedPlan: null,
     currentUserPreference:null,
+    currentUserPlan:null,
     userId:'',
+    userIdForContact:'',
     loading:false,
     error:'',
 }
@@ -49,15 +51,24 @@ const userSlice = createSlice({
       state.currentUserPreference = action.payload;
     },
      clearPreference: (state) => {
-      state.currentUserPreference = null;
+      state.currentUserPreference = '';
     },
+    setUserIdForContact:(state,action) => {
+      state.userIdForContact = action.payload;
+    },
+    clearUserIdForContact:(state) => {
+      state.userIdForContact = ''
+    },
+   
     }
 })
-export const { loginStart,loginSuccess,loginFailure,logout,otpSuccess,editUserSuccess,setPlan,clearPlan,setPreference,clearPreference } = userSlice.actions;
+export const { loginStart,loginSuccess,loginFailure,logout,otpSuccess,editUserSuccess,setPlan,clearPlan,setPreference,clearPreference,setUserIdForContact,clearUserIdForContact} = userSlice.actions;
 
 export const selectPlan = (state) => state.user.selectedPlan;
 
 export const userPreference = (state) => state.user.currentUserPreference;
+
+export const userIdForContact = (state) => state.user.state.userIdForContact;
 
 
 export default userSlice.reducer

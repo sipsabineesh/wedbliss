@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link,useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux';
-import { userPreference } from '../../redux/user/userSlice'
+import { useSelector, useDispatch } from 'react-redux';
+import { clearPreference, userPreference } from '../../redux/user/userSlice'
 import {
   MDBContainer,
   MDBRow,
@@ -15,6 +15,7 @@ export default function UserSignup() {
     const [formData,setFormData] = useState({})
     const [loading,setLoading] = useState(false)
     const [error,setError] = useState('')
+    const dispatch = useDispatch();
     const navigate =  useNavigate()
   const preference = useSelector(userPreference);
 console.log("preference")
@@ -76,6 +77,7 @@ console.log(preference)
           }
           else{
             console.log("ALL GOOD")
+            dispatch(clearPreference());
             setError('')
             // navigate('/otpVerify')
             navigate(`/otpVerify?userId=${data.userId}`);

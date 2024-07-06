@@ -7,7 +7,7 @@ import { MDBContainer, MDBRow, MDBCol, MDBInput } from 'mdb-react-ui-kit';
 import { toast } from 'react-toastify';
 import Header from '../../components/Header.jsx';
 
-
+ 
 
 export default function UpdateProfile() {
    const { currentUser } = useSelector(state => state.user);

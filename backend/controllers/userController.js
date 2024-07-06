@@ -1,6 +1,8 @@
 import { Mongoose } from 'mongoose';
 import Interests from '../models/interestModel.js'
 import User from '../models/userModel.js'
+import Subscription from '../models/subscriptionModel.js'
+import AbuseReport from '../models/subscriptionModel.js'
 import { errorHandler } from "../utils/error.js"
 import cloudinary from "cloudinary"
 import bcryptjs from 'bcryptjs'
@@ -21,6 +23,19 @@ export const getUsers = async(req,res,next) => {
   
 }
 
+export const getUserDetails = async(req,res,next) => {
+console.log("getUserDetails")
+  const userId = req.query.userId;
+  console.log(userId)
+  // const username = req.query.username;
+  try {
+    const user = await User.findById(userId)
+    const { password,...other } = user._doc;
+    res.status(200).json(other);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+}
 
 export const sendChangePasswordLink = async(req,res,next) => {
   console.log("sendChangePasswordLink")
@@ -29,6 +44,7 @@ export const sendChangePasswordLink = async(req,res,next) => {
   const subject = 'Link to change password'
   const message =  `You can change your password by clicking the link:  ${link}`
   sendEmail(email,subject,message)
+  res.status(200).json({success:true,message:"Please check email to change the password"})
 }
 
 
@@ -478,4 +494,122 @@ res.json({interestedUsers})})
     next(errorHandler(300, "Something went wrong"));
   }
  
+}
+
+
+export const getContactDetails = async(req,res,next) => {
+  try {
+    
+console.log("GETTTTTT CONTACT DETAILS")
+const {id,userId} = req.body
+console.log(id)
+    const plan = await Subscription.findOne({ userId: id });
+console.log('USER PLAN')
+console.log(plan)
+    if (!plan) {
+        return { success: false, message: 'Plan not found' };
+    }
+
+    if (plan.remainingContacts > 0) {
+        const updatedPlan = await Subscription.updateOne({ userId: id }, { $inc: { remainingContacts: -1 }},   { new: true } );
+        console.log('UPDATED PLANN:')
+        console.log(updatedPlan)
+    } else {
+        return { success: false, message: 'No contacts left in the plan' };
+    }
+
+    const suggestedUser = await User.findById(userId);
+console.log(suggestedUser)
+    if (!suggestedUser) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+    else{
+      const {password, ...rest} = suggestedUser._doc
+      const updatedPlan = await Subscription.findOne({ userId: id });
+      rest.remainingContacts = updatedPlan.remainingContacts
+console.log("finallllllll")      
+
+console.log(rest)      
+      res.status(200).json(rest)
+    }
+  }
+  catch(error){
+    next(errorHandler(300, error.message));
+
+  }
+}
+
+
+export const blockMemberProfile = async(req,res,next) => {
+  const { blockUserId } = req.body;
+  const userId = req.params.id
+    try {
+        if (!userId || !blockUserId) { 
+            return res.status(400).json({ message: 'User ID and Block User ID are required' });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { blockedProfiles: blockUserId } }, 
+            { new: true } 
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User blocked successfully', user });
+    } catch (error) {
+        console.error('Error blocking profile:', error);
+        res.status(500).json({ message: 'An error occurred', error });
+    }
+}
+
+
+export const unblockMemberProfile = async(req,res,next) => {
+  const { blockUserId } = req.body;
+  const userId = req.params.id
+    try {
+        if (!userId || !blockUserId) { 
+            return res.status(400).json({ message: 'User ID and Unblock User ID are required' });
+        }
+
+        const user = await User.findByIdAndUpdate(
+          userId,
+          { $pull: { blockedProfiles: blockUserId } },
+          { new: true } 
+      );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User unblocked successfully', user });
+    } catch (error) {
+        console.error('Error blocking profile:', error);
+        res.status(500).json({ message: 'An error occurred', error });
+    }
+}
+
+export const reportAbuse = async(req,res,next) => {
+  const { reporterId, reportedUserId, reason } = req.body;
+console.log(reporterId, reportedUserId, reason)
+  try {
+      if (!reporterId || !reportedUserId || !reason) {
+          return res.status(400).json({ message: 'Reporter ID, Reported User ID, and reason are required' });
+      }
+
+      const newReport = new AbuseReport({
+          reporterId,
+          reportedUserId,
+          reason
+      });
+
+      await newReport.save();
+
+      res.status(200).json({ message: 'Abuse report submitted successfully', report: newReport });
+  } catch (error) {
+      console.error('Error reporting abuse:', error);
+      res.status(500).json({ message: 'An error occurred', error });
+  }
 }

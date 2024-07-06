@@ -19,8 +19,9 @@ export default function ForgotPassword() {
        e.preventDefault();
        try {
         const { data } = await forgotPassword({email})
-       
-         toast.success("Please Check Your Email")
+        if(data.success)       
+           toast.success(data.message)
+          navigate('/login')
        
        } catch (error) {
         console.log(error)

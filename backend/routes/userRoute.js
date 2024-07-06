@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { getUsers,
+        getUserDetails,
         sendChangePasswordLink,
         changePassword,
         sendChangeEmailOTP,
@@ -15,9 +16,14 @@ import { getUsers,
         getAllinterests,
         acceptinterests,
         acceptedInterestList,
-        addPreference} from '../controllers/userController.js';
+        addPreference,
+        getContactDetails,
+        blockMemberProfile,
+        unblockMemberProfile,
+        reportAbuse} from '../controllers/userController.js';
    import { getPlansForUser } from '../controllers/planController.js';
    import { getCheckOutSession,addSubscription } from '../controllers/subscriptionController.js';
+   import { getRenewalNotification,getNotification } from '../controllers/notificationController.js'
    
 
 import { verifyToken } from '../middleware/verifyUser.js';
@@ -25,6 +31,8 @@ import { verifyBlocked } from '../middleware/blockedUserMiddleware.js';
 const router = express.Router();
   
 router.get('/',getUsers)
+router.get('/userDetails', getUserDetails);
+      
 router.post('/sendChangePasswordLink',sendChangePasswordLink)
 router.post('/changePassword',changePassword)
 router.post('/sendChangeEmailOTP',sendChangeEmailOTP)
@@ -43,9 +51,12 @@ router.get('/getPlans',getPlansForUser)
 router.post('/createCheckoutSession',getCheckOutSession)
 router.post('/addSubscription',addSubscription)
 router.post('/addPreference',addPreference)
-
-
-
+router.post('/getContactDetails',getContactDetails)
+router.get('/getRenewalNotification/:id',getRenewalNotification)
+router.get('/getNotification/:notificationId',getNotification)
+router.put('/blockMemberProfile/:id',verifyBlocked,blockMemberProfile)
+router.put('/unblockMemberProfile/:id',verifyBlocked,unblockMemberProfile)
+router.post('/reportAbuse',reportAbuse)
 
 
 

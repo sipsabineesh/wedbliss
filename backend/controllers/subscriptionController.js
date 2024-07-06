@@ -105,6 +105,7 @@ console.log("req.bodddddddddy")
             }, 
             { new: true }
           )
+
        const {_id,planValidity,planPrice,noOfContacts,noOfMessages,userId}  = plan
        console.log(_id+"  "+planValidity+"  "+planPrice+"  "+noOfContacts+"  "+noOfMessages+"  "+userId)   
        const months = parseInt(planValidity.match(/\d+/)[0]);
@@ -113,12 +114,18 @@ console.log("req.bodddddddddy")
        // const sessionId = session.id
        console.log("updatedUser")
        console.log(updatedUser)
+       const currentDate = new Date();
+       const validTillDate = new Date(currentDate.setDate(currentDate.getDate() + days));
+console.log("validTillDate")
+console.log(validTillDate)
+
           const newSubscription = new Subscription(
                  {
                     userId,
-                    "planId":_id,
+                    "planId":_id,  
                     "remainingValidity":days,
                     // "stripeSessionId":sessionId,
+                    "validTill":validTillDate,
                     "remainingContacts":noOfContacts,
                     "remainingMessages":noOfMessages,
                     "isPaid":true

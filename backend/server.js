@@ -9,7 +9,9 @@ import cloudinary from "cloudinary";
 import userRoute from './routes/userRoute.js'
 import authRoute from './routes/authRoute.js'
 import adminRoute from './routes/adminRoute.js'
-
+import conversationRoute from './routes/conversationRoute.js'
+import messageRoute from './routes/messageRoute.js'
+import subscriptionRenewalNotifier from './tasks/subscriptionRenewalNotifier.js';
 
 const app = express();
 dotenv.config()
@@ -44,9 +46,13 @@ req.io = io;
 next();
 });
 
+subscriptionRenewalNotifier(io);
+
  app.use('/api/user',userRoute)
  app.use('/api/auth',authRoute)
  app.use('/api/admin',adminRoute)
+ app.use("/api/conversations",conversationRoute);
+ app.use("/api/messages", messageRoute);
  
 
   app.use((err,req,res,next) => {
@@ -59,9 +65,27 @@ next();
     })
   })
 
+  let users = [];
 
-  
-  
+  const addUser = (userId, socketId) => {
+    console.log(`Adding user: ${userId} with socketId: ${socketId}`);
+    if (!users.some((user) => user.userId === userId)) {
+      users.push({ userId, socketId });
+      console.log('User added. Current users:', users);
+    }
+  };
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+  console.log('User removed. Current users:', users);
+};
+const getUser = (userId) => {
+  console.log('Finding user with userId:', userId);
+  console.log('Current users:', users);
+  const user = users.find((user) => user.userId === userId);
+  console.log('Found user:', user);
+  return user;
+};
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
@@ -70,10 +94,85 @@ io.on('connection', (socket) => {
     socket.join(userId);
   });
 
+  socket.on("addUser", (userId) => {
+    addUser(userId, socket.id);
+    io.emit("getUsers", users);
+  });
+
+  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    console.log("SENDING MESSAGE SOCKET:", senderId, receiverId, text);
+    const user = getUser(receiverId);
+    if (user && user.socketId) {
+      io.to(user.socketId).emit("getMessage", {
+        senderId,
+        text,
+      });
+    } else {
+      console.error('User not found or user.socketId is undefined');
+    }
+  });
+
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);
+    removeUser(socket.id);
+    io.emit("getUsers", users);
   });
 });
+
+
+  
+  // const addUser = (userId, socketId) => {
+  //   console.log("userId,socketId IN Add User")
+  //   console.log(userId,socketId)
+
+  //   !users.some((user) => user.userId === userId) &&
+  //     users.push({ userId, socketId });
+  // };
+  
+  // const removeUser = (socketId) => {
+  //   users = users.filter((user) => user.socketId !== socketId);
+  // };
+  
+  // const getUser = (userId) => {
+  //   console.log("userId & users IN GETuSER")
+  //   console.log(userId)
+  //   console.log(users)
+
+  //   return users.find((user) => user.userId === userId);
+//   // };
+  
+// io.on('connection', (socket) => {
+//   console.log('A user connected:', socket.id);
+//   io.emit('welcome', " THIS IS SOCKET");
+//   socket.on('joinRoom', (userId) => {
+//     console.log(`User ${userId} joined room`);
+//     socket.join(userId);
+//   });
+
+  
+//     //take userId and socketId from user
+//     socket.on("addUser", (userId) => {
+//       addUser(userId, socket.id);
+//       io.emit("getUsers", users);
+//     });
+
+//      //send and get message
+//   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+//     console.log("SENDING MESSAGE SOCKET:",senderId,receiverId,text)
+//     const user = getUser(receiverId);
+//     io.to(user.socketId).emit("getMessage", {
+//       senderId,
+//       text,
+//     });
+//   });
+
+//     socket.on('disconnect', () => {
+//       console.log('A user disconnected:', socket.id);
+//       removeUser(socket.id);
+//       io.emit("getUsers", users);
+//     });
+  
+// });
 
 
 const PORT = process.env.PORT || 3000;

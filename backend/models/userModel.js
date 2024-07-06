@@ -94,6 +94,10 @@ const userSchema = new mongoose.Schema({
     reasonForBlocking: {
         type:String,
     },
+    blockedProfiles:{
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
+    },
     // hasDetails:{
     //     type:Boolean,
     //     default:false,

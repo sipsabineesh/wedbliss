@@ -44,7 +44,27 @@ export default function AdminHeader() {
           <li className="nav-item ml-2"><Link className='nav-link' to={'/dashboard'}>Search</Link></li>
           {/* <li className="nav-item ml-2">{currentUser ?<div className="nav-item ml-2"> <Link className="nav-link" to={'/profile'}><i className="fa fa-user" aria-hidden="true"></i></Link> <Link className="nav-link" to={'/profile'}><i className="fa fa-sign-out" aria-hidden="true"></i></Link></div> : <Link className="nav-link" to={'/login'}><i className="fa fa-sign-in" aria-hidden="true"></i></Link> }</li>  */}
           <li className="nav-item ml-2">
-         
+          {/* <div className="notification-wrapper"> */}
+                                {/* <Link className="nav-link"   */}
+                               {/* onClick={toggleDropdow } >  */} 
+                                    {/* <i className="fa fa-solid fa-bell"></i> */}
+                                     {/* {notifications.length > 0 && ( */}
+                                        {/* <span className="notification-badge">{notifications.length}</span> */}
+                                     {/* )} */}
+                                {/* </Link> */}
+                              
+                                   {/* {isDropdownVisible && (
+                                    <div className="notification-dropdown">
+                                        <ul>
+                                            {notifications.map((notification, index) => (
+                                                <li className="text-black" key={index}>
+                                                 <Link to={`/notifications/${notification._id}`}  className="remove-link">{notification.title}</Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )} */}
+                            {/* </div> */}
           {adminUser ? (
                                 <div className="nav-item ml-2 d-flex align-items-center">
                                     <Link className="nav-link" onClick={handleLogout}>

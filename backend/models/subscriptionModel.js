@@ -12,14 +12,19 @@ const subscriptionSchema = new mongoose.Schema({
     stripeSessionId:{
         type:String,
     },
-    remainingValidity:{
+    validTill:{
+        type:Date,
+    },
+    validity:{
         type: Number, 
     },
     remainingContacts:{
         type:Number,
+        default: 0,
     },
     remainingMessages:{
         type:Number,
+        default: 0,
     },
      isPaid:{
         type:Boolean,
@@ -37,6 +42,6 @@ const subscriptionSchema = new mongoose.Schema({
 
 }, {timestamp:true});
 
-const Plan = mongoose.model('Subscription',subscriptionSchema);
+const Subscription = mongoose.model('Subscription',subscriptionSchema);
 
-export default Plan;     
+export default Subscription;     
