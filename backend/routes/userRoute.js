@@ -23,7 +23,7 @@ import { getUsers,
         reportAbuse} from '../controllers/userController.js';
    import { getPlansForUser } from '../controllers/planController.js';
    import { getCheckOutSession,addSubscription } from '../controllers/subscriptionController.js';
-   import { getRenewalNotification,getNotification } from '../controllers/notificationController.js'
+   import { getRenewalNotification,getNotification,updateViewedNotification } from '../controllers/notificationController.js'
    
 
 import { verifyToken } from '../middleware/verifyUser.js';
@@ -54,6 +54,7 @@ router.post('/addPreference',addPreference)
 router.post('/getContactDetails',getContactDetails)
 router.get('/getRenewalNotification/:id',getRenewalNotification)
 router.get('/getNotification/:notificationId',getNotification)
+router.put('/updateViewed/:notificationId',updateViewedNotification)
 router.put('/blockMemberProfile/:id',verifyBlocked,blockMemberProfile)
 router.put('/unblockMemberProfile/:id',verifyBlocked,unblockMemberProfile)
 router.post('/reportAbuse',reportAbuse)

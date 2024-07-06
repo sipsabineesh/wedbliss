@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Link,Navigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios';
 import { logout } from '../redux/user/userSlice';
-import { useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 
 export default function Header() {
@@ -11,6 +11,7 @@ export default function Header() {
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const {currentUser} = useSelector(state => state.user)
 
     useEffect(() => {
@@ -49,7 +50,7 @@ export default function Header() {
             const res = await fetch(`/api/user/getRenewalNotification/${currentUser._id}`);
             const data = await res.json();
             if (res.ok) {
-                setNotifications(data.notifications); // Ensure this matches the response structure
+                setNotifications(data.notifications); 
                 console.log("Fetched notifications:", notifications);
             } else {
                 console.error("Error fetching notifications:", data.message);
@@ -59,9 +60,25 @@ export default function Header() {
         }
     };
 
+    const handleNotificationClick = async (notificationId) => {
+           try {
+            alert(notificationId)
+            const res = await axios.put(`/api/user/updateViewed/${notificationId}`, {
+                isViewed: true
+            })
+            if (res.status === 200) {
+                navigate(`/notifications/${notificationId}`)
+            } else {
+                console.error("Error updating notification:", res.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const handleLogout = async() => {
       try {
-        const res = await fetch ('/api/auth/logout',{
+        const res = await fetch ('/api/auth/logout',{  
           method:'GET',
           headers:{
               'Content-Type':'application/json',
@@ -136,10 +153,22 @@ export default function Header() {
                               
                                    {isDropdownVisible && (
                                     <div className="notification-dropdown">
-                                        <ul>
+                                        {/* <ul>
                                             {notifications.map((notification, index) => (
                                                 <li className="text-black" key={index}>
                                                  <Link to={`/notifications/${notification._id}`}  className="remove-link">{notification.title}</Link>
+                                                </li>
+                                            ))}
+                                        </ul> */}
+                                         <ul>
+                                            {notifications.map((notification, index) => (
+                                                <li className="text-black" key={index}>
+                                                    <span 
+                                                        className="remove-link" 
+                                                        onClick={() => handleNotificationClick(notification._id)}
+                                                    >
+                                                        {notification.title}
+                                                    </span>
                                                 </li>
                                             ))}
                                         </ul>
