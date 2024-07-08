@@ -62,7 +62,6 @@ export default function Header() {
 
     const handleNotificationClick = async (notificationId) => {
            try {
-            alert(notificationId)
             const res = await axios.put(`/api/user/updateViewed/${notificationId}`, {
                 isViewed: true
             })

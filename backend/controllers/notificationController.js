@@ -32,17 +32,58 @@ export const getNotification = async(req,res,next) => {
 
 export const updateViewedNotification = async(req,res,next) => {
     try {
-        console.log('VIEWED UPDATION------------------------')
         const notification = await Notification.findById(req.params.notificationId);
-    console.log("notification",notification)
         if (!notification) {
             return res.status(404).json({ message: 'Notification not found' });
         } 
         notification.isViewed = req.body.isViewed;
         await notification.save();
-        console.log('Notification updated successfully')
         res.status(200).json({ message: 'Notification Viewed updated successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error updating notification', error });
     }
+}
+
+export const getRenewalNotificationsForAdmin = async(req,res,next) => {
+//     try {
+// console.log(" IN getRenewalNotificationsForAdmin")
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error fetching notification for Admin', error });
+//     }
+
+
+    try {
+        const notifications = await Notification.find({ target: 'admin',isViewed:false })
+            .populate({
+                path: 'subscriptionId', 
+                populate: {
+                    path: 'userId', 
+                    select: 'username' 
+                }
+            });
+
+ console.log("notificationData")     
+ console.log(notifications)
+        if (!notifications) {
+            return res.status(200).json({ notifications: [] });
+        }
+
+       
+        const notificationData = notifications.map(notification => ({
+            _id: notification._id,
+            subscriptionId: notification.subscriptionId._id,
+            username: notification.subscriptionId.userId.username,
+            title: notification.title,
+            message: notification.message,
+            date: notification.date,
+            isViewed: notification.isViewed
+        }));
+
+        // Send the prepared notification data as the response
+        res.status(200).json({ notifications: notificationData });
+    } catch (error) {
+        // Handle any errors that occur during fetching and populating notifications
+        res.status(500).json({ message: 'Error fetching notifications for Admin', error });
+    }
+
 }

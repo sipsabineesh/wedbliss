@@ -18,7 +18,17 @@ const notificationSchema = new mongoose.Schema({
     },
     message:{
         type:String,
-    },
+    }, 
+    // isNotifiedToAdmin: {
+    //     type: Boolean,
+    //     default: false
+    // },
+    target: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
+    }
+
 }, {timestamp:true});
 
 const Notification = mongoose.model('Notification',notificationSchema);

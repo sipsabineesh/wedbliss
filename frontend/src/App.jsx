@@ -44,6 +44,7 @@ import Notifications from './pages/user/Notifications';
 // import { ChatProvider } from './context/ChatContext';
 import Messenger from './pages/user/Messenger';
 import MemberProfile from './pages/user/MemberProfile';
+import AdminNotifications from './pages/admin/AdminNotifications';
 
 
 export default function App() {
@@ -76,6 +77,8 @@ export default function App() {
          <Route path="/editPlan/:id" element={<AdminEditPlan/>}/>
          <Route path="/subscriptionlist" element={<AdminSubscriptionList/>}/>
          <Route path="/viewProfile/:id" element={<AdminViewProfile/>}/>
+         <Route path="/AdminNotifications/:notificationId" element={<AdminNotifications/>}/> 
+
          
         </Route>
         <Route element={<PrivateRoute/>}>

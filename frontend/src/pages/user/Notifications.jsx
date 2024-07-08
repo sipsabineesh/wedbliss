@@ -5,7 +5,6 @@ import Header from '../../components/Header';
 
 export default function Notifications() {
       const {notificationId} = useParams()
-      console.log("react == notificationId")
       console.log(notificationId)
       
       const [notification, setNotification] = useState([]);
