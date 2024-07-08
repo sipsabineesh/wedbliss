@@ -45,30 +45,7 @@ export default function AdminUserList() {
         navigate(`/viewProfile/${userId}`);
     } 
 
-    const handleVerify = async (userId) => {
-        try {
-            const response = await fetch(`/api/admin/verifyUser`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: userId })
-            });
-            if (response.ok) {
-                setUsers(prevUsers => {
-                    const updatedUsers = prevUsers.map(user => {
-                        if (user._id === userId) {
-                            return { ...user, isVerifiedByAdmin: true };
-                        }
-                        return user;
-                    });
-                    return updatedUsers;
-                });
-            }
-        } catch (error) {
-            console.error('Error verifying user:', error);
-        }
-    };
+ 
 
     const handleBlock = (userId, isBlocking) => {
         setBlockUserId(userId);
@@ -80,7 +57,8 @@ export default function AdminUserList() {
         }
     };
 
-    const confirmBlockUnblock = async (userId, isBlocking) => {
+    const confirmBlockUnblock = async (userId, isBlocking) => { 
+      
         if (isBlocking && !blockReason) {
             toast.error("A reason is required to block a user.");
             return;
@@ -292,7 +270,7 @@ export default function AdminUserList() {
                     <Button className="btns" onClick={() => setShowModal(false)}>
                         Cancel
                     </Button>
-                    <Button className="btns" onClick={confirmBlockUnblock}>
+                    <Button className="btns" onClick={() => confirmBlockUnblock(blockUserId, isBlocking)}>
                         Confirm
                     </Button>
                 </Modal.Footer>
