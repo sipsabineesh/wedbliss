@@ -2,7 +2,8 @@ import { Mongoose } from 'mongoose';
 import Interests from '../models/interestModel.js'
 import User from '../models/userModel.js'
 import Subscription from '../models/subscriptionModel.js'
-import AbuseReport from '../models/subscriptionModel.js'
+import Notification from '../models/notificationModel.js'
+import AbuseReport from '../models/reportAbuseModel.js'
 import { errorHandler } from "../utils/error.js"
 import cloudinary from "cloudinary"
 import bcryptjs from 'bcryptjs'
@@ -606,6 +607,15 @@ console.log(reporterId, reportedUserId, reason)
       });
 
       await newReport.save();
+      
+      const newNotification = new Notification({
+        userId: reporterId,
+        subscriptionId: null,
+        title: 'Abuse Report',
+        message: `User ${reporterId} reported user ${reportedUserId} for: ${reason}`,
+        target: 'admin'
+    });
+    await newNotification.save();
 
       res.status(200).json({ message: 'Abuse report submitted successfully', report: newReport });
   } catch (error) {

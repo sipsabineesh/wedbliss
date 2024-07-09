@@ -21,6 +21,7 @@ export const getRenewalNotification = async(req,res,next) => {
 export const getNotification = async(req,res,next) => {
     try {
         const notificationId = req.params.notificationId;
+        console.log("notificationId:",notificationId)
         const notification = await Notification.findById(notificationId);
         res.status(200).json({ notification });
     } catch (error) {

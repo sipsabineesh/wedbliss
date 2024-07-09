@@ -5,26 +5,25 @@ import AdminHeader from '../../components/AdminHeader';
 
 export default function AdminNotifications() {
     const {notificationId} = useParams()
+    console.log("notificationId in NOTIFICATION PAGE")
     console.log(notificationId)
-    
     const [notification, setNotification] = useState([]);
-    const { currentUser } = useSelector(state => state.user);
+    const {adminUser} = useSelector(state => state.admin)
     useEffect(() => {
-      const fetchNotification = async () => {
+      const fetchNotification = async () => { 
           try {
-              const response = await fetch(`/api/user/getNotification/${notificationId}`);
+              const response = await fetch(`/api/admin/getNotification/${notificationId}`);
               const data = await response.json();
-              console.log(data)
               setNotification(data.notification);  
           } catch (error) {
               console.error('Error fetching notification:', error);
           }
       };
 
-      if (currentUser) {
+      if (adminUser) {
           fetchNotification();
       }
-  }, [currentUser, notificationId]);
+  }, [adminUser, notificationId]);
   
   if (!notification) {
       return <div>Loading...</div>;

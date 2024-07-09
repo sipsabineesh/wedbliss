@@ -3,8 +3,10 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from "react-toastify";
+import io from 'socket.io-client';
 import ReportAbuseModal from './ReportAbuseModal'; 
 
+const socket = io('http://localhost:3000');
 
 export default function MemberProfile() {
 
@@ -117,9 +119,12 @@ console.log(response)
 
   
     const handleReportAbuse = async (userId) => {
+      
         setShowReportModal(true);
         setReportedUserId(userId);
+       
     };
+
 
     const closeModal = () => {
         setShowReportModal(false);

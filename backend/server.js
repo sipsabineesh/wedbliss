@@ -12,6 +12,7 @@ import adminRoute from './routes/adminRoute.js'
 import conversationRoute from './routes/conversationRoute.js'
 import messageRoute from './routes/messageRoute.js'
 import subscriptionRenewalNotifier from './tasks/subscriptionRenewalNotifier.js';
+import {handleNotificationEvents} from './sockets/notificationSocket.js'
 
 const app = express();
 dotenv.config()
@@ -47,6 +48,7 @@ next();
 });
 
 subscriptionRenewalNotifier(io);
+handleNotificationEvents(io);
 
  app.use('/api/user',userRoute)
  app.use('/api/auth',authRoute)
@@ -111,6 +113,24 @@ io.on('connection', (socket) => {
       console.error('User not found or user.socketId is undefined');
     }
   });
+
+//   socket.on('reportAbuse', (data, callback) => {
+//     console.log('Report Abuse Data:', data);
+//     callback({ status: 'success', message: 'Report received successfully' });
+// });
+
+
+socket.on('reportAbuse', (data, callback) => {
+  console.log('Report Abuse Data:', data);
+  
+  // Emit the event to all connected clients
+  io.emit('abuseReported', data);
+
+  // Simulate processing and acknowledgment
+  setTimeout(() => {
+      callback({ status: 'success', message: 'Report received successfully' });
+  }, 1000);
+});
 
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);

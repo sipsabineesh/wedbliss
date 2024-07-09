@@ -3,6 +3,7 @@ import { Link,useNavigate } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
 import { logout } from '../redux/admin/adminSlice';
 import axios from 'axios';
+import { toast } from "react-toastify";
 import io from 'socket.io-client'
 
 const socket = io.connect('http://localhost:3000'); 
@@ -29,15 +30,43 @@ export default function AdminHeader() {
           setNotifications(prevNotifications => [...prevNotifications, notification]);
       });
 
-      return () => {
-          socket.disconnect();
-      };
+    //   socket.on('abuseReported', (report) => {
+    //     console.log('Abuse report received:', report);
+    //     toast.info('An abuse report has been submitted.');
+    // });
+    socket.on('abuseReported', (report) => {
+      console.log('Abuse report received:', report);
+      setNotifications(prevNotifications => [...prevNotifications, report]);
+      toast.info('An abuse report has been submitted.');
+      console.log("report after toast------------")
+      console.log(report)
+
+  });
+    return () => {
+        socket.off('planRenewal');
+        socket.off('abuseReported');
+        socket.disconnect();
+    };
   }, []);
 
+  
+// useEffect(() => {
+//   socket.on('abuseReported', (report) => {
+//     console.log('Abuse report received:', report);
+//     toast.info('An abuse report has been submitted.');
+// });
+
+// return () => {
+//     socket.off('abuseReported');
+// };
+// }, []);
   const fetchNotifications = async () => {
       try {
           const res = await axios.get('/api/admin/getRenewalNotifications');
           setNotifications(res.data.notifications);
+          console.log("FETCHED NOTIFICATIONNNSS")
+
+          console.log(res)
       } catch (error) {
           console.log(error);
       }
