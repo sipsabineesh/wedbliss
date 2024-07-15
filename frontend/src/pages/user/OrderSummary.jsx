@@ -397,9 +397,10 @@ const OrderSummary = ({ isOpen, closeModal, selectedPlan }) => {
   const { currentUser } = useSelector(state => state.user);
   const dispatch = useDispatch();
 
-  const makePayment = async (selectedPlan, userId) => {
-    selectedPlan.userId = userId;
-    dispatch(setPlan(selectedPlan));
+  const makePayment = async (selectedPlan, userId) => { 
+    
+    const planWithUserId = { ...selectedPlan, userId };  
+    dispatch(setPlan(planWithUserId));
 
     const stripe = await loadStripe("pk_test_51P7BB4J1myCpgaSJHfkOMqHjwpMGlveAFJNoqLN6msEhwDdA36x2a79fGFiDLdtUxgPJGiIZUPhKfCC4uS1hYXXT00SlDlHENm");
 
