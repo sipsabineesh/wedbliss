@@ -45,6 +45,7 @@ import Notifications from './pages/user/Notifications';
 import Messenger from './pages/user/Messenger';
 import MemberProfile from './pages/user/MemberProfile';
 import AdminNotifications from './pages/admin/AdminNotifications';
+import MyPlan from './pages/user/MyPlan';
 
 
 export default function App() {
@@ -98,6 +99,8 @@ export default function App() {
          <Route path="/notifications/:notificationId" element={<Notifications/>} />
          <Route path="/messenger" element={<Messenger/>}/>
          <Route path="/memberProfile/:id" element={<MemberProfile/>}/>
+         <Route path="/myPlan" element={<MyPlan/>}/>
+
 
          
         </Route>

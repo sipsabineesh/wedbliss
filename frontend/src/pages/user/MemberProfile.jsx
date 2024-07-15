@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from "react-toastify";
 import io from 'socket.io-client';
+import { setUserIdForContact } from '../../redux/user/userSlice';
+import { Card, Spinner } from 'react-bootstrap';
 import ReportAbuseModal from './ReportAbuseModal'; 
 
 const socket = io('http://localhost:3000');
@@ -17,8 +20,11 @@ export default function MemberProfile() {
     const [error, setError] = useState(null);
     const [isBlocked, setIsBlocked] = useState(false);
     const [showReportModal, setShowReportModal] = useState(false);
+    const [contactDetails, setContactDetails] = useState(null);
     const [reportedUserId, setReportedUserId] = useState(null); 
     const { currentUser } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { id } = useParams();
 
     useEffect(() => {
@@ -87,6 +93,49 @@ console.log(response)
             toast.error(`Failed to ${isBlocked ? 'unblock' : 'block'} member.`);
         }
     };
+
+    const handleShowContact = async (id) => {
+        try {
+            if (currentUser.isSubscribed) {
+                const response = await axios.post('/api/user/getContactDetails', {
+                    id: currentUser._id,
+                    userId: id
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const contactData = response.data;
+                setContactDetails(contactData);
+            } else {
+                toast.error("You are not subscribed to show contact details");
+                navigate('/plans');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    
+    // const handleShowContact = async(id) => {
+    //     try {
+    //       // alert("Phone Number : "+ currentUser.phoneNumber)
+    //       // alert("Email : "+ currentUser.email)
+    //       console.log(data.isSubscribed)
+    //       if(data.isSubscribed){
+    //         dispatch(setUserIdForContact(id))
+    //         navigate('/showContact')
+    //       }
+    //       else{
+    //         toast.error("You are not subscribed to show contact details")
+    //         navigate('/plans')
+    //       }
+          
+    //     } catch (error) {
+    //      console.log(error) 
+    //     }
+    //   }
+    
+      
 
     // const handleReportAbuse = async () => {
     //     if (!currentUser) {
@@ -166,9 +215,13 @@ console.log(response)
                               <div className="row mb-5">
                             
                                                                     <div className="control">
+                                                                        <button className="btns me-2" id={data._id} onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            handleShowContact(data._id);
+                                                                        }}>Show Contact</button>
                                                                         <button
                                                                             type="button"
-                                                                            className="btns"
+                                                                            className="btns me-2"
                                                                             onClick={() => handleBlock(data._id)}
                                                                         >
                                                                            {isBlocked ? 'Unblock' : 'Block'}
@@ -187,7 +240,15 @@ console.log(response)
                                                                     </div>
                               </div>
                             </div>
-                           
+                            {contactDetails && (
+                            <Card className="mt-4">
+                                <Card.Body>  
+                                    <p className="mb-1 text-black"><strong>Email:</strong> {contactDetails.email}</p>
+                                    <p className="mb-0 text-black"><strong>Phone Number:</strong> {contactDetails.phoneNumber}</p>
+                                    {/* <p className="mb-0 text-black"><strong>Number of Contacts remaining in your Plan:</strong> {contactDetails.remainingContacts}</p> */}
+                                </Card.Body>
+                            </Card>
+                        )}
                             <div className="card-body text-black p-4">
                                 <div className="mb-5">
                                     <p className="lead fw-normal mb-1 text-black text-capitalize">About</p>
@@ -225,6 +286,7 @@ console.log(response)
                                 </div>
                             </div>
                         </div>
+                       
                     </div>
                 </div>
             </div>

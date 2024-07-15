@@ -1,4 +1,4 @@
-import { Mongoose } from 'mongoose';
+import  Mongoose  from 'mongoose';
 import Interests from '../models/interestModel.js'
 import User from '../models/userModel.js'
 import Subscription from '../models/subscriptionModel.js'
@@ -215,101 +215,143 @@ console.log(updatedData.profilePhoto)
   }
 }
 
-export const suggestUsers = async(req,res,next) => {
-   const id = req.params.id 
-   try {
+export const suggestUsers = async (req, res, next) => {
+  const id = req.params.id;
+  const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10 if not provided
 
-    const  profileUser = await  User.find({_id:id})
-      .then(async(user) => {
-      const gender = user.gender === 'male' ? 'female' : 'male'
-      User.aggregate([
-        { $match: { 
-          $and: [
-            { isAdmin: false },
-            { _id: { $ne: id } }
-          ]
-        }},
-      
-        
-        {
-          $lookup: {
-            from: "interests",
-            let: { userId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      { $eq: ["$interestedFrom", id] },
-                      { $eq: ["$interestedTo", "$$userId"] }
-                    ]
-                  }
+  try {
+    const profileUser = await User.findById(id);
+    const gender = profileUser.gender === 'male' ? 'female' : 'male';
+
+    const suggestedUsers = await User.aggregate([
+      { $match: { $and: [{ isAdmin: false }, { _id: { $ne: id } }] } },
+      {
+        $lookup: {
+          from: "interests",
+          let: { userId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$interestedFrom", id] },
+                    { $eq: ["$interestedTo", "$$userId"] }
+                  ]
                 }
               }
-            ],
-            as: "interests"
-          }
-        },
+            }
+          ],
+          as: "interests"
+        }
+      },
+      { $match: { interests: { $eq: [] } } },
+      { $sort: { createdAt: -1 } },
+      { $skip: (page - 1) * limit }, // Skip the documents for pagination
+      { $limit: parseInt(limit) } // Limit the number of documents returned
+    ]);
+
+    res.json({ suggestedUsers });
+  } catch (error) {
+    console.error(error);
+    next(errorHandler(500, 'Error occurred while retrieving data'));
+  }
+};
+
+// export const suggestUsers = async(req,res,next) => {
+//    const id = req.params.id 
+//    try {
+
+//     const  profileUser = await  User.find({_id:id})
+//       .then(async(user) => {
+//       const gender = user.gender === 'male' ? 'female' : 'male'
+//       User.aggregate([
+//         { $match: { 
+//           $and: [
+//             { isAdmin: false },
+//             { _id: { $ne: id } }
+//           ]
+//         }},
       
-        { $match: { interests: { $eq: [] } } },
+        
+//         {
+//           $lookup: {
+//             from: "interests",
+//             let: { userId: "$_id" },
+//             pipeline: [
+//               {
+//                 $match: {
+//                   $expr: {
+//                     $and: [
+//                       { $eq: ["$interestedFrom", id] },
+//                       { $eq: ["$interestedTo", "$$userId"] }
+//                     ]
+//                   }
+//                 }
+//               }
+//             ],
+//             as: "interests"
+//           }
+//         },
       
-        { $sort: { createdAt:-1 } }
-      ])
-      .then(async(suggestedUsers) => {
-        // console.log(suggestedUsers)
-          res.json({suggestedUsers})
-        })
-  })
+//         { $match: { interests: { $eq: [] } } },
+      
+//         { $sort: { createdAt:-1 } }
+//       ])
+//       .then(async(suggestedUsers) => {
+//         // console.log(suggestedUsers)
+//           res.json({suggestedUsers})
+//         })
+//   })
 
 
 
-  //   const  profileUser = await  User.find({_id:id})
-  //   .then(async(user) => {
-  //   const gender = user.gender === 'male' ? 'female' : 'male'
-  //     // const suggestions = await User.find({
-  //     //   isVerifiedByOTP: true,
-  //     //   isVerifiedByAdmin: true,
-  //     //   isBlocked:false,
-  //     //   isAdmin:false,
-  //     //  // gender:gender,
-  //     //   //motherTongue: user.motherTongue,
-  //     //   religion:user.religion,
-  //     //   caste : user.caste,
-  //     //   _id: { $ne: id } 
-  //     // })
-  //     const suggestions = await User.find({
-  //       isAdmin: false,
-  //       $and: [
-  //           {
-  //               $or: [
-  //                   { isVerifiedByOTP: true },
-  //                   { isVerifiedByAdmin: true },
-  //                   { isBlocked: false },
-  //                   { isAdmin: false },
-  //                   { gender: gender }, 
-  //                   { motherTongue: user.motherTongue },
-  //                   { religion: user.religion },
-  //                   { caste: user.caste }
-  //               ]
-  //           },
-  //           { _id: { $ne: id } },
+//   //   const  profileUser = await  User.find({_id:id})
+//   //   .then(async(user) => {
+//   //   const gender = user.gender === 'male' ? 'female' : 'male'
+//   //     // const suggestions = await User.find({
+//   //     //   isVerifiedByOTP: true,
+//   //     //   isVerifiedByAdmin: true,
+//   //     //   isBlocked:false,
+//   //     //   isAdmin:false,
+//   //     //  // gender:gender,
+//   //     //   //motherTongue: user.motherTongue,
+//   //     //   religion:user.religion,
+//   //     //   caste : user.caste,
+//   //     //   _id: { $ne: id } 
+//   //     // })
+//   //     const suggestions = await User.find({
+//   //       isAdmin: false,
+//   //       $and: [
+//   //           {
+//   //               $or: [
+//   //                   { isVerifiedByOTP: true },
+//   //                   { isVerifiedByAdmin: true },
+//   //                   { isBlocked: false },
+//   //                   { isAdmin: false },
+//   //                   { gender: gender }, 
+//   //                   { motherTongue: user.motherTongue },
+//   //                   { religion: user.religion },
+//   //                   { caste: user.caste }
+//   //               ]
+//   //           },
+//   //           { _id: { $ne: id } },
             
-  //         ]
-  //       }).sort({ createdAt: 1 })
-  // .then(async(suggestedUsers) => {
-  //   res.json({suggestedUsers})
-  // })
+//   //         ]
+//   //       }).sort({ createdAt: 1 })
+//   // .then(async(suggestedUsers) => {
+//   //   res.json({suggestedUsers})
+//   // })
      
-  // })
-  //  .catch(err => {
-  //    next(errorHandler(500, 'Error occured while retrieving data'));
-  //    // res.status(500).send({message:err.message||"Error occured while retrieving data"})
-  // })
-   } catch (error) {
-    console.log(error)
-   }
+//   // })
+//   //  .catch(err => {
+//   //    next(errorHandler(500, 'Error occured while retrieving data'));
+//   //    // res.status(500).send({message:err.message||"Error occured while retrieving data"})
+//   // })
+//    } catch (error) {
+//     console.log(error)
+//    }
  
-}
+// } 
 
 export const suggestionCount = async(req,res,next) => {const id = req.params.id;
 
@@ -622,4 +664,61 @@ console.log(reporterId, reportedUserId, reason)
       console.error('Error reporting abuse:', error);
       res.status(500).json({ message: 'An error occurred', error });
   }
+}
+
+export const viewUserPlanDetails = async(req,res,next) => {
+try {
+  const userId = req.params.id; 
+  console.log(userId)
+  console.log("userId")
+
+  const subscription = await Subscription.aggregate([
+    {
+      $match: { userId:new Mongoose.Types.ObjectId(userId)}
+    },
+    {
+      $lookup: {
+        from: 'plans',
+        localField: 'planId',
+        foreignField: '_id',
+        as: 'planDetails'
+      }
+    },
+    {
+      $unwind: '$planDetails'
+    },
+    {
+      $project: {
+        _id: 1,
+        userId: 1,
+        planId: 1,
+        stripeSessionId: 1,
+        validTill: 1,
+        validity: 1,
+        remainingContacts: 1,
+        remainingMessages: 1,
+        isPaid: 1,
+        isApproved: 1,
+        isDeleted: 1,
+        planDetails: {
+          planName: 1,
+          planValidity: 1,
+          planPrice: 1,
+          noOfContacts: 1,
+          noOfMessages: 1,
+          isDeleted: 1
+        }
+      }
+    }
+  ]);
+console.log("subscription")
+console.log(subscription)
+
+  if (!subscription.length) {
+    return res.status(404).json({ message: 'Subscription not found' });
+  }
+  res.json(subscription[0]);
+} catch (error) {
+  res.status(500).json({ message: 'Server error' });
+}
 }

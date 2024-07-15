@@ -116,9 +116,14 @@ export default function Header() {
             </li>
         )} */}
          {currentUser.isSubscribed && (
+            <>
+             <li className="nav-item ml-2">
+                <Link className="nav-link" to={'/myPlan'}>My Plan</Link>
+            </li>
             <li className="nav-item ml-2">
                 <Link className="nav-link" to={'/messenger'}>Messenger</Link>
             </li>
+            </>
         )}
     </>
 ) : (

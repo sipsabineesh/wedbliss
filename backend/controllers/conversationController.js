@@ -1,18 +1,21 @@
 import { Mongoose } from 'mongoose';
 import Message from '../models/messageModel.js'
 import Conversation from '../models/conversationModel.js'
+import Subscription from '../models/subscriptionModel.js'
 
 export const addConversation = async(req,res,next) => {
    
-
+console.log("IN CONVERSATION CONTROLLER")
+let userId = req.body.senderId
   let conversation = await Conversation.findOne({
     members: { $all: [req.body.senderId, req.body.receiverId] }
   });
+ 
   if (!conversation) {
     
     try {
       const plan = await Subscription.findOne({ userId });
-
+      console.log(plan)
       if (!plan) {
         return res.status(404).json({ message: 'No subscription plan found.' }); 
       }
@@ -27,13 +30,17 @@ export const addConversation = async(req,res,next) => {
       const newConversation = new Conversation({
         members: [req.body.senderId, req.body.receiverId],
       });
-      
+  console.log("newConversation")    
+
+  console.log(newConversation)    
       const savedConversation = await newConversation.save();
       res.status(200).json(savedConversation);
     } 
 catch (err) {
       res.status(500).json(err);
     }
+  }else {
+    res.status(200).json(conversation);
   }
   }
 

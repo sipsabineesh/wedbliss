@@ -1,5 +1,6 @@
 import { Mongoose } from 'mongoose';
 import Message from '../models/messageModel.js'
+import Conversation from '../models/conversationModel.js'
 
 
 export const addMessage= async(req,res,next) => {
@@ -7,6 +8,9 @@ export const addMessage= async(req,res,next) => {
 
   try {
     const savedMessage = await newMessage.save();
+    await Conversation.findByIdAndUpdate(req.body.conversationId, { updatedAt: Date.now() });
+    // const result = await Message.deleteMany({ text: '' });
+    // console.log(`${result.deletedCount} messages deleted.`);
     res.status(200).json(savedMessage);
   } catch (err) {
     res.status(500).json(err);
