@@ -1,5 +1,6 @@
 import { Mongoose } from 'mongoose';
 import Message from '../models/messageModel.js'
+import User from '../models/userModel.js'
 import Conversation from '../models/conversationModel.js'
 import Subscription from '../models/subscriptionModel.js'
 
@@ -12,7 +13,14 @@ let userId = req.body.senderId
   });
  
   if (!conversation) {
-    
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    if (!user.isSubscribed) {
+      return res.status(403).json({ message: 'User is not subscribed.' });
+    }
     try {
       const plan = await Subscription.findOne({ userId });
       console.log(plan)
@@ -56,7 +64,7 @@ catch (err) {
     } catch (err) {
       res.status(500).json(err);
     }
-  }
+  }  
 
   export const getUsersConversation = async(req,res,next) => {
  

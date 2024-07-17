@@ -224,7 +224,7 @@ export const suggestUsers = async (req, res, next) => {
     const gender = profileUser.gender === 'male' ? 'female' : 'male';
 
     const suggestedUsers = await User.aggregate([
-      { $match: { $and: [{ isAdmin: false }, { _id: { $ne: id } }] } },
+      { $match: { $and: [{ isAdmin: false ,gender:gender, _id: { $ne: id } }] } },
       {
         $lookup: {
           from: "interests",
@@ -245,7 +245,7 @@ export const suggestUsers = async (req, res, next) => {
         }
       },
       { $match: { interests: { $eq: [] } } },
-      { $sort: { createdAt: -1 } },
+      { $sort: { _id: -1 } },
       { $skip: (page - 1) * limit }, // Skip the documents for pagination
       { $limit: parseInt(limit) } // Limit the number of documents returned
     ]);
@@ -401,6 +401,10 @@ export const sendInterest = async(req,res,next) => {
       // console.log("just after query")
       const interestedFromUser = await User.findById(interestedFrom).select('-password');
       req.io.to(interestedTo).emit('newInterest', interestedFromUser);
+         console.log(`Emitting newInterest to room ${interestedTo}`);
+
+      //  console.log('Emitting newInterest to:', interestedTo);
+      // req.io.to(interestedTo).emit('newInterest', interestedFromUser);
       res.json({ status: 201, message: 'Interests saved' });
     } catch (error) {
       console.log(error)
@@ -500,7 +504,7 @@ export const acceptinterests = async(req,res,next) => {
       interestId: updatedUser._id,
       acceptedBy: updatedUser.interestedTo
     });
-
+console.log("emiited acceptance socket")
      res.status(200).json(updatedUser)
   } catch (error) {
     console.log(error)

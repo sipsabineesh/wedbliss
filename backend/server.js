@@ -47,6 +47,7 @@ req.io = io;
 next();
 });
 
+
 subscriptionRenewalNotifier(io);
 handleNotificationEvents(io);
 
@@ -122,11 +123,7 @@ io.on('connection', (socket) => {
 
 socket.on('reportAbuse', (data, callback) => {
   console.log('Report Abuse Data:', data);
-  
-  // Emit the event to all connected clients
   io.emit('abuseReported', data);
-
-  // Simulate processing and acknowledgment
   setTimeout(() => {
       callback({ status: 'success', message: 'Report received successfully' });
   }, 1000);

@@ -48,6 +48,7 @@ export default function Suggestions() {
   useEffect(() => {
     if (currentUser?._id) {
       socket.emit('joinRoom', currentUser._id);
+      // alert("emitted joinRoom with "+currentUser._id)
     }
 
     return () => {
@@ -56,7 +57,7 @@ export default function Suggestions() {
   }, [currentUser]);
 
   useEffect(() => { 
-    socket.on('newInterest', (userData) => {
+    socket.on('newInterest', (userData) => { 
       console.log('New interest received from:', userData);
       setNewInterestUser(userData);
       toast.success(`You have received a new interest from ${userData.username}`);
@@ -68,7 +69,7 @@ export default function Suggestions() {
   }, []);
 
   useEffect(() => {
-    socket.on('interestAccepted', ({ interestId, acceptedBy }) => {
+    socket.on('interestAccepted', ({ interestId, acceptedBy }) => { 
       console.log('Interest accepted:', interestId, 'by', acceptedBy);
       setAcceptedInterests(prev => [...prev, { interestId, acceptedBy }]);
       toast.success(`Your interest has been accepted by user ${acceptedBy}`);
@@ -168,6 +169,9 @@ export default function Suggestions() {
       if (!res.ok) {
         throw new Error('Network response was not ok');
       } else {
+        console.log("res")
+
+        console.log(res)
         toast.success("Interest Sent");
         setInterestsSent(prev => [...prev, id]);
       }
@@ -214,27 +218,46 @@ export default function Suggestions() {
   // })
   const handleMessage = async (id) => { 
     try {
-      if (currentUser.isSubscribed) {
+      // if (currentUser.isSubscribed) {
         const res = await axios.post('api/conversations/', {
           senderId: currentUser._id,
           receiverId: id,
         });
+        console.log("res IN SUGGESTIONN")
 console.log(res)
         // if (!res.ok) {
         //   throw new Error('Network response was not ok');
         // }
-
-        const conversation = await res.data;
-        navigate('/messenger', { state: { selectedUserId: id, conversation } });
-      } else {
-        toast.error('Please subscribe to any plan to send a message');
-        navigate('/plans');
-      }
+        if (res.status === 200) {
+          const conversation = res.data;
+          navigate('/messenger', { state: { selectedUserId: id, conversation } });
+        } else {
+          handleErrorResponse(res.status);
+        }
+       
+      // } else {
+        // toast.error('Please subscribe to any plan to send a message');
+        // navigate('/plans');
+      // }
     } catch (error) {
       console.error('Error creating conversation:', error);
     }
   };
-
+  const handleErrorResponse = (status) => {
+    switch (status) {
+      case 403:
+        toast.error('No remaining messages in your plan or user is not subscribed.');
+        navigate('/plans');
+        break;
+      case 404:
+        toast.error('Subscription plan not found.');
+        navigate('/plans');
+        break;
+      default:
+        toast.error('Something went wrong. Please try again.');
+        break;
+    }
+  };
   const handleAccept =(async (id) => {
     try {
   

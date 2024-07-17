@@ -100,7 +100,7 @@ const userSchema = new mongoose.Schema({
     },
     // hasDetails:{
     //     type:Boolean,
-    //     default:false,
+    //     default:false, 
     // },
     // hasPreference:{
     //     type:Boolean,
