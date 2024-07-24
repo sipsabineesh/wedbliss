@@ -2,6 +2,7 @@ import  Mongoose  from 'mongoose';
 import Interests from '../models/interestModel.js'
 import User from '../models/userModel.js'
 import Subscription from '../models/subscriptionModel.js'
+import Interest from '../models/interestModel.js'
 import Notification from '../models/notificationModel.js'
 import AbuseReport from '../models/reportAbuseModel.js'
 import { errorHandler } from "../utils/error.js"
@@ -217,14 +218,13 @@ console.log(updatedData.profilePhoto)
 
 export const suggestUsers = async (req, res, next) => {
   const id = req.params.id;
-  const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10 if not provided
-
+  const { page = 1, limit = 10 } = req.query;
   try {
     const profileUser = await User.findById(id);
     const gender = profileUser.gender === 'male' ? 'female' : 'male';
 
     const suggestedUsers = await User.aggregate([
-      { $match: { $and: [{ isAdmin: false ,gender:gender, _id: { $ne: id } }] } },
+      { $match: { $and: [{ _id: { $ne: id } , isAdmin: false , gender:gender, isBlocked:false,isVerifiedByAdmin:true }] } },
       {
         $lookup: {
           from: "interests",
@@ -249,8 +249,14 @@ export const suggestUsers = async (req, res, next) => {
       { $skip: (page - 1) * limit }, // Skip the documents for pagination
       { $limit: parseInt(limit) } // Limit the number of documents returned
     ]);
+    const userInterests = await Interest.find({ interestedFrom: id });
+    const interestedUserIds = userInterests.map(interest => interest.interestedTo.toString());
 
-    res.json({ suggestedUsers });
+    const result = suggestedUsers.map(user => ({
+      ...user,
+      hasSentInterest: interestedUserIds.includes(user._id.toString())
+    }));
+    res.json({ suggestedUsers : result });
   } catch (error) {
     console.error(error);
     next(errorHandler(500, 'Error occurred while retrieving data'));
@@ -400,6 +406,20 @@ export const sendInterest = async(req,res,next) => {
       await newInterest.save();
       // console.log("just after query")
       const interestedFromUser = await User.findById(interestedFrom).select('-password');
+
+      const newNotification = new Notification({
+        userId:interestedTo,
+        subscriptionId: null,
+        title: 'Received Interest',
+        message: `User ${interestedFromUser.username} has sent an Interest`,
+        target: 'user'
+    });
+    await newNotification.save();
+
+      console.log("interestedFromUser USERNAME: "+ interestedFromUser.username)
+      console.log("interestedTo: "+ interestedTo)
+      console.log("interestedFrom: "+ interestedFrom)
+
       req.io.to(interestedTo).emit('newInterest', interestedFromUser);
          console.log(`Emitting newInterest to room ${interestedTo}`);
 
@@ -444,7 +464,7 @@ try {
 //     },
   
 // ])
-const interests = await Interests.find({ interestedTo : interestedTo, isAccepted : false })
+const interests = await Interests.find({ interestedTo : interestedTo })
     .populate({
         path: 'interestedFrom',
         model: 'User',
@@ -498,9 +518,18 @@ export const acceptinterests = async(req,res,next) => {
       { new: true }
      )
 
-    const interestedFromUser = await User.findById(updatedUser.interestedFrom).select('-password');
+    const interesteToUser = await User.findById(updatedUser.interestedTo).select('-password');
+    const username = interesteToUser.username
+    const newNotification = new Notification({
+      userId:interesteToUser._id,
+      subscriptionId: null,
+      title: 'Accepted Interest',
+      message: `User ${username} has accepted your Interest`,
+      target: 'user'
+  });
+  await newNotification.save();
 
-    req.io.to(updatedUser.interestedFrom).emit('interestAccepted', {
+    req.io.to(updatedUser.interestedTo).emit('interestAccepted', {
       interestId: updatedUser._id,
       acceptedBy: updatedUser.interestedTo
     });

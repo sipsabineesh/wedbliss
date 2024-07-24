@@ -31,7 +31,7 @@ export default function AdminHeader() {
       });
 
     //   socket.on('abuseReported', (report) => {
-    //     console.log('Abuse report received:', report);
+    //     console.log('Abuse report  received:', report);
     //     toast.info('An abuse report has been submitted.');
     // });
     socket.on('abuseReported', (report) => {

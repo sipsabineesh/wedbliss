@@ -3,16 +3,20 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios';
 import { logout } from '../redux/user/userSlice';
+import { toast } from 'react-toastify';
 import io from 'socket.io-client';
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [newInterestUser, setNewInterestUser] = useState(null);
+    const [acceptedInterests, setAcceptedInterests] = useState([]);
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {currentUser} = useSelector(state => state.user)
+    const socket = io.connect('http://localhost:3000');
 
     useEffect(() => {
         if (currentUser) {
@@ -21,7 +25,7 @@ export default function Header() {
     }, [currentUser]);
 
     // useEffect(() => {
-    //     const socket = io.connect('http://localhost:3000');
+        // const socket = io.connect('http://localhost:3000');
     // console.log(socket)
     //     socket.on('subscriptionRenewal', (notification) => {
     //         console.log("NEW NOTFY : ",notification)
@@ -35,7 +39,48 @@ export default function Header() {
     //         socket.disconnect();
     //     };
     // }, []);
-
+    useEffect(() => {
+        if (currentUser?._id) {
+          socket.emit('joinRoom', currentUser._id);
+          // alert("emitted joinRoom with "+currentUser._id)
+        }
+    
+        return () => {
+          socket.disconnect(); 
+        };
+      }, [currentUser]);
+      
+    useEffect(() => { 
+        socket.on('newInterest', (userData) => { 
+          console.log('In HEADER New interest received from:', userData);
+          setNewInterestUser(userData);
+          toast.success(`You have received a new interest from ${userData.username}`);
+        },newInterestUser);
+    
+        return () => {
+          socket.off('newInterest');
+        };
+      }, []);
+      useEffect(() => {
+        socket.on('interestAccepted', ({ interestId, acceptedBy }) => { 
+          console.log('Interest accepted:', interestId, 'by', acceptedBy);
+          setAcceptedInterests(prev => [...prev, { interestId, acceptedBy }]);
+          toast.success(`Your interest has been accepted by user ${acceptedBy}`);
+        });
+    
+        return () => {
+          socket.off('interestAccepted');
+        };
+      }, []);
+    //   useEffect(() => {
+    //     socket.on('callNotification', ({ callerId, message }) => {
+    //     //  alert(`${message} from ${callerId}`);
+    //     });
+      
+    //     return () => {
+    //       socket.off('callNotification');
+    //     };
+    //   }, []);
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
@@ -104,12 +149,10 @@ export default function Header() {
           <li className="nav-item ml-2"><Link className='nav-link' to={'/'}>Home</Link></li>
           {currentUser ? (
     <>
-        <li className="nav-item ml-2">
+        {/* <li className="nav-item ml-2">
             <Link className="nav-link" to={'/suggestions'}>Suggestions</Link>
-        </li>
-        <li className="nav-item ml-2">
-            <Link className="nav-link" to={'/acceptedList'}>Accepted Interests</Link>
-        </li>
+        </li> */}
+        
         {/* {currentUser.isSubscribed && (
             <li className="nav-item ml-2">
                 <Link className="nav-link" to={'/plans'}>My Package</Link>
@@ -117,8 +160,14 @@ export default function Header() {
         )} */}
          {currentUser.isSubscribed && (
             <>
-             <li className="nav-item ml-2">
+            <li className="nav-item ml-2">
                 <Link className="nav-link" to={'/myPlan'}>My Plan</Link>
+            </li>
+             <li className="nav-item ml-2">
+                <Link className="nav-link" to={'/interests'}>Interest</Link>
+            </li>
+            <li className="nav-item ml-2">
+                  <Link className="nav-link" to={'/acceptedList'}>Accepted Interests</Link>
             </li>
             <li className="nav-item ml-2">
                 <Link className="nav-link" to={'/messenger'}>Messenger</Link>

@@ -253,7 +253,7 @@ export default function Messenger() {
                   ))}
                   {unreadMessages.length > 0 && (
                     <div className="unreadMessages">
-                      <div className="unreadHeader">Unread Messages</div>
+                      <div className="unreadHeader">{unreadMessages.length} Unread Messages</div>
                       {unreadMessages.map((m) => (
                         <div
                           key={m._id}

@@ -21,6 +21,7 @@ export default function Suggestions() {
   const [newInterestUser, setNewInterestUser] = useState(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [hasMoreSuggestions, setHasMoreSuggestions] = useState(true);
   const { currentUser, sentInterests } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,17 +57,17 @@ export default function Suggestions() {
     };
   }, [currentUser]);
 
-  useEffect(() => { 
-    socket.on('newInterest', (userData) => { 
-      console.log('New interest received from:', userData);
-      setNewInterestUser(userData);
-      toast.success(`You have received a new interest from ${userData.username}`);
-    },newInterestUser);
+  // useEffect(() => { 
+  //   socket.on('newInterest', (userData) => { 
+  //     console.log('New interest received from:', userData);
+  //     setNewInterestUser(userData);
+  //     toast.success(`You have received a new interest from ${userData.username}`);
+  //   },newInterestUser);
 
-    return () => {
-      socket.off('newInterest');
-    };
-  }, []);
+  //   return () => {
+  //     socket.off('newInterest');
+  //   };
+  // }, []);
 
   useEffect(() => {
     socket.on('interestAccepted', ({ interestId, acceptedBy }) => { 
@@ -92,11 +93,18 @@ export default function Suggestions() {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log("data")
-      console.log(data)
-
+     
+      if (data.suggestedUsers.length < limit) {
+        setHasMoreSuggestions(false);
+      } else {
+        setHasMoreSuggestions(true);
+      }
       setSuggestions(data.suggestedUsers);
-  
+      const sentInterests = data.suggestedUsers
+        .filter(user => user.hasSentInterest)
+        .map(user => user._id);
+      setInterestsSent(sentInterests);
+
       if (data.success === false) {
         dispatch(loginFailure(data.message));
         dispatch(logout());
@@ -169,11 +177,13 @@ export default function Suggestions() {
       if (!res.ok) {
         throw new Error('Network response was not ok');
       } else {
-        console.log("res")
-
-        console.log(res)
         toast.success("Interest Sent");
         setInterestsSent(prev => [...prev, id]);
+        setSuggestions(prev => 
+          prev.map(user => 
+            user._id === id ? { ...user, hasSentInterest: true } : user
+          )
+        );
       }
       console.log(await res.json());
     } catch (error) {
@@ -182,9 +192,6 @@ export default function Suggestions() {
   };
   const handleShowContact = async(id) => {
     try {
-      // alert("Phone Number : "+ currentUser.phoneNumber)
-      // alert("Email : "+ currentUser.email)
-      console.log(user.isSubscribed)
       if(user.isSubscribed){
         dispatch(setUserIdForContact(id))
         navigate('/showContact')
@@ -223,8 +230,7 @@ export default function Suggestions() {
           senderId: currentUser._id,
           receiverId: id,
         });
-        console.log("res IN SUGGESTIONN")
-console.log(res)
+      
         // if (!res.ok) {
         //   throw new Error('Network response was not ok');
         // }
@@ -243,6 +249,38 @@ console.log(res)
       console.error('Error creating conversation:', error);
     }
   };
+  const handleVideoCall = async (id) => { 
+    try {
+       try {
+        socket.on('your-id', id => {
+          console.log('Your ID:', id);
+          alert(`Your ID is: ${id}`);
+        });
+        
+        alert('SOCKETID : '+socket.id)
+        socket.emit('incomingCall', { callerId: socket.id, receiverId: id });
+        navigate('/videoCall', { state: { id } });
+      } catch (error) {
+        console.error('Error initiating video call:', error);
+        toast.error('An error occurred. Please try again.');
+      }
+      //  navigate('/videoCall')
+      // const response = await axios.post(`/api/videoCall/initiate`, {
+      //   callerId: currentUser._id,
+      //   receiverId: id,
+      // });
+
+      // if (response.status === 200) {
+        // navigate('/videoCall', { state: { callData: response.data } });
+      // } else {
+      //   toast.error('Failed to initiate video call');
+      // }
+    } catch (error) {
+      console.error('Error initiating video call:', error);
+      toast.error('An error occurred. Please try again.');
+    }
+  };
+
   const handleErrorResponse = (status) => {
     switch (status) {
       case 403:
@@ -268,7 +306,7 @@ console.log(res)
         },
         body: JSON.stringify({ id: id }),
       });
-  console.log(res)
+  
       if (!res.ok) {
         throw new Error('Network response was not ok');
       }
@@ -330,7 +368,7 @@ console.log(res)
                           </div>
                         </div>
                         <div className="d-flex pt-1">
-                          <button
+                          {/* <button
                             className="btns me-2"
                             id={user._id}
                             onClick={(e) => {
@@ -340,24 +378,89 @@ console.log(res)
                             disabled={interestsSent.includes(user._id) || acceptedInterests.some(interest => interest.interestId === user._id)}
                           >
                             {acceptedInterests.some(interest => interest.interestId === user._id) ? 'Interest Accepted' : interestsSent.includes(user._id) ? 'Interest Sent' : 'Send Interest'}
-                          </button>
+                          </button> */}
                           {/* <button className="btns me-2" id={user._id} onClick={(e) => {
                             e.preventDefault();
                             handleShowContact(user._id);
                           }}>Show Contact</button> */}
-                          <button className="btns me-2" id={user._id} onClick={(e) => {
+                          {/* <button className="btns me-2" id={user._id} onClick={(e) => {
                             e.preventDefault();
                             handleMessage(user._id);
-                          }}>Message</button>
+                          }}>Message</button> */}
+                        </div>
+                        
+                        <div className="d-flex pt-1 button-container">
+                            {/* <button
+                              className="btns me-2 custom-button"
+                              id={user._id}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleInterest(user._id);
+                              }}
+                              disabled={interestsSent.includes(user._id) || acceptedInterests.some(interest => interest.interestId === user._id)}
+                              title={acceptedInterests.some(interest => interest.interestId === user._id) ? 'Interest Accepted' : interestsSent.includes(user._id) ? 'Interest Sent' : 'Send Interest'}
+                            >
+                              {acceptedInterests.some(interest => interest.interestId === user._id) ? (
+                                <i className="fa fa-check-circle icon"></i>
+                              ) : interestsSent.includes(user._id) ? (
+                                <i className="fa fa-paper-plane icon"></i>
+                              ) : (
+                                <i className="fa fa-heart icon"></i>
+                              )}
+                              <span className="visually-hidden">{acceptedInterests.some(interest => interest.interestId === user._id) ? 'Interest Accepted' : interestsSent.includes(user._id) ? 'Interest Sent' : 'Send Interest'}</span>
+                            </button> */}
+                             <button
+                                    className="btns me-2 custom-button"
+                                    id={user._id}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleInterest(user._id);
+                                    }}
+                                    disabled={user.hasSentInterest}
+                                    title={user.hasSentInterest ? 'Interest Sent' : 'Send Interest'}
+                                  >
+                                    {user.hasSentInterest ? (
+                                      <i className="fa fa-paper-plane icon"></i>
+                                    ) : (
+                                      <i className="fa fa-heart icon"></i>
+                                    )}
+                                    <span className="visually-hidden">{user.hasSentInterest ? 'Interest Sent' : 'Send Interest'}</span>
+                          </button>
+                            <button
+                              className="btns me-2 custom-button"
+                              id={user._id}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleMessage(user._id);
+                              }}
+                              title="Message"
+                            >
+                              <i className="fa fa-comment icon"></i>
+                              <span className="visually-hidden">Message</span>
+                            </button>
+                             
+                            <button
+                              className="btns me-2 custom-button"
+                              id={user._id}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                 handleVideoCall(user._id);
+                              }}
+                              title="Message"
+                            >
+                              <i className="fa fa-video-camera"></i>
+                              <span className="visually-hidden">Video Call</span>
+                            </button>
+
                         </div>
                       </div>
                     </div>
                   </Link>
                 </div>
               ))
-            ) : (
+            ) : page === 1 ? (
               <p>No suggestions available.</p>
-            )}
+            ) : null}
           </div>
           <div className="d-flex justify-content-between mt-4">
             <button
@@ -368,11 +471,12 @@ console.log(res)
               Previous
             </button>
             <button
-              className="btns"
-              onClick={() => setPage(prevPage => prevPage + 1)}
-            >
-              Next
-            </button>
+                className="btns"
+                onClick={() => setPage(prevPage => prevPage + 1)}
+                disabled={!hasMoreSuggestions}
+              >
+                Next
+              </button>
           </div>
         </div>
       </div>

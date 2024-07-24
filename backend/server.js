@@ -91,6 +91,7 @@ const getUser = (userId) => {
 };
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
+  socket.emit('your-id', socket.id);
 
   socket.on('joinRoom', (userId) => {
     console.log(`User ${userId} joined room`);
@@ -127,6 +128,24 @@ socket.on('reportAbuse', (data, callback) => {
   setTimeout(() => {
       callback({ status: 'success', message: 'Report received successfully' });
   }, 1000);
+});
+
+
+socket.on('offer', payload => {
+  io.to(payload.target).emit('offer', payload);
+});
+
+socket.on('answer', payload => {
+  io.to(payload.target).emit('answer', payload);
+});
+
+socket.on('ice-candidate', payload => {
+  io.to(payload.target).emit('ice-candidate', payload);
+});
+
+socket.on('incomingCall', ({ callerId, receiverId }) => {
+  console.log("CALLINGGGGGGGGGGGGGGGGGG SOCKET")
+  io.to(receiverId).emit('callNotification', { callerId, message: 'You have an incoming call' });
 });
 
   socket.on('disconnect', () => {

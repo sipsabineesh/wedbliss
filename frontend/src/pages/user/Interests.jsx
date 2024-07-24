@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 export default function Interests() {
   const [interests,setInterests] = useState({})
+  const [acceptedInterests, setAcceptedInterests] = useState({});
   const { currentUser } = useSelector(state => state.user);
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -32,8 +33,15 @@ export default function Interests() {
           navigate('/login')
         }
         setInterests(data);
-        console.log("LIST:")
-        console.log(data);
+        const initialAcceptedInterests = {};
+        Object.keys(data).forEach(key => {
+          data[key].forEach(user => {
+            if (user.isAccepted) {
+              initialAcceptedInterests[user._id] = true;
+            }
+          });
+        });
+        setAcceptedInterests(initialAcceptedInterests);
       } catch (error) {
         console.error('Error fetching suggestions:', error);
       }
@@ -66,15 +74,18 @@ export default function Interests() {
         },
         body: JSON.stringify({ id: id }),
       });
-  
+  console.log(res)
       if (!res.ok) {
         throw new Error('Network response was not ok');
       }
       else{
         toast.success('Interest Accepted')
+        setAcceptedInterests((prev) => ({ ...prev, [id]: true }));
+        console.log("acceptedInterests")
+        console.log(acceptedInterests)
       }
   
-      console.log(await res.json()); // if you want to log the response data
+      console.log(await res.json()); 
     } catch (error) {
       console.error('Error handling interest:', error);
     }
@@ -163,7 +174,8 @@ export default function Interests() {
                 </div>
               </div>
               <div className="d-flex pt-1">
-                <button className="btns" id={user.interestedFrom._id}  onClick={() => handleAccept(user._id)}>Accept</button>
+                <button className="btns" id={user.interestedFrom._id}  onClick={() => handleAccept(user._id)}
+                                 disabled={acceptedInterests[user._id]}>{acceptedInterests[user._id] ? 'Accepted' : 'Accept'}</button>
               </div>
             </div>
           </div>
@@ -175,7 +187,7 @@ export default function Interests() {
  <>
   <div className="card mt-2" style={{ borderRadius: '15px' }}>
     <div className="card-body p-4">
-      <p className="text-center">No accepted interests found.</p>
+      <p className="text-center">No interests found.</p>
     </div>
   </div>
   </>

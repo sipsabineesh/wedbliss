@@ -46,6 +46,7 @@ import Messenger from './pages/user/Messenger';
 import MemberProfile from './pages/user/MemberProfile';
 import AdminNotifications from './pages/admin/AdminNotifications';
 import MyPlan from './pages/user/MyPlan';
+import VideoChat from './pages/user/VideoChat';
 
 
 export default function App() {
@@ -100,6 +101,7 @@ export default function App() {
          <Route path="/messenger" element={<Messenger/>}/>
          <Route path="/memberProfile/:id" element={<MemberProfile/>}/>
          <Route path="/myPlan" element={<MyPlan/>}/>
+         <Route path="/videoCall" element={<VideoChat/>}/>
 
 
          
