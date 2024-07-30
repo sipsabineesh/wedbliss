@@ -285,7 +285,7 @@ export default function Home() {
             <Header />
             {/* <Sidebar/> */}
             {currentUser ? (
-                user.isSubscribed ? (
+                currentUser.isSubscribed ? (
                     <Suggestions />
                 ) : (
                     <Plans />

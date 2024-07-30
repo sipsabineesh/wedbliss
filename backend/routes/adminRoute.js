@@ -1,11 +1,12 @@
 import express from 'express'
-import { getUser,getUsers,verifyUser,blockUnblockUser } from '../controllers/adminController.js';
+import { getAllDetails,getUser,getUsers,verifyUser,blockUnblockUser } from '../controllers/adminController.js';
 import { getPlans,createPlan,editPlan,deletePlan } from '../controllers/planController.js'
 import { getSubscriptions,approveSubscription } from '../controllers/subscriptionController.js';
-import {getNotification,getRenewalNotificationsForAdmin} from '../controllers/notificationController.js'
+import { getNotification,getRenewalNotificationsForAdmin } from '../controllers/notificationController.js'
 
 const router = express.Router();
 
+router.get('/dashboard',getAllDetails)
 router.get('/viewUsers',getUsers)
 router.put('/verifyUser',verifyUser)
 router.put('/blockUnblockUser',blockUnblockUser)

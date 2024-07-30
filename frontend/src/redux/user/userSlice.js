@@ -56,13 +56,13 @@ const userSlice = createSlice({
     setUserIdForContact:(state,action) => {
       state.userIdForContact = action.payload;
     },
-    clearUserIdForContact:(state) => {
+    clearUserIdForContact:(state) => {   
       state.userIdForContact = ''
     },
    
     }
 })
-export const { loginStart,loginSuccess,loginFailure,logout,otpSuccess,editUserSuccess,setPlan,clearPlan,setPreference,clearPreference,setUserIdForContact,clearUserIdForContact} = userSlice.actions;
+export const { loginStart,loginSuccess,loginFailure,logout,otpSuccess,editUserSuccess,setPlan,clearPlan,setPreference,clearPreference,setUserIdForContact,clearUserIdForContact } = userSlice.actions;
 
 export const selectPlan = (state) => state.user.selectedPlan;
 

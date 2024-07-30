@@ -2025,6 +2025,32 @@ strong {
 }
 
 .video-call-modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-call-modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  text-align: center;
+}
+
+/* .video-call-modal {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2047,6 +2073,17 @@ strong {
   width: 80%;
   max-width: 500px;
   text-align: center;
+} */
+.link-input{
+  padding:5px;
+  margin :2%;
+}
+
+.remote-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .list-group-flush {

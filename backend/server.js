@@ -144,8 +144,8 @@ socket.on('ice-candidate', payload => {
 });
 
 socket.on('incomingCall', ({ callerId, receiverId }) => {
-  console.log("CALLINGGGGGGGGGGGGGGGGGG SOCKET")
-  io.to(receiverId).emit('callNotification', { callerId, message: 'You have an incoming call' });
+  console.log("CALLINGGGGGGGGGGGGGGGGGG SOCKET   :  Receiver Id : "+receiverId)
+  io.to(receiverId).emit('callNotification', {receiverId, callerId, message: 'You have an incoming call' });
 });
 
   socket.on('disconnect', () => {

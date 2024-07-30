@@ -134,9 +134,9 @@ export const getUser = async(req,res,next) => {
    const userId = req.params.id
   const  users =  await User.findOne({ _id: userId, isAdmin: false })
   .then(user => {
-  console.log("USER")
+  // console.log("USER")
 
-  console.log(user)
+  // console.log(user)
    res.json({user})
 })
  .catch(err => {
@@ -518,18 +518,19 @@ export const acceptinterests = async(req,res,next) => {
       { new: true }
      )
 
-    const interesteToUser = await User.findById(updatedUser.interestedTo).select('-password');
-    const username = interesteToUser.username
+    const interestToUser = await User.findById(updatedUser.interestedTo).select('-password');
+    const username = interestToUser.username
     const newNotification = new Notification({
-      userId:interesteToUser._id,
+      userId:updatedUser.interestedFrom,
       subscriptionId: null,
       title: 'Accepted Interest',
       message: `User ${username} has accepted your Interest`,
       target: 'user'
   });
   await newNotification.save();
-
-    req.io.to(updatedUser.interestedTo).emit('interestAccepted', {
+console.log(updatedUser.interestedFrom)
+console.log(updatedUser.interestedTo)
+    req.io.to(updatedUser.interestedFrom).emit('interestAccepted', {
       interestId: updatedUser._id,
       acceptedBy: updatedUser.interestedTo
     });

@@ -149,3 +149,32 @@ console.log(updatedUser)
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
+export const getAllDetails = async(req,res) => { console.log("GET ALL DETAILS CALLED")
+    try {
+        const statistics = {
+          totalUsers: 1000,
+          totalPlans: 50,
+          totalSubscriptions: 300,
+          pieChartData: [
+            { name: 'Users', value: 1000 },
+            { name: 'Plans', value: 50 },
+            { name: 'Subscriptions', value: 300 },
+          ],
+        };
+    console.log(statistics)
+        const chartData = {
+          lineChartData: [
+            { name: 'January', value: 100 },
+            { name: 'February', value: 200 },
+            { name: 'March', value: 300 },
+            { name: 'April', value: 400 },
+          ],
+        };
+    
+        res.json({ statistics, chartData });
+      } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+      }
+}

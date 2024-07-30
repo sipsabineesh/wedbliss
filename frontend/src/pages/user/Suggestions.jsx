@@ -254,10 +254,10 @@ export default function Suggestions() {
        try {
         socket.on('your-id', id => {
           console.log('Your ID:', id);
-          alert(`Your ID is: ${id}`);
+          // alert(`Your ID is: ${id}`);
         });
         
-        alert('SOCKETID : '+socket.id)
+        // alert('SOCKETID : '+socket.id)
         socket.emit('incomingCall', { callerId: socket.id, receiverId: id });
         navigate('/videoCall', { state: { id } });
       } catch (error) {
@@ -458,8 +458,8 @@ export default function Suggestions() {
                   </Link>
                 </div>
               ))
-            ) : page === 1 ? (
-              <p>No suggestions available.</p>
+            // ) : page === 1 ? (
+            //   <p>No suggestions available.</p>
             ) : null}
           </div>
           <div className="d-flex justify-content-between mt-4">

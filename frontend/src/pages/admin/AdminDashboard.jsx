@@ -1,6 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import { Link } from "react-router-dom"
 import AdminHeader from '../../components/AdminHeader';
+import AdminChart from '../../components/AdminChart';
+import AdminStatistics from '../../components/AdminStatistics';
 
 export default function Home()  {
     const [user,setUser] = useState({})
@@ -22,6 +24,7 @@ export default function Home()  {
                     <a href="#"><span><i className="fa fa-instagram"></i></span></a>
                     <a href="#"><span><i className="fa fa-youtube-play"></i></span></a>
                   </div> */}
+                  
                 </div>
               </div>
             </div>
