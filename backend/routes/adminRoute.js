@@ -3,10 +3,21 @@ import { getAllDetails,getUser,getUsers,verifyUser,blockUnblockUser } from '../c
 import { getPlans,createPlan,editPlan,deletePlan } from '../controllers/planController.js'
 import { getSubscriptions,approveSubscription } from '../controllers/subscriptionController.js';
 import { getNotification,getRenewalNotificationsForAdmin } from '../controllers/notificationController.js'
+import { getUserStats,getPlanSelectionStats,getSubscriptionStats,getUserGrowthStats,getPlanDistributionStats,getAgeStats,getCountryStats,getRegistrationVsSubscriptionStats} from '../controllers/analyticController.js'
 
 const router = express.Router();
 
 router.get('/dashboard',getAllDetails)
+router.get('/userStats',getUserStats)
+router.get('/planSelectionStats',getPlanSelectionStats);
+router.get('/subscriptionStats', getSubscriptionStats);
+router.get('/userGrowthStats', getUserGrowthStats);
+router.get('/planDistributionStats', getPlanDistributionStats);
+router.get('/ageStats', getAgeStats);
+router.get('/countryStats', getCountryStats);
+router.get('/registrationVsSubscriptionStats', getRegistrationVsSubscriptionStats);
+
+
 router.get('/viewUsers',getUsers)
 router.put('/verifyUser',verifyUser)
 router.put('/blockUnblockUser',blockUnblockUser)

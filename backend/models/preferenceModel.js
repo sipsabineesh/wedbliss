@@ -53,7 +53,7 @@ const preferenceSchema = new mongoose.Schema({
         type:String,
     }, 
                  
-}, {timestamp:true});
+}, {timestamps:true});
 
 const Preference = mongoose.model('Preference',preferenceSchema);
 

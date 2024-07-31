@@ -40,7 +40,7 @@ const subscriptionSchema = new mongoose.Schema({
     },
     
 
-}, {timestamp:true});
+}, {timestamps:true});
 
 const Subscription = mongoose.model('Subscription',subscriptionSchema);
 
