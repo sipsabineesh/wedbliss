@@ -46,6 +46,7 @@ export const getPlanSelectionStats = async (req, res) => {
 
 export const getSubscriptionStats = async (req, res) => {
     try {
+        const totalSubscriptions = await Subscription.countDocuments();
         const subscriptions = await Subscription.aggregate([
             {
               $addFields: {
@@ -62,53 +63,134 @@ export const getSubscriptionStats = async (req, res) => {
             { $sort: { "_id.year": 1, "_id.month": 1 } }
           ]);
   
-      res.json(subscriptions);
+      // res.json(subscriptions);
+      res.json({ totalSubscriptions, subscriptions });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   };
-  
-export const getUserGrowthStats = async (req, res) => {
+
+  export const getRevenueStats = async (req, res) => {
     try {
-        const userGrowth = await User.aggregate([
-            {
+      const data = await Subscription.aggregate([
+        {
+          $group: {
+            _id: {
+              month: { $month: "$createdAt" },
+              year: { $year: "$createdAt" }
+            },
+            totalRevenue: { $sum: "$planPrice" }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            month: { $concat: [{ $toString: "$_id.month" }, "-", { $toString: "$_id.year" }] },
+            revenue: "$totalRevenue"
+          }
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } }
+      ]);
+  
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching revenue trends data', error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+  
+  
+// export const getUserGrowthStats = async (req, res) => {
+//     try {
+//         const userGrowth = await User.aggregate([
+//             {
+//               $group: {
+//                 _id: {
+//                   date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+//                 },
+//                 newUsers: { $sum: 1 },
+//               },
+//             },
+//             {
+//               $sort: { "_id.date": 1 },
+//             },
+//             {
+//               $addFields: {
+//                 date: "$_id.date",
+//               },
+//             },
+//             {
+//               $project: {
+//                 _id: 0,
+//                 date: 1,
+//                 newUsers: 1,
+//               },
+//             },
+//           ]);
+          
+//           let totalUsers = 0;
+//           const userGrowthWithTotal = userGrowth.map((item) => {
+//             totalUsers += item.newUsers;
+//             return { ...item, totalUsers };
+//           });
+          
+    
+//         res.json(userGrowthWithTotal);
+//       } catch (err) {
+//         res.status(500).json({ message: err.message });
+//       }
+// }
+export const getUserGrowthStats = async (req, res) => {
+  try {
+      const userGrowth = await User.aggregate([
+          {
               $group: {
-                _id: {
-                  date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-                },
-                newUsers: { $sum: 1 },
+                  _id: {
+                      year: { $year: "$createdAt" },
+                      week: { $isoWeek: "$createdAt" }, // Group by week
+                  },
+                  newUsers: { $sum: 1 },
               },
-            },
-            {
-              $sort: { "_id.date": 1 },
-            },
-            {
+          },
+          {
+              $sort: { "_id.year": 1, "_id.week": 1 },
+          },
+          {
               $addFields: {
-                date: "$_id.date",
+                  year: "$_id.year",
+                  week: "$_id.week",
+                  startDate: {
+                      $dateFromParts: {
+                          isoWeekYear: "$_id.year",
+                          isoWeek: "$_id.week",
+                          isoDayOfWeek: 1,
+                      },
+                  },
               },
-            },
-            {
+          },
+          {
               $project: {
-                _id: 0,
-                date: 1,
-                newUsers: 1,
+                  _id: 0,
+                  year: 1,
+                  week: 1,
+                  startDate: 1,
+                  newUsers: 1,
               },
-            },
-          ]);
-          
-          let totalUsers = 0;
-          const userGrowthWithTotal = userGrowth.map((item) => {
-            totalUsers += item.newUsers;
-            return { ...item, totalUsers };
-          });
-          
-    
-        res.json(userGrowthWithTotal);
-      } catch (err) {
-        res.status(500).json({ message: err.message });
-      }
-}
-    
+          },
+      ]);
+
+      let totalUsers = 0;
+      const userGrowthWithTotal = userGrowth.map((item) => {
+          totalUsers += item.newUsers;
+          return { ...item, totalUsers };
+      });
+
+      res.json(userGrowthWithTotal);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+};
+ 
 
 export const getPlanDistributionStats = async (req, res) => {
     try {
@@ -203,7 +285,25 @@ export const getCountryStats = async (req, res) => {
 }
 
 export const getRegistrationVsSubscriptionStats = async (req, res) => {
+    // const documents = await User.find({ createdAt: { $exists: false }, updatedAt: { $exists: true } }).toArray();
 
+    // // Prepare bulk operations
+    // const bulkOps = documents.map(doc => ({
+    //   updateOne: {
+    //     filter: { _id: doc._id },
+    //     update: { $set: { createdAt: doc.updatedAt } }
+    //   }
+    // }));
+
+    // // Execute bulk operations
+    // if (bulkOps.length > 0) {
+    //   const result = await User.bulkWrite(bulkOps);
+    //   console.log("Field 'createdAt' added successfully to", result.modifiedCount, "documents");
+    // } else {
+    //   console.log("No documents found that need updating");
+    // }
+
+  
 
     try {
         const registrations = await User.aggregate([
@@ -245,7 +345,7 @@ export const getRegistrationVsSubscriptionStats = async (req, res) => {
             },
             { $sort: { date: 1 } }
         ]);
-console.log(registrations, subscriptions)
+
         res.json({ registrations, subscriptions });
     } catch (err) {
         res.status(500).send(err.message);

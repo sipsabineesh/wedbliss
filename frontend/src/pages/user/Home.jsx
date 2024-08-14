@@ -265,7 +265,7 @@ export default function Home() {
         } else {
             setLoading(false); 
         }
-    }, [currentUser]);
+    }, []);
 
     if (loading) {
         return (
@@ -285,7 +285,7 @@ export default function Home() {
             <Header />
             {/* <Sidebar/> */}
             {currentUser ? (
-                currentUser.isSubscribed ? (
+                user.isSubscribed ? (
                     <Suggestions />
                 ) : (
                     <Plans />

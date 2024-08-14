@@ -8,7 +8,7 @@ export const getRenewalNotification = async(req,res,next) => {
         const soonToExpireDate = new Date(now);
         soonToExpireDate.setDate(now.getDate() + 7); 
         const userId = req.params.id;
-        const notifications = await Notification.find({ userId:userId,isViewed:false });
+        const notifications = await Notification.find({ userId:userId,isViewed:false,type:'user' });
        
         console.log(notifications)
         res.status(200).json({notifications})

@@ -103,13 +103,14 @@ io.on('connection', (socket) => {
     io.emit("getUsers", users);
   });
 
-  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-    console.log("SENDING MESSAGE SOCKET:", senderId, receiverId, text);
+  socket.on("sendMessage", ({ senderId, receiverId, text,conversationId }) => {
+    console.log("SENDING MESSAGE SOCKET:", senderId, receiverId, text,conversationId);
     const user = getUser(receiverId);
     if (user && user.socketId) {
       io.to(user.socketId).emit("getMessage", {
         senderId,
         text,
+        conversationId
       });
     } else {
       console.error('User not found or user.socketId is undefined');

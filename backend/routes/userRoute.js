@@ -21,7 +21,8 @@ import { getUsers,
         blockMemberProfile,
         unblockMemberProfile,
         reportAbuse,
-        viewUserPlanDetails } from '../controllers/userController.js';
+        viewUserPlanDetails,
+        advancedSearch } from '../controllers/userController.js';
    import { getPlansForUser } from '../controllers/planController.js';
    import { getCheckOutSession,addSubscription } from '../controllers/subscriptionController.js';
    import { getRenewalNotification,getNotification,updateViewedNotification } from '../controllers/notificationController.js'
@@ -60,6 +61,7 @@ router.put('/blockMemberProfile/:id',verifyBlocked,blockMemberProfile)
 router.put('/unblockMemberProfile/:id',verifyBlocked,unblockMemberProfile)
 router.post('/reportAbuse',reportAbuse)
 router.get('/viewUserPlan/:id',viewUserPlanDetails)
+router.get('/advancedSearch/:id', verifyBlocked,advancedSearch);
 
 
 

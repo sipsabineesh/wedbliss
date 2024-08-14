@@ -234,8 +234,7 @@ export default function AdminSubscriptionList() {
   const subscriptions = useSelector(state => state.admin.subscriptions);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Number of items to display per page
-
+  const [itemsPerPage] = useState(5); 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -307,7 +306,7 @@ export default function AdminSubscriptionList() {
                               <th>Validation</th>
                               <th>No. of Contacts</th>
                               <th>No. of Messages</th>
-                              <th>Action</th>
+                              {/* <th>Action</th> */}
                             </tr>
                           </thead>
                           <tbody>
@@ -319,18 +318,18 @@ export default function AdminSubscriptionList() {
                                 <td>{subscription.remainingValidity} Days</td>
                                 <td>{subscription.remainingContacts}</td>
                                 <td>{subscription.remainingMessages}</td>
-                                <td>
+                                {/* <td>
                                   {!subscription.isApproved && (
                                     <div className="control">
                                       <button
                                         type="button" // Change type to button to prevent form submission
                                         className="btns"
-                                        onClick={() => handleApprove(subscription._id)} >
+                                        onClick={(event) => handleApprove(subscription._id, event)}>
                                         Approve
                                       </button>
                                     </div>
                                   )}
-                                </td>
+                                </td> */}
                               </tr>
                             ))}
                           </tbody>

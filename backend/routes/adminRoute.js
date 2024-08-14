@@ -3,7 +3,7 @@ import { getAllDetails,getUser,getUsers,verifyUser,blockUnblockUser } from '../c
 import { getPlans,createPlan,editPlan,deletePlan } from '../controllers/planController.js'
 import { getSubscriptions,approveSubscription } from '../controllers/subscriptionController.js';
 import { getNotification,getRenewalNotificationsForAdmin } from '../controllers/notificationController.js'
-import { getUserStats,getPlanSelectionStats,getSubscriptionStats,getUserGrowthStats,getPlanDistributionStats,getAgeStats,getCountryStats,getRegistrationVsSubscriptionStats} from '../controllers/analyticController.js'
+import { getUserStats,getPlanSelectionStats,getSubscriptionStats,getUserGrowthStats,getPlanDistributionStats,getAgeStats,getCountryStats,getRegistrationVsSubscriptionStats,getRevenueStats} from '../controllers/analyticController.js'
 
 const router = express.Router();
 
@@ -16,6 +16,7 @@ router.get('/planDistributionStats', getPlanDistributionStats);
 router.get('/ageStats', getAgeStats);
 router.get('/countryStats', getCountryStats);
 router.get('/registrationVsSubscriptionStats', getRegistrationVsSubscriptionStats);
+router.get('/revenueTrends', getRevenueStats)
 
 
 router.get('/viewUsers',getUsers)

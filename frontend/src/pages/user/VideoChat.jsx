@@ -40,10 +40,10 @@ export default function VideoChat() {
 
 
 useEffect(() => {
-  const handleCallNotification = ({ callerId, message }) => {
+  const handleCallNotification = ({ receiverId,callerId, message }) => {
     console.log('callNotification event received');
     console.log('Incoming call from:', callerId);
-    setIncomingCall({ callerId, message });
+    setIncomingCall({ receiverId,callerId, message });
     setRemoteId(callerId);
     console.log("incomingCall  :"+incomingCall)
 
@@ -104,12 +104,10 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    alert('remoteId changed:', remoteId);
+    alert('Ringing.....', remoteId);
   }, [remoteId]);
   
-  useEffect(() => {
-    alert('incomingCall changed:', incomingCall);
-  }, [incomingCall]);
+  
 
   const startCall = async () => {
     alert("Connecting...");
@@ -260,7 +258,8 @@ useEffect(() => {
         </div>
       )} */}
        {incomingCall && (
-            <div className="video-call-modal">
+        incomingCall.receiverId === currentUser._id && (
+          <div className="video-call-modal">
               <div className="video-call-modal-content">
                 <h2>Incoming Call</h2>
                 <p>{incomingCall.message} from {incomingCall.callerId}</p>
@@ -268,6 +267,8 @@ useEffect(() => {
                 <button className="btns" onClick={() => rejectCall(incomingCall.callerId)}>Cancel</button>
               </div>
             </div>
+        )
+            
           )}
     </div>
   );

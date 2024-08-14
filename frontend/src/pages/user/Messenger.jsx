@@ -5,6 +5,7 @@ import axios from 'axios';
 import Header from '../../components/Header';
 import Conversation from '../../components/Conversation';
 import Message from '../../components/Message';
+import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 
 export default function Messenger() {
@@ -17,27 +18,97 @@ export default function Messenger() {
   const [searchTerm, setSearchTerm] = useState('');
   const [userDetails, setUserDetails] = useState({});
   const [notifications, setNotifications] = useState([]);
-  const [unreadConversations, setUnreadConversations] = useState({});
+  const [unreadConversations,setUnreadConversations] = useState({});
+  const [unreadCurrentConversations, setUnreadCurrentConversations] = useState({});
   const socket = useRef();
   const scrollRef = useRef();
+  const userDetailsRef = useRef({});
   const { currentUser } = useSelector(state => state.user);
 
   useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userDetailsMap = {};
+        const memberIds = [...new Set(Object.values(conversations).flatMap(conversation => conversation.members))];
+        for (const memberId of memberIds) {
+          if (!userDetails[memberId]) {
+            const res = await axios.get(`/api/user/userDetails?userId=${memberId}`);
+            userDetailsMap[memberId] = res.data;
+          }
+        }
+        setUserDetails(prevDetails => ({ ...prevDetails, ...userDetailsMap }));
+      } catch (err) {
+        console.error('Error fetching user details:', err);
+      }
+    };
+
+    if (Object.keys(conversations).length > 0) {
+      fetchUserDetails();
+    }
+  }, [conversations]);
+
+  useEffect(() => {
+    // Update the ref with the latest userDetails
+    userDetailsRef.current = userDetails;
+  }, [userDetails]);
+  
+  useEffect(() => {
+    console.log("--------------User Details:::", userDetails);
+  //  let forSenderDetails = userDetails;
     socket.current = io('http://localhost:3000');
+let senderId = ''
     socket.current.on('getMessage', (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-        read: false,
-      });
-      setNotifications(prev => [...prev, `New message from ${data.senderId}`]);
-      setUnreadConversations(prev => ({
-        ...prev,
-        [data.conversationId]: (prev[data.conversationId] || 0) + 1
-      }));
+       senderId = data.senderId;
+       const senderDetails = userDetailsRef.current[senderId];
+       const senderUsername = senderDetails ? senderDetails.username : 'Unknown User';
+       toast.success(`New Message from ${senderUsername}`)
+            setArrivalMessage({
+            sender: senderId,
+            text: data.text,
+            conversationId: data.conversationId,
+            createdAt: Date.now(),
+            read: false,
+        });
+       
+  
+        console.log("SenderDetails:", senderDetails);
+        console.log("Sender Username:", senderUsername);
+  
+        // Set the notification with the username
+        setNotifications(prev => [...prev, `New message from ${senderUsername}`]);
+
+        setUnreadCurrentConversations(prev => ({
+            ...prev,
+            [data.conversationId]: (prev[data.conversationId] || 0) + 1
+        }));
     });
-  }, []);
+}, [userDetails]); 
+
+//   useEffect(() => {
+//     console.log("--------------User Details:::",userDetails)
+//     socket.current = io('http://localhost:3000');
+//     socket.current.on('getMessage', (data) => {
+//       let senderId = data.senderId
+//       setArrivalMessage({
+//         sender: data.senderId,
+//         text: data.text,
+//         conversationId:data.conversationId,
+//         createdAt: Date.now(),
+//         read: false,
+//       });
+//       console.log("Sender ID:", senderId);
+// console.log("User Details:", userDetails);
+
+
+//       const senderUsername = userDetails[senderId]?.username || 'Unknown User';
+//       setNotifications(prev => [...prev, `New message from ${senderUsername}`]);
+
+//       setUnreadCurrentConversations(prev => ({
+//         ...prev,
+//         [data.conversationId]: (prev[data.conversationId] || 0) + 1
+//       }));
+//     });
+//   }, []);
 
   useEffect(() => {
     arrivalMessage &&
@@ -48,7 +119,7 @@ export default function Messenger() {
   useEffect(() => {
     socket.current.emit('addUser', currentUser._id);
     socket.current.on('getUsers', users => {
-      console.log(users);
+      // console.log(users);
     });
   }, [currentUser]);
 
@@ -57,9 +128,9 @@ export default function Messenger() {
       try {
         if (currentUser && currentUser._id) {
           const userId = currentUser._id;
-          console.log('Fetching conversations for user:', userId);
+          // console.log('Fetching conversations for user:', userId);
           const res = await axios.get(`/api/conversations/${userId}`);
-          console.log('Server response data:', res.data);
+          // console.log('Server response data:', res.data);
 
           if (Array.isArray(res.data)) {
             const conversationsObject = res.data.reduce((acc, conversation) => {
@@ -67,7 +138,7 @@ export default function Messenger() {
               return acc;
             }, {});
             setConversations(conversationsObject);
-            console.log('Conversations set successfully:', conversationsObject);
+            // console.log('Conversations set successfully:', conversationsObject);
           } else {
             console.error('Expected an array but got:', res.data);
           }
@@ -85,12 +156,12 @@ export default function Messenger() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        console.log('currentChat');
-        console.log(currentChat);
+        // console.log('currentChat');
+        // console.log(currentChat);
         const res = await axios.get('/api/messages/' + currentChat?._id);
-        console.log(res);
+        // console.log(res);
         setMessages(res.data);
-        setUnreadConversations(prev => ({ ...prev, [currentChat?._id]: 0 }));
+        setUnreadCurrentConversations(prev => ({ ...prev, [currentChat?._id]: 0 }));
       } catch (err) {
         console.log(err);
       }
@@ -100,6 +171,10 @@ export default function Messenger() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!newMessage.trim()) {
+      // alert('Message cannot be empty');
+      return;
+    }
     const message = {
       sender: currentUser._id,
       text: newMessage,
@@ -114,6 +189,7 @@ export default function Messenger() {
       senderId: currentUser._id,
       receiverId,
       text: newMessage,
+      conversationId: currentChat._id,
     });
     try {
       const res = await axios.post('/api/messages', message);
@@ -171,35 +247,14 @@ export default function Messenger() {
     setNotifications([]);
   };
 
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const userDetailsMap = {};
-        const memberIds = [...new Set(Object.values(conversations).flatMap(conversation => conversation.members))];
-        for (const memberId of memberIds) {
-          if (!userDetails[memberId]) {
-            const res = await axios.get(`/api/user/userDetails?userId=${memberId}`);
-            userDetailsMap[memberId] = res.data;
-          }
-        }
-        setUserDetails(prevDetails => ({ ...prevDetails, ...userDetailsMap }));
-      } catch (err) {
-        console.error('Error fetching user details:', err);
-      }
-    };
-
-    if (Object.keys(conversations).length > 0) {
-      fetchUserDetails();
-    }
-  }, [conversations]);
-
+ 
   const filteredConversations = Object.values(conversations)
     .filter(conversation =>
       conversation.members.some(member =>
         userDetails[member]?.username.toLowerCase().includes(searchTerm.toLowerCase())
       )
     )
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); // Sort by latest message timestamp
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); 
 
   const getChatUserName = () => {
     if (!currentChat) return '';
@@ -209,8 +264,23 @@ export default function Messenger() {
 
   return (
     <>
-      {/* <Header/> */}
-      <div className="messenger">
+      <Header/>
+      <div className="messenger mt-5">
+      {/* {notifications.length > 0 && (
+          <div className="notificationBar">
+            <div className="notifications">
+              {notifications.map((notification, index) => (
+                <div key={index} className="notification">
+                  {notification}
+                </div>
+              ))}
+            </div>
+            <button onClick={clearNotifications} className="clearNotificationsButton">
+              Clear Notifications
+            </button>
+          </div>
+        )} */}
+        <div className="chatContainer">
         <div className="chatMenu">
           <div className="chatMenuWrapper">
             <input
@@ -224,7 +294,7 @@ export default function Messenger() {
                   <Conversation
                     conversation={conversation}
                     currentUser={currentUser}
-                    unreadCount={unreadConversations[conversation._id] || 0}
+                    unreadCount={unreadCurrentConversations[conversation._id] || 0}
                   />
                 </div>
               ))
@@ -287,6 +357,7 @@ export default function Messenger() {
               </span>
             )}
           </div>
+        </div>
         </div>
       </div>
     </>

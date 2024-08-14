@@ -46,16 +46,28 @@ export default function Suggestions() {
     }
 }, [currentUser]);
 
-  useEffect(() => {
-    if (currentUser?._id) {
+useEffect(() => {
+  if (currentUser?._id) {
       socket.emit('joinRoom', currentUser._id);
-      // alert("emitted joinRoom with "+currentUser._id)
-    }
+      console.log('Joined room:', currentUser._id); 
+  }
 
-    return () => {
-      socket.disconnect(); 
-    };
-  }, [currentUser]);
+  return () => {
+      socket.disconnect();
+      console.log('Socket disconnected'); 
+  };
+}, [currentUser]);
+
+  // useEffect(() => {
+  //   if (currentUser?._id) {
+  //     socket.emit('joinRoom', currentUser._id);
+  //     // alert("emitted joinRoom with "+currentUser._id)
+  //   }
+
+  //   return () => {
+  //     socket.disconnect(); 
+  //   };
+  // }, [currentUser]);
 
   // useEffect(() => { 
   //   socket.on('newInterest', (userData) => { 
@@ -258,8 +270,15 @@ export default function Suggestions() {
         });
         
         // alert('SOCKETID : '+socket.id)
-        socket.emit('incomingCall', { callerId: socket.id, receiverId: id });
-        navigate('/videoCall', { state: { id } });
+        // socket.emit('incomingCall', { callerId: socket.id, receiverId: id });
+        // navigate('/videoCall', { state: { id } });
+        if (socket.connected) {
+          socket.emit('incomingCall', { callerId: socket.id, receiverId: id });
+          navigate('/videoCall', { state: { id } });
+      } else {
+          toast.error('Unable to connect to the socket. Please try again.');
+          console.error('Socket not connected'); 
+      }
       } catch (error) {
         console.error('Error initiating video call:', error);
         toast.error('An error occurred. Please try again.');

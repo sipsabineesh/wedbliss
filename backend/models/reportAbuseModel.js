@@ -20,6 +20,9 @@ const reportAbuseSchema = new mongoose.Schema(
         type: Date,
         default: Date.now
     },
+    proofImage:{
+        type: String,
+    },
     status: {
         type: String,
         //enum: ['Pending', 'Reviewed', 'Resolved'],

@@ -1660,13 +1660,46 @@
 }
 
 /* Messenger css */
-.messenger {
+/* .messenger {
   height: calc(100vh - 70px);
   display: flex;
 }
 
 .chatMenu {
-  flex: 3.5;
+  flex: 2.5;
+} */
+.messenger {
+  height: calc(100vh - 70px); /* Adjust the height according to your header */
+  display: flex;
+  flex-direction: column;
+}
+
+.chatContainer {
+  display: flex;
+  height: 100%;
+  position: relative; /* For pseudo-element positioning */
+}
+
+.chatMenu {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+.chatMenu::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background-color: #ccc; /* Vertical line */
+}
+
+.chatBox {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
 }
 
 .chatMenuInput {
@@ -1675,10 +1708,10 @@
   border: none;
   border-bottom: 1px solid gray;
 }
-
+/* 
 .chatBox {
   flex: 5.5;
-}
+} */
 
 .chatBoxWrapper {
   display: flex;
@@ -1922,6 +1955,12 @@
   font-size: 14px;
 }
 
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+ 
 strong {
   font-weight: bold;
 }
@@ -2263,7 +2302,10 @@ strong {
 .report-abuse-modal button:hover {
   background-color: #0056b3;
 } */
-
+.report-abuse-modal-footer{
+  display: flex; 
+  justify-content: flex-end;
+}
 
 @media screen and (max-width: 768px) {
   .conversationName {

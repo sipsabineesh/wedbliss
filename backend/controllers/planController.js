@@ -3,17 +3,28 @@ import Plan from '../models/planModel.js'
 import { errorHandler } from "../utils/error.js"
 
 export const getPlans = async(req,res,next) => {
-    const  plans = await Plan.find({isDeleted:false})
-    .then(plan => {
-     //res.send(user) 
-     console.log(plan)
-     res.json({plan})
- })
-   .catch(err => {
-    console.log(err)
-     next(errorHandler(500, 'Error occured while retrieving data'));
- })
-  
+//   console.log("--------------------")
+//     const  plans = await Plan.find({isDeleted:false})
+//     .then(plan => {
+//      //res.send(user) 
+//      console.log("plan")
+
+//      console.log(plan)
+//      res.json({plan})
+//  })
+//    .catch(err => {
+//     console.log(err)
+//      next(errorHandler(500, 'Error occured while retrieving data'));
+//  })
+try {
+  console.log("Fetching plans...");
+  const plans = await Plan.find({ isDeleted: false });
+  console.log("Plans fetched successfully:", plans);
+  res.json({ plan: plans });
+} catch (err) {
+  console.error("Error occurred while retrieving data:", err);
+  next(errorHandler(500, 'Error occurred while retrieving data'));
+}
 //  exports.listProducts = async (req, res) => {
 //     const defaultPerPage = 10;
 //     const page = parseInt(req.query.page) || 1; 

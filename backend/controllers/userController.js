@@ -224,7 +224,17 @@ export const suggestUsers = async (req, res, next) => {
     const gender = profileUser.gender === 'male' ? 'female' : 'male';
 
     const suggestedUsers = await User.aggregate([
-      { $match: { $and: [{ _id: { $ne: id } , isAdmin: false , gender:gender, isBlocked:false,isVerifiedByAdmin:true }] } },
+      { $match: {
+         $and: [{ _id: { $ne: id } ,
+                  isAdmin: false ,
+                  gender:gender,
+                  isBlocked:false,
+                  isVerifiedByAdmin:true,
+                  blockedProfiles: { $ne: new Mongoose.Types.ObjectId(id) },
+                   _id: { $nin: profileUser.blockedProfiles } 
+               }] 
+        }
+      },
       {
         $lookup: {
           from: "interests",
@@ -669,16 +679,19 @@ export const unblockMemberProfile = async(req,res,next) => {
 }
 
 export const reportAbuse = async(req,res,next) => {
-  const { reporterId, reportedUserId, reason } = req.body;
-console.log(reporterId, reportedUserId, reason)
+  let { reporterId, reportedUserId, proofImage, reason } = req.body;
   try {
       if (!reporterId || !reportedUserId || !reason) {
           return res.status(400).json({ message: 'Reporter ID, Reported User ID, and reason are required' });
       }
-
+      if (proofImage && typeof proofImage === 'string') {
+        const uploadResponse = await cloudinary.v2.uploader.upload(proofImage);
+        proofImage = uploadResponse.url;
+      }
       const newReport = new AbuseReport({
           reporterId,
           reportedUserId,
+          proofImage,
           reason
       });
 
@@ -756,3 +769,100 @@ console.log(subscription)
   res.status(500).json({ message: 'Server error' });
 }
 }
+
+export const advancedSearch = async (req, res, next) => {
+  console.log("IN ADVAAANCED SEARCH")
+  const {
+    page = 1,
+    limit = 10,
+    ageFrom,
+    ageTo,
+    maritalStatus,
+    diet,
+    religion,
+    caste,
+    motherTongue,
+    nativePlace,
+    height,
+    weight,
+    qualification,
+    workingStatus,
+    hobbies,
+    countryLivingIn,
+  } = req.query;
+
+  try {
+    const id = req.params.id; // Assuming you have user authentication in place
+    const profileUser = await User.findById(id);
+    // const preference = await Preference.findOne({ userId: id });
+
+    if (!profileUser) {
+      throw new Error('Profile user not found');
+    }
+
+    let matchConditions = [
+      { isAdmin: false },
+      { _id: { $ne: id } },
+      { gender: profileUser.gender === 'male' ? 'female' : 'male' },
+    ];
+
+    const pushCondition = (field, value) => {
+      if (value) {
+        matchConditions.push({ [field]: value });
+      }
+    };
+
+    const userSpecifications =  profileUser;
+
+    // pushCondition('dob', {
+    //   $gte: new Date(new Date().setFullYear(new Date().getFullYear() - (ageTo || userSpecifications.ageTo || 100))),
+    //   $lte: new Date(new Date().setFullYear(new Date().getFullYear() - (ageFrom || userSpecifications.ageFrom || 18))),
+    // });
+    // pushCondition('maritalStatus', maritalStatus || userSpecifications.maritalStatus);
+    // pushCondition('diet', diet || userSpecifications.diet);
+    pushCondition('religion', religion || userSpecifications.religion);
+    // pushCondition('caste', caste || userSpecifications.caste);
+    pushCondition('motherTongue', motherTongue || userSpecifications.motherTongue);
+    // pushCondition('nativePlace', nativePlace || userSpecifications.nativePlace);
+    // pushCondition('height', { $gte: height || userSpecifications.height });
+    // pushCondition('weight', { $lte: weight || userSpecifications.weight });
+    // pushCondition('qualification', qualification || userSpecifications.qualification);
+    // pushCondition('workingStatus', workingStatus || userSpecifications.workingStatus);
+    // pushCondition('hobbies', { $in: (hobbies || userSpecifications.hobbies)?.split(', ') });
+    // pushCondition('countryLivingIn', countryLivingIn || userSpecifications.countryLivingIn);
+
+    matchConditions = matchConditions.filter(condition => Object.keys(condition).length !== 0);
+
+    const suggestedUsers = await User.aggregate([
+      { $match: { $and: matchConditions } },
+      {
+        $lookup: {
+          from: "interests",
+          let: { userId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$interestedFrom", id] },
+                    { $eq: ["$interestedTo", "$$userId"] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: "interests"
+        }
+      },
+      { $match: { interests: { $eq: [] } } },
+      { $sort: { _id: -1 } },
+      { $skip: (page - 1) * limit }, 
+      { $limit: parseInt(limit) } 
+    ]);
+console.log(suggestedUsers.length)
+    res.json({ suggestedUsers });
+  } catch (error) {
+    console.error('Error occurred during advanced search:', error);
+    next(errorHandler(500, 'Error occurred while retrieving data'));
+  }
+};
