@@ -9,7 +9,7 @@ import { setUserIdForContact } from '../../redux/user/userSlice';
 import { Card, Spinner } from 'react-bootstrap';
 import ReportAbuseModal from './ReportAbuseModal'; 
 
-const socket = io('http://localhost:3000');
+const socket = io('https://wedbliss.live');
 
 export default function MemberProfile() {
 

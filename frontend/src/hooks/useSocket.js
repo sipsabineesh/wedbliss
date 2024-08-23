@@ -5,7 +5,7 @@ export default function useSocket(userId) {
 
     useEffect(() => {
       if (userId) {
-        socketRef.current = io('http://localhost:3000', {
+        socketRef.current = io('https://wedbliss.live', {
           query: { userId }
         });
   

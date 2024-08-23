@@ -410,7 +410,7 @@ import { logout } from '../redux/user/userSlice';
 import { toast } from 'react-toastify';
 import io from 'socket.io-client';
 
-const socket = io.connect('http://localhost:3000');
+const socket = io.connect('https://wedbliss.live');
 
 export default function Header() {
   const [user, setUser] = useState({});
@@ -513,11 +513,14 @@ export default function Header() {
     setIsDropdownVisible(!isDropdownVisible);
   };
 
-  const handleNotificationClick = async (notificationId) => {
+  const handleNotificationClick = async (notificationId) => { alert(notificationId)
     try {
       const res = await axios.put(`/api/user/updateViewed/${notificationId}`, {
         isViewed: true,
       });
+      console.log("res")
+      console.log(res)
+
       if (res.status === 200) {
         navigate(`/notifications/${notificationId}`);
       } else {

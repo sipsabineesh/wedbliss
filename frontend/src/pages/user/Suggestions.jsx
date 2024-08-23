@@ -10,7 +10,7 @@ import axios from 'axios';
 import Messenger from './Messenger';
 
 
-const socket = io('http://localhost:3000');
+const socket = io('https://wedbliss.live');
 
 export default function Suggestions() {
   const [user, setUser] = useState({});

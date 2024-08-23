@@ -13,6 +13,7 @@ import conversationRoute from './routes/conversationRoute.js'
 import messageRoute from './routes/messageRoute.js'
 import subscriptionRenewalNotifier from './tasks/subscriptionRenewalNotifier.js';
 import {handleNotificationEvents} from './sockets/notificationSocket.js'
+import Notification from './models/notificationModel.js';
 
 const app = express();
 dotenv.config()
@@ -103,7 +104,7 @@ io.on('connection', (socket) => {
     io.emit("getUsers", users);
   });
 
-  socket.on("sendMessage", ({ senderId, receiverId, text,conversationId }) => {
+  socket.on("sendMessage",async ({ senderId, receiverId, text,conversationId }) => {
     console.log("SENDING MESSAGE SOCKET:", senderId, receiverId, text,conversationId);
     const user = getUser(receiverId);
     if (user && user.socketId) {
@@ -115,6 +116,21 @@ io.on('connection', (socket) => {
     } else {
       console.error('User not found or user.socketId is undefined');
     }
+
+    try {
+      const newNotification = new Notification({
+          userId: receiverId, 
+          title: 'New Message',
+          subscriptionId: null,
+          message: `You have a new message from ${senderId}`, 
+          target: 'user', 
+      });
+      console.log('New Notification:',newNotification)
+      await newNotification.save();
+      console.log('Notification saved successfully');
+  } catch (error) {
+      console.error('Error saving notification:', error);
+  }
   });
 
 //   socket.on('reportAbuse', (data, callback) => {

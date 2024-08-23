@@ -48,7 +48,7 @@ import AdminNotifications from './pages/admin/AdminNotifications';
 import MyPlan from './pages/user/MyPlan';
 import VideoChat from './pages/user/VideoChat';
 import AdvancedSearch from './pages/user/AdvancedSearch';
-import AdminReportAbuseList from './pages/admin/AdminReportAbuseList';
+import AdminReportAbuse from './pages/admin/AdminReportAbuse';
 
 
 export default function App() {
@@ -82,8 +82,7 @@ export default function App() {
          <Route path="/subscriptionlist" element={<AdminSubscriptionList/>}/>
          <Route path="/viewProfile/:id" element={<AdminViewProfile/>}/>
          <Route path="/AdminNotifications/:notificationId" element={<AdminNotifications/>}/> 
-         <Route path="/abuseReportList" element={<AdminReportAbuseList/>}/> 
-
+         <Route path="/abuseReportList" element={<AdminReportAbuse/>}/> 
          
         </Route>
         <Route element={<PrivateRoute/>}>

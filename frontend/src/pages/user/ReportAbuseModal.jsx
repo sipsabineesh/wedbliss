@@ -65,7 +65,7 @@ import io from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { AttachFile } from '@mui/icons-material';
 
-const socket = io('http://localhost:3000');
+const socket = io('https://wedbliss.live');
 
 export default function ReportAbuseModal({ isOpen, onClose, reportedUserId }) {
     const [reportReason, setReportReason] = useState('');

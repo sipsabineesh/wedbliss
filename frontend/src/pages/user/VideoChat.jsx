@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import Header from '../../components/Header';
 
-const socket = io('http://localhost:3000');
+const socket = io('https://wedbliss.live');
 
 export default function VideoChat() { 
   const location = useLocation();

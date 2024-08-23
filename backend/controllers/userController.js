@@ -163,7 +163,7 @@ console.log(userData.profilePhoto)
     console.log(error)
   }
 
-console.log("userData>>>>>>>>>>>:")
+// console.log("userData>>>>>>>>>>>:")
 console.log(userData)
 const newUser = new User(userData)
 const addUser = await newUser.save()

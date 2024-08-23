@@ -55,7 +55,7 @@ export default function Messenger() {
   useEffect(() => {
     console.log("--------------User Details:::", userDetails);
   //  let forSenderDetails = userDetails;
-    socket.current = io('http://localhost:3000');
+    socket.current = io('https://wedbliss.live');
 let senderId = ''
     socket.current.on('getMessage', (data) => {
        senderId = data.senderId;
