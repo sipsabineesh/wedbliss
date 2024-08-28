@@ -111,6 +111,7 @@ export const google = async(req,res,next) => {
      }
 }
 export const login = async (req,res,next) =>{
+     console.log("----------------")
      try {
      const {email,password} = req.body
      if (!email && !password){
