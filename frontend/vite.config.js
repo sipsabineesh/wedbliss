@@ -7,7 +7,7 @@ export default defineConfig({
   server:{
     proxy:{
       '/api':{
-        target: 'http://wedbliss.live',
+        target: 'https://wedbliss.live',
         secure : false,
       }
     }
