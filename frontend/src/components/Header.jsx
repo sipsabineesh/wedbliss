@@ -410,7 +410,7 @@ import { logout } from '../redux/user/userSlice';
 import { toast } from 'react-toastify';
 import io from 'socket.io-client';
 
-const socket = io.connect('https://wedbliss.live');
+const socket = io.connect('http://localhost:3000');
 
 export default function Header() {
   const [user, setUser] = useState({});
