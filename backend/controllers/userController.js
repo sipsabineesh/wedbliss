@@ -245,7 +245,8 @@ export const suggestUsers = async (req, res, next) => {
                 $expr: {
                   $and: [
                     { $eq: ["$interestedFrom", id] },
-                    { $eq: ["$interestedTo", "$$userId"] }
+                    { $eq: ["$interestedTo", "$$userId"] },
+                    // { $eq: ["$isAccepted", true] }
                   ]
                 }
               }
@@ -254,6 +255,17 @@ export const suggestUsers = async (req, res, next) => {
           as: "interests"
         }
       },
+      // {
+      //   $addFields: {
+      //     isInterestAccepted: {
+      //       $cond: {
+      //         if: { $gt: [{ $size: "$interests" }, 0] },
+      //         then: { $arrayElemAt: ["$interests.isAccepted", 0] },
+      //         else: false
+      //       }
+      //     }
+      //   }
+      // },
       { $match: { interests: { $eq: [] } } },
       { $sort: { _id: -1 } },
       { $skip: (page - 1) * limit }, // Skip the documents for pagination

@@ -60,7 +60,7 @@ useEffect(() => {
 
   // useEffect(() => {
   //   if (currentUser?._id) {
-  //     socket.emit('joinRoom', currentUser._id);
+  //     socket.emit('joinRoom', currentUser._id);     
   //     // alert("emitted joinRoom with "+currentUser._id)
   //   }
 
@@ -68,7 +68,7 @@ useEffect(() => {
   //     socket.disconnect(); 
   //   };
   // }, [currentUser]);
-
+  
   // useEffect(() => { 
   //   socket.on('newInterest', (userData) => { 
   //     console.log('New interest received from:', userData);
