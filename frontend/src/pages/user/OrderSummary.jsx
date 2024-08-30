@@ -410,7 +410,7 @@ const OrderSummary = ({ isOpen, closeModal, selectedPlan }) => {
       "Content-Type": "application/json"
     };
 
-    const response = await fetch(`/api/user/createCheckoutSession`, {
+    const response = await fetch(`https://wedbliss.live/api/user/createCheckoutSession`, {
       method: "POST",
       headers: header,
       body: JSON.stringify(body)
