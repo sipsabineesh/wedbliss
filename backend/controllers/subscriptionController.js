@@ -22,8 +22,8 @@ export const getCheckOutSession = async(req,res,next) => {
         payment_method_types : ["card"],
         line_items:[items],
         mode:"payment",
-        success_url:"http://localhost:5173/success",
-        cancel_url:"http://localhost:5173/cancel"
+        success_url:"https://wedbliss.live/success",
+        cancel_url:"https://wedbliss.live/cancel"
     })
     console.log("session")
      console.log(session.url)

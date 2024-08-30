@@ -42,7 +42,7 @@ console.log("getUserDetails")
 export const sendChangePasswordLink = async(req,res,next) => {
   console.log("sendChangePasswordLink")
   const email = req.body.email
-  const link = 'http://localhost:5173/changePassword/'+email
+  const link = 'https://wedbliss.live/changePassword/'+email
   const subject = 'Link to change password'
   const message =  `You can change your password by clicking the link:  ${link}`
   sendEmail(email,subject,message)
