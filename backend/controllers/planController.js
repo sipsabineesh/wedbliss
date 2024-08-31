@@ -17,9 +17,7 @@ export const getPlans = async(req,res,next) => {
 //      next(errorHandler(500, 'Error occured while retrieving data'));
 //  })
 try {
-  console.log("Fetching plans...");
   const plans = await Plan.find({ isDeleted: false });
-  console.log("Plans fetched successfully:", plans);
   res.json({ plan: plans });
 } catch (err) {
   console.error("Error occurred while retrieving data:", err);
@@ -91,7 +89,6 @@ try {
   const { planName,planValidity,planPrice,noOfContacts,noOfMessages } = req.body
   const planExists = await Plan.findOne({planName})
   if(planExists) {
-  console.log("name already in db")    
     return res.status(200).json({
       success: false,
       message: 'Plan Already Existing',

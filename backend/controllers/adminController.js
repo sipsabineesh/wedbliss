@@ -17,7 +17,6 @@ export const login = async (req,res,next) =>{
         next(errorHandler(404, 'Please enter the password'));
      }else {
         const validUser = await User.findOne({email})
-        console.log(validUser)
         if(!validUser)  next(errorHandler(404,'User not Found'))
         const validPassword = bcryptjs.compareSync(password,validUser.password)
         if(!validPassword)  next(errorHandler(401,'Wrong Credentials'))
@@ -26,7 +25,6 @@ export const login = async (req,res,next) =>{
         else{
               const token = jwt.sign({id:validUser._id,isAdmin:validUser.isAdmin},process.env.JWT_SECRET)
               const {password : hashedPassword,...rest} = validUser._doc
-console.log(rest)               
               const expiryDate = new Date(Date.now() + 3600000)
               res
               .cookie('access_token',token,{httpOnly:true,expires:expiryDate})
@@ -124,7 +122,6 @@ export const verifyUser = async(req,res) => {
 export const blockUnblockUser = async (req, res) => {
     try {
         const { id, isBlocked, reason } = req.body;
-console.log(id, isBlocked, reason )
         const updatedUser = await User.findOneAndUpdate(
             { _id: id },
             { $set: { isBlocked: isBlocked, reasonForBlocking: reason } },
@@ -141,8 +138,7 @@ console.log(id, isBlocked, reason )
             const message = `You have been blocked by Admin due to the reason: ${reason}`;
             sendEmail(email, subject, message);
         }
-console.log("USERSSSSSSSSSS-------------")
-console.log(updatedUser)
+
         return res.status(200).json({ message: 'User blocked/unblocked successfully', user: updatedUser });
     } catch (error) {
         console.error('Error blocking user:', error);
@@ -151,7 +147,7 @@ console.log(updatedUser)
 };
 
 
-export const getAllDetails = async(req,res) => { console.log("GET ALL DETAILS CALLED")
+export const getAllDetails = async(req,res) => { 
     try {
         const statistics = {
           totalUsers: 1000,
@@ -163,7 +159,6 @@ export const getAllDetails = async(req,res) => { console.log("GET ALL DETAILS CA
             { name: 'Subscriptions', value: 300 },
           ],
         };
-    console.log(statistics)
         const chartData = {
           lineChartData: [
             { name: 'January', value: 100 },

@@ -26,9 +26,7 @@ export const getUsers = async(req,res,next) => {
 }
 
 export const getUserDetails = async(req,res,next) => {
-console.log("getUserDetails")
   const userId = req.query.userId;
-  console.log(userId)
   // const username = req.query.username;
   try {
     const user = await User.findById(userId)
@@ -40,7 +38,6 @@ console.log("getUserDetails")
 }
 
 export const sendChangePasswordLink = async(req,res,next) => {
-  console.log("sendChangePasswordLink")
   const email = req.body.email
   const link = 'http://localhost:5173/changePassword/'+email
   const subject = 'Link to change password'
@@ -53,7 +50,6 @@ export const sendChangePasswordLink = async(req,res,next) => {
 export const changePassword = async(req,res,next) => {
   try {
   const { email,newPassword } = req.body.formData; 
-  console.log(email)
   const hashedPassword = bcryptjs.hashSync(newPassword,10) 
   const updatedData =  {password:hashedPassword}
   const updatedUser = await User.findOneAndUpdate(
@@ -63,8 +59,7 @@ export const changePassword = async(req,res,next) => {
     },
     { new: true }
   )
-  console.log("updatedUser")
-  console.log(updatedUser)
+
 
   res.status(200).json({success:true,message:"Password changed successfully"})
   } catch (error) { 
@@ -74,7 +69,6 @@ export const changePassword = async(req,res,next) => {
 }
 
 export const sendChangeEmailOTP = async(req,res,next) => {
-  console.log("sendChangeEmailOTP")
   const email = req.body.email
   const user = await User.findOne({email:req.body.email})
   if(!user) {

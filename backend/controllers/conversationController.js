@@ -5,8 +5,6 @@ import Conversation from '../models/conversationModel.js'
 import Subscription from '../models/subscriptionModel.js'
 
 export const addConversation = async(req,res,next) => {
-   
-console.log("IN CONVERSATION CONTROLLER")
 let userId = req.body.senderId
   let conversation = await Conversation.findOne({
     members: { $all: [req.body.senderId, req.body.receiverId] }
@@ -23,7 +21,6 @@ let userId = req.body.senderId
     }
     try {
       const plan = await Subscription.findOne({ userId });
-      console.log(plan)
       if (!plan) {
         return res.status(404).json({ message: 'No subscription plan found.' }); 
       }
@@ -38,9 +35,6 @@ let userId = req.body.senderId
       const newConversation = new Conversation({
         members: [req.body.senderId, req.body.receiverId],
       });
-  console.log("newConversation")    
-
-  console.log(newConversation)    
       const savedConversation = await newConversation.save();
       res.status(200).json(savedConversation);
     } 
@@ -59,7 +53,6 @@ catch (err) {
         members: { $in: [userId] },
       });
 
-      console.log(conversation)
       res.status(200).json(conversation);
     } catch (err) {
       res.status(500).json(err);
@@ -80,8 +73,6 @@ catch (err) {
   
   export const updateLastMessage = async(req,res,next) => {
     try {
-      console.log("updateLastMessage")
-      console.log(req.body)
       const conversationId = req.params.conversationId;
      const lastMessage = req.body;
       const result = await Conversation.updateOne(

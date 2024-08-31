@@ -5,7 +5,6 @@ const stripeIntegration = stripe('sk_test_51P7BB4J1myCpgaSJBfMBwYeeIBXi2nhMs22sm
 
 export const getCheckOutSession = async(req,res,next) => {
     const {plan} = req.body
-    console.log(plan)
    try {
     
     const items = {
@@ -25,8 +24,7 @@ export const getCheckOutSession = async(req,res,next) => {
         success_url:"http://localhost:5173/success",
         cancel_url:"http://localhost:5173/cancel"
     })
-    console.log("session")
-     console.log(session.url)
+   
     // if(session.id) {
     
     //    const updatedData = {"isSubscribed" : true}
@@ -93,8 +91,7 @@ function calculateRemainingValidity(creationDate, currentDate, initialValidity) 
 
 export const addSubscription = async(req,res,next) => {
   try {
-console.log("req.bodddddddddy")
-    console.log(req.body)
+
     const plan = req.body.selectedPlan
     const updatedData = {"isSubscribed" : true}
        const id = plan.userId
@@ -107,17 +104,11 @@ console.log("req.bodddddddddy")
           )
 
        const {_id,planValidity,planPrice,noOfContacts,noOfMessages,userId}  = plan
-       console.log(_id+"  "+planValidity+"  "+planPrice+"  "+noOfContacts+"  "+noOfMessages+"  "+userId)   
        const months = parseInt(planValidity.match(/\d+/)[0]);
        const days = monthsToDays(months);
-       console.log(`${months} months is equivalent to ${days} days.`);
        // const sessionId = session.id
-       console.log("updatedUser")
-       console.log(updatedUser)
        const currentDate = new Date();
        const validTillDate = new Date(currentDate.setDate(currentDate.getDate() + days));
-console.log("validTillDate")
-console.log(validTillDate)
 
           const newSubscription = new Subscription(
                  {
@@ -203,7 +194,6 @@ export const getSubscriptions = async(req,res,next) => {
  listSubscriptionsWithDetails()
   .then((subscriptions) => {
     res.json({subscriptions})
-   // console.log('Subscriptions with details:', subscriptions);
   })
   .catch((error) => {
     console.error('Error:', error);
@@ -213,7 +203,6 @@ export const getSubscriptions = async(req,res,next) => {
 }
 
 export const approveSubscription = async(req,res,next) => {
-console.log("approveSubscription")
 try {
     const subscription = await Subscription.findById(req.body.id);
     if(subscription){

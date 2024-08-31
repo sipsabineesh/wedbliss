@@ -38,8 +38,7 @@ export const signup = async (req,res,next) => {
           const hashedPassword = bcryptjs.hashSync(password,10) 
           const newUser = new User( {username,email,phoneNumber,password:hashedPassword,otp})
           const userData = await newUser.save()
-          console.log("FORMDATA IN SIGNUP AFTER SAVING  TO USER AND ABOUT TO SAVE PREFERNCE")
-          console.log(req.body.preference)
+     
           const userId = userData._id
           if(req.body.preference){
                const { gender, ageFrom, ageTo, religion, motherTongue } = req.body.preference;
@@ -58,7 +57,6 @@ export const signup = async (req,res,next) => {
     export const otpVerify = async (req,res,next) =>{
      try {
      const {otp} = req.body
-     console.log(otp)
      if (!otp){
           next(errorHandler(404, 'Please enter the OTP'));
          }
@@ -111,7 +109,6 @@ export const google = async(req,res,next) => {
      }
 }
 export const login = async (req,res,next) =>{
-     console.log("----------------")
      try {
      const {email,password} = req.body
      if (!email && !password){
@@ -124,7 +121,6 @@ export const login = async (req,res,next) =>{
          next(errorHandler(404, 'Please enter the password'));
       }else {
          const validUser = await User.findOne({email})
-         console.log(validUser)
          if(!validUser)  next(errorHandler(404,'User not Found'))
          const validPassword = bcryptjs.compareSync(password,validUser.password)
          if(!validPassword)  next(errorHandler(401,'Wrong Credentials'))
@@ -134,7 +130,6 @@ export const login = async (req,res,next) =>{
          else{
                const token = jwt.sign({id:validUser._id,isAdmin:validUser.isAdmin},process.env.JWT_SECRET)
                const {password : hashedPassword,...rest} = validUser._doc
-console.log(rest)               
                const expiryDate = new Date(Date.now() + 3600000)
                res
                .cookie('access_token',token,{httpOnly:true,expires:expiryDate})
@@ -154,12 +149,10 @@ export const resendOTP = async(req,res,next) => {
 }
 
  const sendOTP = async(id,email) => {
-     console.log(email)
      const userEmail = email ? email : await User.findOne({ _id: id }, { email: 1 })
      const otp = generateOTP()
      const subject = 'OTP Verification'
      const message =  `Your OTP is ${otp}`
-console.log("OTP RESESNDING---"+otp )    
      sendEmail(userEmail,subject,message)
      const updatedData = {"otp":otp}
      const updatedUser = await User.findByIdAndUpdate(
@@ -169,7 +162,6 @@ console.log("OTP RESESNDING---"+otp )
           },
           { new: true }
         )
-        console.log(updatedUser)
         const {password, ...rest} = updatedUser._doc
        return rest
     }

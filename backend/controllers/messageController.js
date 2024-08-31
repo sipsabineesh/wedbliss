@@ -9,8 +9,6 @@ export const addMessage= async(req,res,next) => {
   try {
     const savedMessage = await newMessage.save();
     await Conversation.findByIdAndUpdate(req.body.conversationId, { updatedAt: Date.now() });
-    // const result = await Message.deleteMany({ text: '' });
-    // console.log(`${result.deletedCount} messages deleted.`);
     res.status(200).json(savedMessage);
   } catch (err) {
     res.status(500).json(err);
@@ -22,7 +20,6 @@ export const getMessage= async(req,res,next) => {
     const messages = await Message.find({
       conversationId: req.params.conversationId,
     });
-console.log(messages)    
     res.status(200).json(messages);
   } catch (err) {
     res.status(500).json(err);

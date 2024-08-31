@@ -9,8 +9,7 @@ export const getRenewalNotification = async(req,res,next) => {
         soonToExpireDate.setDate(now.getDate() + 7); 
         const userId = req.params.id;
         const notifications = await Notification.find({ userId:userId,isViewed:false,type:'user' });
-       console.log("gettttttttttingNotification for user  "+userId)
-        console.log(notifications)
+      
         res.status(200).json({notifications})
     } catch (error) {
         
@@ -21,7 +20,6 @@ export const getRenewalNotification = async(req,res,next) => {
 export const getNotification = async(req,res,next) => {
     try {
         const notificationId = req.params.notificationId;
-        console.log("notificationId:",notificationId)
         const notification = await Notification.findById(notificationId);
         res.status(200).json({ notification });
     } catch (error) {
@@ -33,11 +31,7 @@ export const getNotification = async(req,res,next) => {
 
 export const updateViewedNotification = async(req,res,next) => {
     try {     
-
-        console.log("updateViewedNotification",req.params.notificationId)
-
         const notification = await Notification.findById(req.params.notificationId);
- console.log("notification",notification)        
         if (!notification) {
             return res.status(404).json({ message: 'Notification not found' });
         } 
@@ -68,8 +62,7 @@ export const getRenewalNotificationsForAdmin = async(req,res,next) => {
                 }
             });
 
- console.log("notificationData")     
- console.log(notifications)
+
         if (!notifications) {
             return res.status(200).json({ notifications: [] });
         }
