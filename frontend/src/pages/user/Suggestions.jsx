@@ -374,7 +374,7 @@ useEffect(() => {
                         </div>
                         <div className="d-flex justify-content-start rounded-3 p-2 mb-3 flex-grow-1"
                           style={{ backgroundColor: '#efefef' }}>
-                          <div>
+                          <div className="px-3">
                             <p className="small text-muted mb-1">Age</p>
                             <p className="mb-0">{calculateAge(user.dob)}</p>
                           </div>
@@ -382,7 +382,7 @@ useEffect(() => {
                             <p className="small text-muted mb-1">Height</p>
                             <p className="mb-0">{user.height ? user.height + "cm" : 'N/A'}</p>
                           </div>
-                          <div>
+                          <div className="px-3">
                             <p className="small text-muted mb-1">Qualification</p>
                             <p className="mb-0">{user.qualification || 'N/A'}</p>
                           </div>
