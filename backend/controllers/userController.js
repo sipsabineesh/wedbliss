@@ -140,15 +140,12 @@ export const getUser = async(req,res,next) => {
  
 }
 
-export async function addUser(req, res, next) {   try{
+export async function addUser(req, res, next) {  
+  try{
   const userData = req.body
-  console.log(req.body)
   try {
   
     if (userData.profilePhoto) {
-console.log("userData.profilePhoto")
-console.log(userData.profilePhoto)
-
       const image = userData.profilePhoto ?  userData.profilePhoto : 'https://res.cloudinary.com/dcsdqiiwr/image/upload/v1717406174/ava_xlfouh.png';
       const uploadResponse = await cloudinary.v2.uploader.upload(image);
       updatedData.profilePhoto= uploadResponse.url ? uploadResponse.url :'https://res.cloudinary.com/dcsdqiiwr/image/upload/v1717406174/ava_xlfouh.png';
@@ -157,8 +154,7 @@ console.log(userData.profilePhoto)
     console.log(error)
   }
 
-// console.log("userData>>>>>>>>>>>:")
-console.log(userData)
+
 const newUser = new User(userData)
 const addUser = await newUser.save()
   const {password, ...rest} = addUser._doc
@@ -179,8 +175,7 @@ export const editUser = async(req,res,next) => {
     const updatedData = req.body
     
     try {
-      console.log("PROFILE iMAGE ===========")
-   console.log(updatedData.profilePhoto) 
+  
    if (updatedData.profilePhoto && typeof updatedData.profilePhoto === 'string') {
     const uploadResponse = await cloudinary.v2.uploader.upload(updatedData.profilePhoto);
     updatedData.profilePhoto = uploadResponse.url;
@@ -191,8 +186,7 @@ export const editUser = async(req,res,next) => {
       console.log(error)
     }
 
-console.log("updatedData IIIIIIIIIIIIIIIIIIIMAGE>>>>>>>>>>>:")
-console.log(updatedData.profilePhoto)
+
     const updatedUser = await User.findByIdAndUpdate(
       id, 
       {
@@ -200,8 +194,7 @@ console.log(updatedData.profilePhoto)
       },
       { new: true }
     )
-    console.log("updatedUser")
-    console.log(updatedUser)
+   
     const {password, ...rest} = updatedUser._doc
     res.status(200).json(rest)
   }
@@ -218,61 +211,75 @@ export const suggestUsers = async (req, res, next) => {
     const gender = profileUser.gender === 'male' ? 'female' : 'male';
 
     const suggestedUsers = await User.aggregate([
-      { $match: {
-         $and: [{ _id: { $ne: id } ,
-                  isAdmin: false ,
-                  gender:gender,
-                  isBlocked:false,
-                  isVerifiedByAdmin:true,
-                  blockedProfiles: { $ne: new Mongoose.Types.ObjectId(id) },
-                   _id: { $nin: profileUser.blockedProfiles } 
-               }] 
+      {
+        $match: {
+          $and: [
+            { _id: { $ne: new Mongoose.Types.ObjectId(id) } }, // Exclude current user
+            { isAdmin: false }, // Exclude admin users
+            { gender: gender }, // Filter by opposite gender
+            { isBlocked: false }, // Only include unblocked users
+            { isVerifiedByAdmin: true }, // Only include users verified by admin
+            { blockedProfiles: { $ne: new Mongoose.Types.ObjectId(id) } }, // Exclude users who blocked the current user
+            { _id: { $nin: profileUser.blockedProfiles } } // Exclude users blocked by current user
+          ]
         }
       },
+      // Lookup to check if the current user has sent interest to suggested users
       {
         $lookup: {
           from: "interests",
-          let: { userId: "$_id" },
+          let: { userId: "$_id" }, // User being suggested
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$interestedFrom", id] },
-                    { $eq: ["$interestedTo", "$$userId"] },
-                    // { $eq: ["$isAccepted", true] }
+                    { $eq: ["$interestedFrom", new Mongoose.Types.ObjectId(id)] }, // Current user sent interest
+                    { $eq: ["$interestedTo", "$$userId"] } // To the suggested user
                   ]
                 }
               }
             }
           ],
-          as: "interests"
+          as: "sentInterest"
         }
       },
-      // {
-      //   $addFields: {
-      //     isInterestAccepted: {
-      //       $cond: {
-      //         if: { $gt: [{ $size: "$interests" }, 0] },
-      //         then: { $arrayElemAt: ["$interests.isAccepted", 0] },
-      //         else: false
-      //       }
-      //     }
-      //   }
-      // },
-      { $match: { interests: { $eq: [] } } },
-      { $sort: { _id: -1 } },
-      { $skip: (page - 1) * limit }, // Skip the documents for pagination
+      // Lookup to check if the current user has an accepted interest with suggested users
+      {
+        $lookup: {
+          from: "interests",
+          let: { userId: "$_id" }, // User being suggested
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$interestedFrom", new Mongoose.Types.ObjectId(id)] }, // Current user sent interest
+                    { $eq: ["$interestedTo", "$$userId"] }, // To the suggested user
+                    { $eq: ["$isAccepted", true] } // The interest is accepted
+                  ]
+                }
+              }
+            }
+          ],
+          as: "acceptedInterest"
+        }
+      },
+      // Add fields for hasSentInterest and hasAcceptedInterest
+      {
+        $addFields: {
+          hasSentInterest: { $gt: [{ $size: "$sentInterest" }, 0] }, // True if sentInterest is not empty
+          hasAcceptedInterest: { $gt: [{ $size: "$acceptedInterest" }, 0] } // True if acceptedInterest is not empty
+        }
+      },
+      // { $match: { sentInterest: { $eq: [] } } }, // Only include users where the current user has not sent interest yet
+      { $sort: { _id: -1 } }, // Sort results
+      { $skip: (page - 1) * limit }, // Pagination: skip documents
       { $limit: parseInt(limit) } // Limit the number of documents returned
     ]);
-    const userInterests = await Interest.find({ interestedFrom: id });
-    const interestedUserIds = userInterests.map(interest => interest.interestedTo.toString());
-
-    const result = suggestedUsers.map(user => ({
-      ...user,
-      hasSentInterest: interestedUserIds.includes(user._id.toString())
-    }));
-    res.json({ suggestedUsers : result });
+    
+    res.json({ suggestedUsers });
+    
   } catch (error) {
     console.error(error);
     next(errorHandler(500, 'Error occurred while retrieving data'));
