@@ -30,6 +30,15 @@ export default function Suggestions() {
     async function fetchSubscriptionStatus() {
         try {
             const response = await fetch(`/api/user/getUser/${currentUser._id}`);
+            console.log("response",response)
+            if (response.status === 401) {
+              // User is blocked
+              const data = await response.json();
+              toast.error(data.message); 
+              navigate('/login'); 
+              return;
+          }
+          
             const data = await response.json();
             setUser(data.user);
         } catch (error) {
@@ -101,7 +110,13 @@ useEffect(() => {
           'Content-Type': 'application/json',
         },
       });
-    
+      if (response.status === 401) {
+        // User is blocked
+        const data = await response.json();
+        toast.error(data.message); 
+        navigate('/login'); 
+        return;
+    }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -345,11 +360,6 @@ useEffect(() => {
       <Header />
       <div className="vh-100 content">
         <div className="container">
-          {newInterestUser && (
-            <div className="new-interest">
-              {/* ... existing code ... */}
-            </div>
-          )}
           <div className="row justify-content-center mt-5">
             <h4>Suggestions</h4>
             {suggestions.length > 0 ? (

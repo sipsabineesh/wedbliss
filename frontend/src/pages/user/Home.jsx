@@ -216,7 +216,7 @@
   
   
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -224,8 +224,9 @@ import Plans from './Plans';
 import Suggestions from './Suggestions';
 import { useGetUserQuery } from '../../redux/user/userApiSlice';
 import { Carousel } from 'react-bootstrap';
-import { setPreference } from '../../redux/user/userSlice';
+import { setPreference,logout } from '../../redux/user/userSlice';
 import Sidebar from '../../components/Sidebar';
+import { toast } from 'react-toastify';
 
 export default function Home() {
     const [user, setUser] = useState({});
@@ -246,11 +247,34 @@ export default function Home() {
         dispatch(setPreference(formData));
         navigate('/signup');
     };
+    const handleLogout = async () => {
+        try {
+          const res = await fetch('/api/auth/logout', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          dispatch(logout());
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     useEffect(() => {
         async function fetchSubscriptionStatus() {
             try {
                 const response = await fetch(`/api/user/getUser/${currentUser._id}`);
+                console.log("response",response.status)
+                if (response.status === 401) {
+                  // User is blocked 
+                  toast.error("Your account has been blocked by the admin");
+                //   toast.error(data.message); 
+                handleLogout()
+                  navigate('/login'); 
+                  return;
+              }
+              
                 const data = await response.json();
                 setUser(data.user);
             } catch (error) {
