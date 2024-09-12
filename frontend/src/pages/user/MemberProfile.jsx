@@ -31,7 +31,6 @@ export default function MemberProfile() {
         const fetchUser = async () => {
             try {
                 const response = await axios.get(`/api/user/getUser/${id}`);
-console.log(response)                
                 setData(response.data.user);
                 setDOB(response.data.dob);
                 calculateAge(response.data.user.dob);
@@ -116,57 +115,7 @@ console.log(response)
         }
     };
     
-    // const handleShowContact = async(id) => {
-    //     try {
-    //       // alert("Phone Number : "+ currentUser.phoneNumber)
-    //       // alert("Email : "+ currentUser.email)
-    //       console.log(data.isSubscribed)
-    //       if(data.isSubscribed){
-    //         dispatch(setUserIdForContact(id))
-    //         navigate('/showContact')
-    //       }
-    //       else{
-    //         toast.error("You are not subscribed to show contact details")
-    //         navigate('/plans')
-    //       }
-          
-    //     } catch (error) {
-    //      console.log(error) 
-    //     }
-    //   }
-    
-      
-
-    // const handleReportAbuse = async () => {
-    //     if (!currentUser) {
-    //         toast.error("You must be logged in to report a user.");
-    //         return;
-    //     }
-
-    //     if (!reportReason.trim()) {
-    //         toast.error("Please provide a reason for reporting abuse.");
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await axios.post('/api/user/reportAbuse', {
-    //             reporterId: currentUser._id,
-    //             reportedUserId: data._id,
-    //             reason: reportReason
-    //         });
-
-    //         if (response.status === 200) {
-    //             toast.success("Abuse report submitted successfully.");
-    //             setIsReportModalOpen(false);
-    //             setReportReason('');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error reporting abuse:', error);
-    //         toast.error("Failed to submit abuse report.");
-    //     }
-    // };
-
-  
+   
     const handleReportAbuse = async (userId) => {
       
         setShowReportModal(true);

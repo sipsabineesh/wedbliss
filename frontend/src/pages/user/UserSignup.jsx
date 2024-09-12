@@ -18,8 +18,6 @@ export default function UserSignup() {
     const dispatch = useDispatch();
     const navigate =  useNavigate()
   const preference = useSelector(userPreference);
-console.log("preference")
-console.log(preference)
 
     const handleChange = (e) => {
         setFormData({...formData,[e.target.id]:e.target.value})
@@ -66,17 +64,12 @@ console.log(preference)
             body:JSON.stringify(formData),
         })
           const data = await res.json()
-          console.log(data)
-          console.log("--")
-          console.log(data.userId)
           setLoading(false)
          
           if(data.success === false) {
-            console.log("EEEEEEEEEERRRRRRRRROR")
             setError(data)
           }
           else{
-            console.log("ALL GOOD")
             dispatch(clearPreference());
             setError('')
             // navigate('/otpVerify')
@@ -192,7 +185,7 @@ console.log(preference)
             {error.re_password && <span className="errorMsg">{error.re_password}</span>}
 
             <div className="text-center pt-1 mb-5 pb-1">
-              <div className="control">{console.log("err------------or")}{console.log(error)}
+              <div className="control">
                 <p className="errorMsg">{error ? error.message : ""}</p>
                 <button type="submit" disabled={loading} className="btns mb-4 w-100">{loading ? "Loading... " : "Register"}</button>
                 <OAuth />

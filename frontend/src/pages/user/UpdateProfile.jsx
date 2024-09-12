@@ -54,7 +54,6 @@ export default function UpdateProfile() {
   }, [currentUser,imageFileURL],dob);
   
   const uploadImage = (base6Encode) => {
-    console.log('uplodingggggggggggg')
     console.log(base6Encode)
     try {
       
@@ -120,8 +119,7 @@ const handleChange = (e) => {
                   }
                     setLoading(true)
                     setError('')
-                    console.log("FORMDATA")
-                    console.log(formData)
+                    
                     const res = await fetch (`/api/user/editProfile/${currentUser._id}`,{
                     method:'PUT',
                     headers:{

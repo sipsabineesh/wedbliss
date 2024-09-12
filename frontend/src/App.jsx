@@ -25,7 +25,6 @@ import Plans from './pages/user/Plans';
 import Success from './pages/user/Success';
 import Cancel from './pages/user/Cancel';
 import AdminSubscriptionList from './pages/admin/AdminSubscriptionList';
-// import ChatWindow from './pages/user/ChatWindow';
 import Userlogin from './pages/user/Userlogin';
 import UserSignup from './pages/user/UserSignup';
 import UserOTPVerification from './pages/user/UserOTPVerification';
@@ -41,7 +40,6 @@ import AddProfile from './pages/user/AddProfile';
 import AdminViewProfile from './pages/admin/AdminViewProfile'
 import ShowContact from './pages/user/ShowContact';
 import Notifications from './pages/user/Notifications';
-// import { ChatProvider } from './context/ChatContext';
 import Messenger from './pages/user/Messenger';
 import MemberProfile from './pages/user/MemberProfile';
 import AdminNotifications from './pages/admin/AdminNotifications';

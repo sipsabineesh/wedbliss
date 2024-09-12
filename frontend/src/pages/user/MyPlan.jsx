@@ -35,22 +35,7 @@ export default function MyPlan() {
   return (
     <>
     <Header/>
-    {/* <div className="my-plan">
-      <h3>My Plan Details</h3>
-      <div className="plan-info">
-        <h2>{planName}</h2>
-        <p><strong>Validity:</strong> {planValidity}</p>
-        <p><strong>Price:</strong> ₹ {planPrice}</p>
-        <p><strong>Contacts Allowed:</strong> {noOfContacts}</p>
-        <p><strong>Messages Allowed:</strong> {noOfMessages}</p>
-      </div>
-      <div className="subscription-info">
-        <p><strong>Valid Till:</strong> {new Date(validTill).toLocaleDateString()}</p>
-        <p><strong>Remaining Contacts:</strong> {remainingContacts}</p>
-        <p><strong>Remaining Messages:</strong> {remainingMessages}</p>
-      </div>
-    </div> */
-    }
+
     <div className="my-plan-container">
       <h3>My Plan</h3>
       <div className="my-plan">

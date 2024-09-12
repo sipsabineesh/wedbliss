@@ -30,18 +30,11 @@ export default function AdminHeader() {
           setNotifications(prevNotifications => [...prevNotifications, notification]);
       });
 
-    //   socket.on('abuseReported', (report) => {
-    //     console.log('Abuse report  received:', report);
-    //     toast.info('An abuse report has been submitted.');
-    // });
+   
     socket.on('abuseReported', (report) => {
-      console.log('Abuse report received:', report);
       setNotifications(prevNotifications => [...prevNotifications, report]);
       toast.info('An abuse report has been submitted.');
-      console.log("report after toast------------")
-      console.log(report)
-
-  });
+    });
     return () => {
         socket.off('planRenewal');
         socket.off('abuseReported');
@@ -49,24 +42,11 @@ export default function AdminHeader() {
     };
   }, []);
 
-  
-// useEffect(() => {
-//   socket.on('abuseReported', (report) => {
-//     console.log('Abuse report received:', report);
-//     toast.info('An abuse report has been submitted.');
-// });
 
-// return () => {
-//     socket.off('abuseReported');
-// };
-// }, []);
   const fetchNotifications = async () => {
       try {
           const res = await axios.get('/api/admin/getRenewalNotifications');
           setNotifications(res.data.notifications);
-          console.log("FETCHED NOTIFICATIONNNSS")
-
-          console.log(res)
       } catch (error) {
           console.log(error);
       }
@@ -118,30 +98,8 @@ export default function AdminHeader() {
           <li className="nav-item ml-2"><Link className='nav-link' to={'/subscriptionlist'}>Subscriptions</Link></li>
           <li className="nav-item ml-2"><Link className='nav-link' to={'/abuseReportList'}>Reported Abuses</Link></li>
 
-          {/* <li className="nav-item ml-2"><Link className='nav-link' to={'/dashboard'}>Search</Link></li> */}
-          {/* <li className="nav-item ml-2">{currentUser ?<div className="nav-item ml-2"> <Link className="nav-link" to={'/profile'}><i className="fa fa-user" aria-hidden="true"></i></Link> <Link className="nav-link" to={'/profile'}><i className="fa fa-sign-out" aria-hidden="true"></i></Link></div> : <Link className="nav-link" to={'/login'}><i className="fa fa-sign-in" aria-hidden="true"></i></Link> }</li>  */}
           <li className="nav-item ml-2">
-          {/* <div className="notification-wrapper"> */}
-                                {/* <Link className="nav-link"   */}
-                               {/* onClick={toggleDropdow } >  */} 
-                                    {/* <i className="fa fa-solid fa-bell"></i> */}
-                                     {/* {notifications.length > 0 && ( */}
-                                        {/* <span className="notification-badge">{notifications.length}</span> */}
-                                     {/* )} */}
-                                {/* </Link> */}
-                              
-                                   {/* {isDropdownVisible && (
-                                    <div className="notification-dropdown">
-                                        <ul>
-                                            {notifications.map((notification, index) => (
-                                                <li className="text-black" key={index}>
-                                                 <Link to={`/notifications/${notification._id}`}  className="remove-link">{notification.title}</Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )} */}
-                            {/* </div> */}
+          
           {adminUser ? (
                                 <div className="nav-item ml-2 d-flex align-items-center">
                                      <div className="d-flex align-items-center">

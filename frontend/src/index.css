@@ -2603,3 +2603,24 @@ strong {
     margin-top: 0;
   }
 }
+
+@media (max-width: 768px) {
+  .navbar-nav {
+    text-align: center;
+  }
+  .nav-item {
+    margin-bottom: 10px;
+  }
+  .navbar-nav.ml-auto {
+    margin-left: 0;
+  }
+  .notification-dropdown {
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    background-color: white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+}
+

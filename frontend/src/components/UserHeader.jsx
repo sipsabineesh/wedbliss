@@ -26,59 +26,7 @@ export default function UserHeader() {
     }
     const {currentUser} = useSelector(state => state.user)
   return (
-//     <nav className="header navbar navbar-expand-lg navbar-dark fixed-top">
-//       <div className="container">
-//       <div style={{ width: '50px', height: '39px' ,marginBottom:'59px', borderStyle:'1px solid #fff'}}>
-//       <Link className='' to={'/'}><a className="navbar-brand"><img src="http://res.cloudinary.com/dcsdqiiwr/image/upload/v1713969131/nstigastexr3ltx6vafc.png"
-//        style={{ width: '50px', height: '32px' ,marginBottom:'59px', borderStyle:'1px solid #fff'}} alt="logo" /></a></Link>
-//       </div>
-     
-//      <button className="navbar-toggler" type="button" onClick={toggleMenu}>
-//         <span className="fa fa-bars"></span>
-//       </button>
-//       <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
-//         <ul className="navbar-nav ml-auto">
-//           <li className="nav-item ml-2"><Link className='nav-link' to={'/'}>Home</Link></li>
-//           <li className="nav-item ml-2"><Link className='nav-link' to={'/suggestions'}>Suggestions</Link></li>
-//           <li className="nav-item ml-2"><Link className='nav-link' to={'/acceptedList'}>Accepted Interests</Link></li>
-//           <li className="nav-item ml-2"><Link className='nav-link' to={'/plans'}>Packages</Link></li>
-//           <li className="nav-item ml-2"><Link className='nav-link' to={'/profile'}>Search</Link></li>
-//           {/* <li className="nav-item ml-2">{currentUser ?<div className="nav-item ml-2"> <Link className="nav-link" to={'/profile'}><i className="fa fa-user" aria-hidden="true"></i></Link> <Link className="nav-link" to={'/profile'}><i className="fa fa-sign-out" aria-hidden="true"></i></Link></div> : <Link className="nav-link" to={'/login'}><i className="fa fa-sign-in" aria-hidden="true"></i></Link> }</li>  */}
-//           {currentUser ? (
-//                                 <div className="nav-item ml-2 d-flex">
-                                  
-//                                   <li className="nav-item ml-2">    <Link className="nav-link" to={'/suggestions'} >
-//                                         Suggestions
-//                                     </Link> </li>
-//                                     <li className="nav-item ml-2"> <Link className="nav-link" to={'/acceptedList'}>
-//                                         Accepted Interests
-//                                     </Link></li>
-//                                     {!currentUser.isSubscribed && ( 
-//                                     <li className="nav-item ml-2"><Link className="nav-link" to={'/plans'}>
-//                                         Packages
-//                                     </Link></li>
-//                                 )}
-//                                      <li className="nav-item ml-2"><Link className="nav-link" to={'/profile'}>
-//                                         <i className="fa fa-user mr-2"></i>
-//                                     </Link></li>
-//                                     <li className="nav-item ml-2"><Link className="nav-link" onClick={handleLogout}>
-//                                         <i  className="fa fa-sign-out"></i>Logout
-//                                     </Link></li>
 
-//                                     <div>
-//                     <p className="mb-1 h5"><Link to='/suggestions'>{}</Link></p>
-//                     <p className="small text-muted mb-0"><Link className="text-black remove-link"></Link></p>
-//                  </div>
-//                                 </div>
-//                             ) : (
-//                                 <Link className="nav-link" to={'/login'}>
-//                                     <i className="fa fa-sign-in" aria-hidden="true"></i>Login
-//                                 </Link>
-//                             )}
-//         </ul>
-//       </div>
-//     </div>
-//   </nav>
 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
 <div className="container">
     <Link className="navbar-brand" to="/">

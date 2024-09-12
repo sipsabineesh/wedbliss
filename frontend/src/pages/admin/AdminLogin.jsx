@@ -62,22 +62,18 @@ export default function AdminLogin() {
                 </div>
         <form onSubmit={handleSubmit}>
           <div className="control">
-          {/* <label htmlFor="name">Name</label> */}
           <input type="email"
                  id="email"
                  placeholder="Email" className="stylish-textbox"
                  onChange={handleChange} />
         </div>
         <div className="control">
-          {/* <label htmlFor="password">Password</label> */}
           <input type="password"
                  id="password" 
                  placeholder="Password" className="stylish-textbox"
                  onChange={handleChange} />
         </div>
-        {/* <p className="link">
-          <input type="checkbox" /> Remember Me
-        </p> */}
+      
         <div className="control">
         <button type="submit" disabled={loading} className="btns">{loading ? "Loading... " : "Login"}</button>
         </div>
@@ -85,9 +81,7 @@ export default function AdminLogin() {
         <div className="text-medium"><p>Don't have an account? <Link to='/signup' className='text-link'>Signup</Link></p></div> 
 
       </form>
-      {/* <p className="link">
-        <a href="#">Forgot Password</a>
-      </p> */}
+     
     </div>
   </section>
 

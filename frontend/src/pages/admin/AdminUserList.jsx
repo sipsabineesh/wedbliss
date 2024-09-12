@@ -27,7 +27,6 @@ export default function AdminUserList() {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log('Fetched users:', data); // Debug log to check fetched data
             if (data.user && Array.isArray(data.user)) {
                 setUsers(data.user);
             } else {

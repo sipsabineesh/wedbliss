@@ -53,11 +53,9 @@ export default function Messenger() {
   }, [userDetails]);
   
   useEffect(() => {
-    console.log("--------------User Details:::", userDetails);
-  //  let forSenderDetails = userDetails;
-    socket.current = io('http://localhost:3000');
-let senderId = ''
-    socket.current.on('getMessage', (data) => {
+     socket.current = io('http://localhost:3000');
+     let senderId = ''
+     socket.current.on('getMessage', (data) => {
        senderId = data.senderId;
        const senderDetails = userDetailsRef.current[senderId];
        const senderUsername = senderDetails ? senderDetails.username : 'Unknown User';
@@ -71,9 +69,6 @@ let senderId = ''
         });
        
   
-        console.log("SenderDetails:", senderDetails);
-        console.log("Sender Username:", senderUsername);
-  
         // Set the notification with the username
         setNotifications(prev => [...prev, `New message from ${senderUsername}`]);
 
@@ -84,31 +79,6 @@ let senderId = ''
     });
 }, [userDetails]); 
 
-//   useEffect(() => {
-//     console.log("--------------User Details:::",userDetails)
-//     socket.current = io('http://localhost:3000');
-//     socket.current.on('getMessage', (data) => {
-//       let senderId = data.senderId
-//       setArrivalMessage({
-//         sender: data.senderId,
-//         text: data.text,
-//         conversationId:data.conversationId,
-//         createdAt: Date.now(),
-//         read: false,
-//       });
-//       console.log("Sender ID:", senderId);
-// console.log("User Details:", userDetails);
-
-
-//       const senderUsername = userDetails[senderId]?.username || 'Unknown User';
-//       setNotifications(prev => [...prev, `New message from ${senderUsername}`]);
-
-//       setUnreadCurrentConversations(prev => ({
-//         ...prev,
-//         [data.conversationId]: (prev[data.conversationId] || 0) + 1
-//       }));
-//     });
-//   }, []);
 
   useEffect(() => {
     arrivalMessage &&
@@ -119,7 +89,6 @@ let senderId = ''
   useEffect(() => {
     socket.current.emit('addUser', currentUser._id);
     socket.current.on('getUsers', users => {
-      // console.log(users);
     });
   }, [currentUser]);
 
@@ -128,9 +97,7 @@ let senderId = ''
       try {
         if (currentUser && currentUser._id) {
           const userId = currentUser._id;
-          // console.log('Fetching conversations for user:', userId);
           const res = await axios.get(`/api/conversations/${userId}`);
-          // console.log('Server response data:', res.data);
 
           if (Array.isArray(res.data)) {
             const conversationsObject = res.data.reduce((acc, conversation) => {
@@ -138,7 +105,6 @@ let senderId = ''
               return acc;
             }, {});
             setConversations(conversationsObject);
-            // console.log('Conversations set successfully:', conversationsObject);
           } else {
             console.error('Expected an array but got:', res.data);
           }
@@ -156,10 +122,8 @@ let senderId = ''
   useEffect(() => {
     const getMessages = async () => {
       try {
-        // console.log('currentChat');
-        // console.log(currentChat);
+        
         const res = await axios.get('/api/messages/' + currentChat?._id);
-        // console.log(res);
         setMessages(res.data);
         setUnreadCurrentConversations(prev => ({ ...prev, [currentChat?._id]: 0 }));
       } catch (err) {
@@ -172,7 +136,6 @@ let senderId = ''
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newMessage.trim()) {
-      // alert('Message cannot be empty');
       return;
     }
     const message = {

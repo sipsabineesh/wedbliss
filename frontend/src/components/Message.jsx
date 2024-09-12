@@ -15,23 +15,7 @@ export default function Message( { message, own, unreadCount }) {
       {/* <div className="messageBottom">{format(message.createdAt)}</div> */}
       <div className="messageBottom">{new Date(message.createdAt).toLocaleTimeString()}</div>
     </div>
-    // <div className={own ? "message own" : "message"}>
-    //   <div className="messageTop">
-    //     {own ? (
-    //       <p className="messageText">{message.text}</p>
-    //     ) : (
-    //       <>
-    //         <p className="messageText">{message.text}</p>
-    //         {unreadCount > 0 && (
-    //           <div className="unreadCount">
-    //             <p>{unreadCount} unread message{unreadCount > 1 ? 's' : ''}</p>
-    //           </div>
-    //         )}
-    //       </>
-    //     )}
-    //   </div>
-    //   <div className="messageBottom">{new Date(message.createdAt).toLocaleTimeString()}</div>
-    // </div>
+   
 
   )
 }

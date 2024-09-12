@@ -62,7 +62,6 @@ export default function SignUp() {
             setError(data.message)
           }
           else{
-            console.log("ALL GOOD")
             setError('')
             navigate('/otpVerify')
           }

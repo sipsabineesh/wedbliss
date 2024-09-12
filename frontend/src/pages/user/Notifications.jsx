@@ -5,8 +5,6 @@ import Header from '../../components/Header';
 
 export default function Notifications() {
       const {notificationId} = useParams()
-      console.log(notificationId)
-      
       const [notification, setNotification] = useState([]);
       const { currentUser } = useSelector(state => state.user);
       useEffect(() => {
@@ -14,7 +12,6 @@ export default function Notifications() {
             try {
                 const response = await fetch(`/api/user/getNotification/${notificationId}`);
                 const data = await response.json();
-                console.log(data)
                 setNotification(data.notification);  
             } catch (error) {
                 console.error('Error fetching notification:', error);

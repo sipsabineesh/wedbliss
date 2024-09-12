@@ -9,7 +9,6 @@ import { useCreatePlanMutation  } from '../../redux/admin/adminApiSlice';
 
 
 export default function AdminCreatePlan() {
-    // const [formData,setFormData] = useState({})
     const [planName,setPlanName] = useState('')
     const [planValidity,setPlanValidity] = useState('')
     const [planPrice,setPlanPrice] = useState(null)

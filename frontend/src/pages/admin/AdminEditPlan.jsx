@@ -11,7 +11,6 @@ export default function AdminEditPlan() {
     const {id} = useParams()
     const plans = useSelector(state => state.admin.plans);
     const plan = plans.plan.find( u => u._id === id)
-    console.log(plan)
     const [planName,setPlanName] = useState('')
     const [planValidity,setPlanValidity] = useState('')
     const [planPrice,setPlanPrice] = useState(null)

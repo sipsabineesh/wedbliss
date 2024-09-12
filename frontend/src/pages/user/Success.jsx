@@ -8,22 +8,7 @@ import { toast } from 'react-toastify'
 export default function Success() {
   const selectedPlan = useSelector(selectPlan);
   const dispatch = useDispatch()
-  console.log(selectedPlan)
   
-  // const [selectedPlan, setSelectedPlan] = useState(null);
-
-  // useEffect(() => {
-  //     const storedPlan = localStorage.getItem('selectedPlan');
-  //     console.log("storedPlan")
-  //     console.log(storedPlan)
-  //     if (storedPlan) {
-  //         setSelectedPlan(JSON.parse(storedPlan));
-  //         console.log("SELECTED PLAN")
-  //         console.log(selectedPlan)
-  //         localStorage.removeItem('selectedPlan');
-  //     }
-  // }, []);
-
   const [addSubscription, { isLoading, isError, error }] = useAddSubscriptionMutation();
 
   const handleAddSubscription = async () => {

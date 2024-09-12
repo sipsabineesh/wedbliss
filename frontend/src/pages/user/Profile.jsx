@@ -18,7 +18,6 @@ export default function Profile() {
     calculateAge()
     checkSuggestion()
     checkInterest()
-console.log(currentUser)
   }, [currentUser,age,interestCount])
 
   const handleEditProfile = async() => {
@@ -50,7 +49,6 @@ console.log(currentUser)
       const response = await fetch(`/api/user/getSuggestionsCount/${currentUser._id}`); 
       const data = await response.json();
       setSuggestionCount(data.numRequests); 
-      console.log(suggestionCount)
   } catch (error) {
       console.error('Error fetching user data:', error);
   }
@@ -61,7 +59,6 @@ console.log(currentUser)
       const response = await fetch(`/api/user/checkInterest/${currentUser._id}`); 
       const data = await response.json();
       setInterestCount(data.numRequests); 
-      console.log(interestCount)
   } catch (error) {
       console.error('Error fetching user data:', error);
   }

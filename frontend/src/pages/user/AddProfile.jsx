@@ -47,8 +47,6 @@ export default function AddProfile() {
     const [dob, setDOB] = useState('');
     const userId = useSelector(state => state.user.userId);
 
-    console.log("userId:")
-    console.log(userId)
     useEffect(() => {
       if (imageFile) {
         uploadImage(imageFileURL);

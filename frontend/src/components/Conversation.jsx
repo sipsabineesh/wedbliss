@@ -2,8 +2,6 @@ import { useState,useEffect } from 'react';
 import axios from "axios";
 
 export default function Conversation({ conversation, currentUser, unreadCount }) {
-   console.log("unreadCount")
-   console.log(unreadCount)
 
   const [user, setUser] = useState(null);
   useEffect(() => {

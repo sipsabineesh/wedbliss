@@ -17,8 +17,6 @@ export default function ProfileChangeEmailAddress() {
      const navigate = useNavigate();
     // const [changeEmailAddress] = useChangeEmailAddressMutation();
      const [verifyEmailAddress] = useVerifyEmailAddressMutation(email);
-console.log("userId")
-console.log(id)
     
     const handleChange = (e) => {
       setEmail(e.target.value);
@@ -29,8 +27,6 @@ console.log(id)
        try {
         // const { res } = await changeEmailAddress({id,email})
         const res = await verifyEmailAddress({id,email})
-        console.log("res")
-        console.log(res.data.message)
         // dispatch(editUserSuccess(res))
         if(res.data.success === true) {
             toast.success(res.data.message)

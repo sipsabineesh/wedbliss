@@ -5,8 +5,6 @@ import AdminHeader from '../../components/AdminHeader';
 
 export default function AdminNotifications() {
     const {notificationId} = useParams()
-    console.log("notificationId in NOTIFICATION PAGE")
-    console.log(notificationId)
     const [notification, setNotification] = useState([]);
     const {adminUser} = useSelector(state => state.admin)
     useEffect(() => {

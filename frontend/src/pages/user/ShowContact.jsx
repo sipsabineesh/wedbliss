@@ -22,8 +22,6 @@ export default function ShowContact() {
             });
             const data = await res.json();
             setContactDetails(data)
-            console.log("FETCHING CONTACT")
-            console.log(data)
         }
         catch(error){
             console.log(error)

@@ -58,7 +58,7 @@ useEffect(() => {
   };
 }, []);
 
-  // useEffect(() => {
+
     
 // const handleCallNotification = ({ callerId, message }) => { 
 //   console.log('callNotification event received');

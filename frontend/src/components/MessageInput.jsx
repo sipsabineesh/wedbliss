@@ -1,12 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-// import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
 
 export default function MessageInput({ contactId }) {
-
-    // const { user } = useContext(AuthContext);
   const { socket } = useContext(ChatContext);
   const [message, setMessage] = useState('');
   const {currentUser} = useSelector(state => state.user)

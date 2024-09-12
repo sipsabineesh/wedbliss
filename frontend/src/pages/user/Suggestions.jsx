@@ -30,7 +30,6 @@ export default function Suggestions() {
     async function fetchSubscriptionStatus() {
         try {
             const response = await fetch(`/api/user/getUser/${currentUser._id}`);
-            console.log("response",response)
             if (response.status === 401) {
               // User is blocked
               const data = await response.json();
@@ -67,32 +66,9 @@ useEffect(() => {
   };
 }, [currentUser]);
 
-  // useEffect(() => {
-  //   if (currentUser?._id) {
-  //     socket.emit('joinRoom', currentUser._id);     
-  //     // alert("emitted joinRoom with "+currentUser._id)
-  //   }
-
-  //   return () => {
-  //     socket.disconnect(); 
-  //   };
-  // }, [currentUser]);
-  
-  // useEffect(() => { 
-  //   socket.on('newInterest', (userData) => { 
-  //     console.log('New interest received from:', userData);
-  //     setNewInterestUser(userData);
-  //     toast.success(`You have received a new interest from ${userData.username}`);
-  //   },newInterestUser);
-
-  //   return () => {
-  //     socket.off('newInterest');
-  //   };
-  // }, []);
 
   useEffect(() => {
     socket.on('interestAccepted', ({ interestId, acceptedBy }) => { 
-      console.log('Interest accepted:', interestId, 'by', acceptedBy);
       setAcceptedInterests(prev => [...prev, { interestId, acceptedBy }]);
       toast.success(`Your interest has been accepted by user ${acceptedBy}`);
     });
@@ -121,7 +97,6 @@ useEffect(() => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log("data",data)
       if (data.suggestedUsers.length < limit) {
         setHasMoreSuggestions(false);
       } else {
@@ -149,34 +124,6 @@ useEffect(() => {
     }
   }, [currentUser, page]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(`/api/user/getSuggestions/${currentUser?._id}`, {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //       });
-  //       if (!response.ok) { 
-  //         console.log('Network response was not ok');
-  //       }
-        
-  //       const data = await response.json();
-  //       setSuggestions(data);
-        
-  //       if (data.success === false) {
-  //         dispatch(loginFailure(data.message));
-  //         dispatch(logout());
-  //         navigate('/login');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching suggestions:', error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   const calculateAge = (dob) => {
     if (!dob) return 'N/A';
@@ -213,7 +160,7 @@ useEffect(() => {
           )
         );
       }
-      console.log(await res.json());
+     await res.json();
     } catch (error) {
       console.error('Error handling interest:', error);
     }
@@ -235,33 +182,14 @@ useEffect(() => {
   }
 
   
-  // const handleMessage =(async (id) => {
-  //   try {
-  //     console.log(user.isSubscribed)
-  //     if(user.isSubscribed){
-  //       dispatch(setUserIdForContact(id))
-  //       navigate('/messenger', { state: { selectedUserId: id } });
-  //     }
-  //     else{
-  //       toast.error("Please subscribe to any plan to send message")
-  //       navigate('/plans')
-  //     }
-      
-  //   } catch (error) {
-  //    console.log(error) 
-  //   }
-  // })
+
   const handleMessage = async (id) => { 
     try {
-      // if (currentUser.isSubscribed) {
         const res = await axios.post('api/conversations/', {
           senderId: currentUser._id,
           receiverId: id,
         });
-      
-        // if (!res.ok) {
-        //   throw new Error('Network response was not ok');
-        // }
+     
         if (res.status === 200) {
           const conversation = res.data;
           navigate('/messenger', { state: { selectedUserId: id, conversation } });
@@ -269,10 +197,7 @@ useEffect(() => {
           handleErrorResponse(res.status);
         }
        
-      // } else {
-        // toast.error('Please subscribe to any plan to send a message');
-        // navigate('/plans');
-      // }
+    
     } catch (error) {
       console.error('Error creating conversation:', error);
     }
@@ -282,12 +207,9 @@ useEffect(() => {
        try {
         socket.on('your-id', id => {
           console.log('Your ID:', id);
-          // alert(`Your ID is: ${id}`);
         });
         
-        // alert('SOCKETID : '+socket.id)
-        // socket.emit('incomingCall', { callerId: socket.id, receiverId: id });
-        // navigate('/videoCall', { state: { id } });
+     
         if (socket.connected) {
           socket.emit('incomingCall', { callerId: socket.id, receiverId: id });
           navigate('/videoCall', { state: { id } });
@@ -299,17 +221,7 @@ useEffect(() => {
         console.error('Error initiating video call:', error);
         toast.error('An error occurred. Please try again.');
       }
-      //  navigate('/videoCall')
-      // const response = await axios.post(`/api/videoCall/initiate`, {
-      //   callerId: currentUser._id,
-      //   receiverId: id,
-      // });
-
-      // if (response.status === 200) {
-        // navigate('/videoCall', { state: { callData: response.data } });
-      // } else {
-      //   toast.error('Failed to initiate video call');
-      // }
+    
     } catch (error) {
       console.error('Error initiating video call:', error);
       toast.error('An error occurred. Please try again.');

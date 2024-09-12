@@ -12,8 +12,7 @@ export default function Login() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-      console.log("current user in login")
-      console.log(currentUser)
+    
      if(currentUser){
         navigate('/'); 
       }
@@ -37,7 +36,7 @@ export default function Login() {
             body:JSON.stringify(formData),
         })
           const data = await res.json()
-          console.log(data)
+         
           if(data.success === false) {
             dispatch(loginFailure(data.message))
             setError(data.message);
@@ -45,7 +44,7 @@ export default function Login() {
           }
           else{
             dispatch(loginSuccess(data))
-            console.log(data)
+           
             if(data.isAdmin == true)
              navigate('/dashboard')
             else           

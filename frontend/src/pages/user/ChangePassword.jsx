@@ -20,7 +20,6 @@ export default function ChangePassword() {
     
       const handleSubmit = async(e) => {
         formData.email = email
-        console.log(formData)
         e.preventDefault();
        try {
         const { data } = await changePassword({formData})

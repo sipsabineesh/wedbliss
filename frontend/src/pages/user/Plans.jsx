@@ -20,7 +20,6 @@ export default function Plans() {
   };
 
     const { data: planList, isLoading, isError, error } = useGetPlansQuery();
-console.log(planList)
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error: {error.message}</div>;
  

@@ -71,16 +71,12 @@ export default function UserOTPVerification() {
             body:JSON.stringify(formData),
         })
           const data = await res.json()
-          console.log("data")
-          console.log(data)
-
+         
           if(!data.userId) {
             dispatch(loginFailure(data.message))
             return;
           }
           else{
-          console.log(data.userId)
-
             dispatch(otpSuccess(data.userId))
             navigate('/addProfile')
           }

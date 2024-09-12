@@ -21,8 +21,7 @@ export default function Userlogin() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-      console.log("current user in login")
-      console.log(currentUser)
+    
      if(currentUser){
         navigate('/'); 
       }
@@ -67,7 +66,6 @@ export default function Userlogin() {
             body:JSON.stringify(formData),
         })
           const data = await res.json()
-          console.log(data)
           if(data.success === false) {
             dispatch(loginFailure(data.message))
             setError(data.message);
@@ -75,7 +73,6 @@ export default function Userlogin() {
           }
           else{
             dispatch(loginSuccess(data))
-            console.log(data)
             if(data.isAdmin == true)
              navigate('/dashboard')
             else           
@@ -138,14 +135,7 @@ export default function Userlogin() {
         <MDBCol col='6' className="mb-5">
           <div className="d-flex flex-column justify-content-center">
                 <img src="http://res.cloudinary.com/dcsdqiiwr/image/upload/v1713969131/login_img_eu6vkz.png"></img>
-            {/* <div className="text-black px-3 py-4 p-md-5 mx-md-4">
-              <h4 class="mb-4">We are The WedBliss Team</h4>
-              <p class="text-black small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              </p>
-            </div> */}
-
+          
           </div>
 
         </MDBCol>

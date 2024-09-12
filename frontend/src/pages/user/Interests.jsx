@@ -14,7 +14,6 @@ export default function Interests() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(currentUser);
         const response = await fetch(`/api/user/getInterests/${currentUser._id}`, {
           method: 'GET',
           headers: {
@@ -74,18 +73,14 @@ export default function Interests() {
         },
         body: JSON.stringify({ id: id }),
       });
-  console.log(res)
       if (!res.ok) {
         throw new Error('Network response was not ok');
       }
       else{
         toast.success('Interest Accepted')
         setAcceptedInterests((prev) => ({ ...prev, [id]: true }));
-        console.log("acceptedInterests")
-        console.log(acceptedInterests)
       }
-  
-      console.log(await res.json()); 
+     await res.json(); 
     } catch (error) {
       console.error('Error handling interest:', error);
     }
