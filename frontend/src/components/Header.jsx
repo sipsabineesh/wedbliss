@@ -12,6 +12,7 @@ const socket = io.connect('http://localhost:3000');
 export default function Header() {
   const [user, setUser] = useState({});
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [notifications, setNotifications] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [newInterestUser, setNewInterestUser] = useState(null);
@@ -21,23 +22,49 @@ export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
-  useEffect(() => {
-    async function fetchSubscriptionStatus() {
-        try {
-            const response = await fetch(`/api/user/getUser/${currentUser._id}`);
-            const data = await response.json();
-            setUser(data.user);
-        } catch (error) {
-            console.error('Error fetching subscription status:', error);
-        }
-    }
+//   useEffect(() => {
+//     async function fetchSubscriptionStatus() {
+//         try {
+//             const response = await fetch(`/api/user/getUser/${currentUser._id}`);
+//             const data = await response.json();
+//             setUser(data.user);
+//         } catch (error) {
+//             console.error('Error fetching subscription status:', error);
+//         }
+//     }
 
-    if (currentUser) {
-        fetchSubscriptionStatus();
-    }
+//     if (currentUser) {
+//         fetchSubscriptionStatus();
+//     }
   
-}, []);
+// }, []);
+useEffect(() => {
+  async function fetchSubscriptionStatus() {
+      try {
+          const response = await fetch(`/api/user/getUser/${currentUser._id}`);
+          if (response.status === 401) {
+            // User is blocked
+            const data = await response.json();
+            toast.error(data.message); 
+            navigate('/login'); 
+            return;
+        }
+        
+          const data = await response.json();
+          setUser(data.user);
+      } catch (error) {
+          console.error('Error fetching subscription status:', error);
+      } finally {
+          setLoading(false); 
+      }
+  }
 
+  if (currentUser) {
+      fetchSubscriptionStatus();
+  } else {
+      setLoading(false); 
+  }
+}, [currentUser]);
   const fetchNotifications = useCallback(async () => {
     if (currentUser?._id) {
       try {

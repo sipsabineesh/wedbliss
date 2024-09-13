@@ -172,7 +172,7 @@ useEffect(() => {
         navigate('/showContact')
       }
       else{
-        toast.error("You are not subscribed to show contact details")
+        toast.error("You have not subscribed to show contact details")
         navigate('/plans')
       }
       

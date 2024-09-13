@@ -12,7 +12,7 @@ import ReportAbuseModal from './ReportAbuseModal';
 const socket = io('http://localhost:3000');
 
 export default function MemberProfile() {
-
+    const [user, setUser] = useState({});
     const [data, setData] = useState(null);
     const [dob, setDOB] = useState('');
     const [age, setAge] = useState('');
@@ -26,6 +26,29 @@ export default function MemberProfile() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
+    useEffect(() => {
+        async function fetchSubscriptionStatus() {
+            try {
+                const response = await fetch(`/api/user/getUser/${currentUser._id}`);
+                if (response.status === 401) {
+                  // User is blocked
+                  const data = await response.json();
+                  toast.error(data.message); 
+                  navigate('/login'); 
+                  return;
+              }
+              
+                const data = await response.json();
+                setUser(data.user);
+            } catch (error) {
+                console.error('Error fetching subscription status:', error);
+            }
+        }
+    
+        if (currentUser) {
+            fetchSubscriptionStatus();
+        }
+    }, [currentUser]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -95,7 +118,7 @@ export default function MemberProfile() {
 
     const handleShowContact = async (id) => {
         try {
-            if (currentUser.isSubscribed) {
+            if (user.isSubscribed) {
                 const response = await axios.post('/api/user/getContactDetails', {
                     id: currentUser._id,
                     userId: id
