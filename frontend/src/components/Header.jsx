@@ -137,182 +137,96 @@ export default function Header() {
   };
 
   return (
-//     <>
-//      <nav className="navbar navbar-expand-lg navbar-dark fixed-top nav-scroll">
-//       <div className="container">
-//       <div className="logo">
-//       <Link className='nav-link' to={'/'}><a className="navbar-brand custom_logo"><span>WedBliss</span></a></Link>
-//       </div>
-     
-//      <button className="navbar-toggler" type="button" onClick={toggleMenu}>
-//         <span className="fa fa-bars"></span>
-//       </button>
-//       <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
-//       <ul className="navbar-nav ml-auto">
-//             <li className="nav-item ml-2"><Link className="nav-link" to="/">Home</Link></li>
-//             {currentUser ? (
-//               <>
-//                 {user.isSubscribed && (
-//                   <>
-//                     <li className="nav-item ml-2">
-//                       <Link className="nav-link" to="/myPlan">My Plan</Link>
-//                     </li>
-//                     <li className="nav-item ml-2">
-//                       <Link className="nav-link" to="/interests">Interest</Link>
-//                     </li>
-//                     <li className="nav-item ml-2">
-//                       <Link className="nav-link" to="/acceptedList">Accepted Interests</Link>
-//                     </li>
-//                     <li className="nav-item ml-2">
-//                       <Link className="nav-link" to="/messenger">Messenger</Link>
-//                     </li>
-//                   </>
-//                 )}
-//               </>
-//             ) : (
-//               <li className="nav-item ml-2">
-//                 <Link className="nav-link" to="/">Search</Link>
-//               </li>
-//             )}
-            
-//           </ul>
-//           <ul className="navbar-nav ml-auto">
-//           {currentUser ? (
-//             <>
-//               <li className="nav-item">
-//                 <Link className="nav-link" to="/profile">
-//                   <i className="C">{currentUser.username}</i>
-//                 </Link>
-//               </li>
-//               <div className="notification-wrapper">
-//                 <Link className="nav-link text-black" onClick={toggleDropdown}>
-//                   <i className="fa fa-solid fa-bell"></i>
-//                   {notifications.length > 0 && (
-//                     <span className="notification-badge">{notifications.length}</span>
-//                   )}
-//                 </Link>
-//                 {isDropdownVisible && notifications.length > 0 &&(
-//                   <div className="notification-dropdown">
-//                     <ul>
-//                       {notifications.map((notification, index) => (
-//                         <li className="text-black" key={index}>
-//                           <span
-//                             className="remove-link"
-//                             onClick={() => handleNotificationClick(notification._id)}
-//                           >
-//                             {notification.title}
-//                           </span>
-//                         </li>
-//                       ))}
-//                     </ul>
-//                   </div>
-//                 )}
-//               </div>
-//               <li className="nav-item">
-//                 <Link className="nav-link" onClick={handleLogout}>
-//                   <i className="fa fa-sign-out mr-1"></i>
-//                 </Link>
-//               </li>
-//             </>
-//           ) : (
-//             <li className="nav-item">
-//               <Link className="nav-link" to="/login">
-//                 <i className="fa fa-sign-in mr-1"></i> Login
-//               </Link>
-//             </li>
-//           )}
-//         </ul>
-//       </div>
-//     </div>
-//   </nav>
-  
-// </>
 <>
-  <nav className="navbar navbar-expand-lg navbar-dark fixed-top nav-scroll">
-    <div className="container">
-      <div className="logo">
-        <Link className="nav-link" to={'/'}>
-          <a className="navbar-brand custom_logo"><span>WedBliss</span></a>
-        </Link>
-      </div>
-
-      <button className="navbar-toggler" type="button" onClick={() => setIsOpen(!isOpen)}>
-        <span className="fa fa-bars"></span>
-      </button>
-
-      <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item ml-2"><Link className="nav-link" to="/">Home</Link></li>
-          {currentUser ? (
-            <>
-              {user.isSubscribed && (
-                <>
-                  <li className="nav-item ml-2"><Link className="nav-link" to="/myPlan">My Plan</Link></li>
-                  <li className="nav-item ml-2"><Link className="nav-link" to="/interests">Interest</Link></li>
-                  <li className="nav-item ml-2"><Link className="nav-link" to="/acceptedList">Accepted Interests</Link></li>
-                  <li className="nav-item ml-2"><Link className="nav-link" to="/messenger">Messenger</Link></li>
-                </>
-              )}
-            </>
-          ) : (
-            <li className="nav-item ml-2">
-              <Link className="nav-link" to="/">Search</Link>
-            </li>
-          )}
-        </ul>
-
-        <ul className="navbar-nav ml-auto align-items-center" style={{ marginLeft: 'auto' }}>
-          {currentUser ? (
-            <>
-              <li className="nav-item">
-                <Link className="nav-link" to="/profile">
-                  <i className="C">{currentUser.username}</i>
-                </Link>
-              </li>
-
-              <div className="notification-wrapper">
-                <Link className="nav-link text-black" onClick={() => setIsDropdownVisible(!isDropdownVisible)}>
-                  <i className="fa fa-solid fa-bell"></i>
-                  {notifications.length > 0 && (
-                    <span className="notification-badge">{notifications.length}</span>
-                  )}
-                </Link>
-                {isDropdownVisible && notifications.length > 0 && (
-                  <div className="notification-dropdown">
-                    <ul>
-                      {notifications.map((notification, index) => (
-                        <li className="text-black" key={index}>
-                          <span
-                            className="remove-link"
-                            onClick={() => handleNotificationClick(notification._id)}
-                          >
-                            {notification.title}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-
-              <li className="nav-item">
-                <Link className="nav-link" onClick={handleLogout}>
-                  <i className="fa fa-sign-out mr-1"></i>
-                </Link>
-              </li>
-            </>
-          ) : (
-            <li className="nav-item">
-              <Link className="nav-link" to="/login">
-                <i className="fa fa-sign-in mr-1"></i> Login
-              </Link>
-            </li>
-          )}
-        </ul>
-      </div>
+<nav className="header navbar navbar-expand-lg navbar-dark fixed-top">
+  <div className="container">
+    <div className="logo">
+      <Link className="nav-link" to="/">
+        <a className="navbar-brand custom_logo"><span>WedBliss</span></a>
+      </Link>
     </div>
-  </nav>
-</> 
 
+    <button className="navbar-toggler" type="button" onClick={toggleMenu}>
+      <span className="fa fa-bars"></span>
+    </button>
+    <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
+      <ul className="navbar-nav ml-auto">
+        <li className="nav-item ml-2"><Link className="nav-link" to="/">Home</Link></li>
+        {currentUser ? (
+          <>
+            {user.isSubscribed && (
+              <>
+                <li className="nav-item ml-2">
+                  <Link className="nav-link" to="/myPlan">My Plan</Link>
+                </li>
+                <li className="nav-item ml-2">
+                  <Link className="nav-link" to="/interests">Interest</Link>
+                </li>
+                <li className="nav-item ml-2">
+                  <Link className="nav-link" to="/acceptedList">Accepted Interests</Link>
+                </li>
+                <li className="nav-item ml-2">
+                  <Link className="nav-link" to="/messenger">Messenger</Link>
+                </li>
+              </>
+            )}
+          </>
+        ) : (
+          <li className="nav-item ml-2">
+            <Link className="nav-link" to="/">Search</Link>
+          </li>
+        )}
+      </ul>
+    
+    <ul className="navbar-nav ml-auto align-items-center" style={{ marginLeft: 'auto' }}>
+      {currentUser ? (
+        <>
+          <li className="nav-item">
+            <Link className="nav-link" to="/profile">
+              <i className="C">{currentUser.username}</i>
+            </Link>
+          </li>
+          <div className="notification-wrapper">
+            <Link className="nav-link" onClick={toggleDropdown}>
+              <i className="fa fa-solid fa-bell"></i>
+              {notifications.length > 0 && (
+                <span className="notification-badge">{notifications.length}</span>
+              )}
+            </Link>
+            {isDropdownVisible && notifications.length > 0 &&(
+              <div className="notification-dropdown">
+                <ul>
+                  {notifications.map((notification, index) => (
+                    <li className="text-black" key={index}>
+                      <span
+                        className="remove-link"
+                        onClick={() => handleNotificationClick(notification._id)}
+                      >
+                        {notification.title}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          <li className="nav-item">
+            <Link className="nav-link" onClick={handleLogout}>
+              <i className="fa fa-sign-out mr-1"></i>
+            </Link>
+          </li>
+        </>
+      ) : (
+        <li className="nav-item">
+          <Link className="nav-link" to="/login">
+            <i className="fa fa-sign-in mr-1"></i> Login
+          </Link>
+        </li>
+      )}
+    </ul>
+  </div>
+  </div>
+</nav>   
+</>
   );
 }
