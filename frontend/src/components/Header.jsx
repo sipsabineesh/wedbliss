@@ -594,7 +594,7 @@ export default function Header() {
               </li>
             )}
           </ul>
-        </div>
+        
         <ul className="navbar-nav ml-auto">
           {currentUser ? (
             <>
@@ -642,7 +642,7 @@ export default function Header() {
           )}
         </ul>
       </div>
-     
+      </div>
     </nav>   
   
     {/* {incomingCall && (
