@@ -269,7 +269,7 @@ useEffect(() => {
   });
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="vh-100 content">
         <div className="container">
           <div className="row justify-content-center mt-5">
