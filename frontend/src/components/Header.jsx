@@ -595,7 +595,7 @@ export default function Header() {
             )}
           </ul>
         
-        <ul className="navbar-nav ml-auto">
+        <ul className="navbar-nav ml-auto align-items-center" style={{ marginLeft: 'auto' }}>
           {currentUser ? (
             <>
               <li className="nav-item">
