@@ -1,7 +1,7 @@
 import User from "../models/userModel.js"
 import bcryptjs from 'bcryptjs'
 import { errorHandler } from "../utils/error.js"
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'  
 import twilio from 'twilio'
 import { sendEmail } from '../utils/email.js'
 import { generateOTP } from '../utils/otpGenerator.js'

@@ -11,7 +11,7 @@ export const  sendEmail = async(email,subject,message) => {
      
     let mailDetails = {
         from: 'info@wedbliss.com',
-        to: 'sipsabineesh@gmail.com',//email
+        to: email,//'sipsabineesh@gmail.com',
         subject: subject,
         text:message
     };
