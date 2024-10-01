@@ -38,7 +38,34 @@ export default function Header() {
   
 }, []);
 
-  const fetchNotifications = useCallback(async () => {
+  // const fetchNotifications = useCallback(async () => {
+  //   if (currentUser?._id) {
+  //     try {
+  //       const res = await fetch(`/api/user/getRenewalNotification/${currentUser._id}`);
+  //       const data = await res.json();
+  //       if (res.ok) {
+  //         setNotifications(data.notifications);
+  //       } else {
+  //         console.error('Error fetching notifications:', data.message);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // }, [currentUser]);
+
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     fetchNotifications();
+  //     socket.emit('joinRoom', currentUser._id);
+  //   }
+
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, [currentUser, fetchNotifications]);
+
+  const fetchNotifications = async () => {
     if (currentUser?._id) {
       try {
         const res = await fetch(`/api/user/getRenewalNotification/${currentUser._id}`);
@@ -52,7 +79,7 @@ export default function Header() {
         console.log(error);
       }
     }
-  }, [currentUser]);
+  };
 
   useEffect(() => {
     if (currentUser) {
@@ -63,13 +90,15 @@ export default function Header() {
     return () => {
       socket.disconnect();
     };
-  }, [currentUser, fetchNotifications]);
+  }, [currentUser,fetchNotifications]);
 
   useEffect(() => {
     const handleNewInterest = (userData) => {
       setNewInterestUser(userData);
       toast.success(`You have received a new interest from ${userData.username}`);
-      setNotifications(prev => [...prev, { title: `New interest from ${userData.username}`, _id: userData._id }]);
+      fetchNotifications();
+      socket.emit('joinRoom', currentUser._id);
+//      setNotifications(prev => [...prev, { title: `New interest from ${userData.username}`, _id: userData._id }]);
     };
 
     const handleInterestAccepted = ({ interestId, acceptedBy }) => {

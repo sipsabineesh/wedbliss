@@ -8,14 +8,23 @@ export const getRenewalNotification = async(req,res,next) => {
         const soonToExpireDate = new Date(now);
         soonToExpireDate.setDate(now.getDate() + 7); 
         const userId = req.params.id;
-        const notifications = await Notification.find({ userId:userId,isViewed:false,type:'user' });
-      
+        const notifications = await Notification.find({ userId:userId,isViewed:false,target:'user' });
         res.status(200).json({notifications})
     } catch (error) {
         
     }
 }
 
+
+export const getAllNotifications = async(req,res,next) => {
+    try {
+        const userId = req.params.id;
+        const notification = await Notification.findById(userId);
+        res.status(200).json({ notification });
+    } catch (error) {
+        
+    }
+}
 
 export const getNotification = async(req,res,next) => {
     try {
