@@ -48,10 +48,7 @@ export default function Home() {
             try {
                 const response = await fetch(`/api/user/getUser/${currentUser._id}`);
                 if (response.status === 401) {
-                  // User is blocked 
-                  toast.error("Your account has been blocked by the admin");
-                //   toast.error(data.message); 
-                handleLogout()
+                  handleLogout()
                   navigate('/login'); 
                   return;
               }

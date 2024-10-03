@@ -164,7 +164,35 @@ export default function Header() {
       console.log(error);
     }
   };
+  
+    useEffect(() => {
+        async function fetchSubscriptionStatus() {
+            try {
+                const response = await fetch(`/api/user/getUser/${currentUser._id}`);
+                if (response.status === 401) {
+                  // User is blocked 
+                  toast.error("Your account has been blocked by the admin");
+                //   toast.error(data.message); 
+                handleLogout()
+                  navigate('/login'); 
+                  return;
+              }
+              
+                const data = await response.json();
+                setUser(data.user);
+            } catch (error) {
+                console.error('Error fetching subscription status:', error);
+            } finally {
+                setLoading(false); 
+            }
+        }
 
+        if (currentUser) {
+            fetchSubscriptionStatus();
+        } else {
+            setLoading(false); 
+        }
+    }, []);
   return (
 <>
 <nav className="header navbar navbar-expand-lg navbar-dark fixed-top">
@@ -183,7 +211,7 @@ export default function Header() {
         <li className="nav-item ml-2"><Link className="nav-link" to="/">Home</Link></li>
         {currentUser ? (
           <>
-            {user.isSubscribed && (
+            {user?.isSubscribed && (
               <>
                 <li className="nav-item ml-2">
                   <Link className="nav-link" to="/myPlan">My Plan</Link>
