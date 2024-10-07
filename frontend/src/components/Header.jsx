@@ -14,6 +14,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [newInterestUser, setNewInterestUser] = useState(null);
   const [acceptedInterests, setAcceptedInterests] = useState([]);
 //   const [incomingCall, setIncomingCall] = useState(null);

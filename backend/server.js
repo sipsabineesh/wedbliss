@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-app.use((req, res, next) => {console.log('Middleware executed');
+app.use((req, res, next) => {
 req.io = io;
 next();
 });
