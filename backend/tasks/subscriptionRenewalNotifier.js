@@ -10,6 +10,23 @@ export default function subscriptionRenewalNotifier(io) {
         soonToExpireDate.setDate(now.getDate() + 7); 
     
         try {
+
+            const now = new Date();
+            const startOfDay = new Date(now.setHours(0, 0, 0, 0)); 
+            const endOfDay = new Date(now.setHours(23, 59, 59, 999)); 
+
+
+            const expiredSubscriptions = await Subscription.find({
+            validTill: { $gte: startOfDay, $lte: endOfDay } 
+            });
+
+
+            if (expiredSubscriptions.length > 0) {
+            await User.updateMany(
+                { _id: { $in: expiredSubscriptions.map(sub => sub.userId) } }, 
+                { $set: { isSubscribed:false } } 
+            );
+            }
             // const subscriptions = await Subscription.find({ validTill: { $lte: soonToExpireDate } });
             const subscriptions = await Subscription.find({
                 validTill: { $lte: soonToExpireDate },
@@ -18,11 +35,13 @@ export default function subscriptionRenewalNotifier(io) {
                 
                 const existingNotification = await Notification.findOne({ subscriptionId: subscription._id });
                 if (!existingNotification) {
+                    let validityDate = new Date(subscription.validTill);
+                    const vDate = validityDate.toISOString().split('T')[0];
                     const notification = new Notification({
                         userId : subscription.userId,
                         subscriptionId: subscription._id,
                         title: 'Your Validity Period is about to end',
-                        message: `Your subscription is about to expire on ${subscription.validTill}. Please renew it soon.`,
+                        message: `Your subscription is about to expire on ${vDate}. Please renew it soon.`,
                         date: new Date(),
                         read: false,
                         target: 'user',
