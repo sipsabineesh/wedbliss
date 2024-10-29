@@ -17,16 +17,22 @@ export default function subscriptionRenewalNotifier(io) {
 
 
             const expiredSubscriptions = await Subscription.find({
-            validTill: { $gte: startOfDay, $lte: endOfDay } 
-            });
-
+                validTill: { $gte: startOfDay, $lte: endOfDay } ,
+                isDeleted: false
+            },
+        );
 
             if (expiredSubscriptions.length > 0) {
             await User.updateMany(
                 { _id: { $in: expiredSubscriptions.map(sub => sub.userId) } }, 
                 { $set: { isSubscribed:false } } 
             );
+            await Subscription.updateMany(
+                { _id: { $in: expiredSubscriptions.map(sub => sub._id) } }, 
+                { $set: { isDeleted:true } } 
+            )
             }
+
             // const subscriptions = await Subscription.find({ validTill: { $lte: soonToExpireDate } });
             const subscriptions = await Subscription.find({
                 validTill: { $lte: soonToExpireDate },

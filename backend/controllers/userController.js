@@ -734,7 +734,10 @@ try {
 
   const subscription = await Subscription.aggregate([
     {
-      $match: { userId:new Mongoose.Types.ObjectId(userId)}
+      $match: { 
+        userId:new Mongoose.Types.ObjectId(userId),
+        isDeleted:false,
+      }
     },
     {
       $lookup: {
