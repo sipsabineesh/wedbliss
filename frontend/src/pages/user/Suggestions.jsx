@@ -368,7 +368,9 @@ useEffect(() => {
                                     )}
                                     <span className="visually-hidden">{user.hasSentInterest ? 'Interest Sent' : 'Send Interest'}</span>
                           </button>
-                          {user.hasAcceptedInterest && ( <>
+                          {/* {user.hasAcceptedInterest && (  */}
+                          {(user.hasAcceptedInterest || acceptedInterests.some(interest => interest.interestId === user._id)) && (
+                          <>
                             <button
                               className="btns me-2 custom-button"
                               id={user._id}

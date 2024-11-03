@@ -254,8 +254,19 @@ export const suggestUsers = async (req, res, next) => {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$interestedFrom", new Mongoose.Types.ObjectId(id)] }, // Current user sent interest
-                    { $eq: ["$interestedTo", "$$userId"] }, // To the suggested user
+                    {
+                      $or: [
+                        { $eq: ["$interestedFrom", new Mongoose.Types.ObjectId(id)] }, // Current user sent interest
+                        { $eq: ["$interestedFrom", "$$userId"] }                       // Suggested user sent interest
+                      ]
+                    },
+                    { 
+
+                      $or: [
+                        { $eq: ["$interestedTo", "$$userId"] },                        // Interest directed to suggested user
+                        { $eq: ["$interestedTo", new Mongoose.Types.ObjectId(id)] }    // Interest directed to current user
+                      ]
+                    },
                     { $eq: ["$isAccepted", true] } // The interest is accepted
                   ]
                 }
@@ -729,9 +740,6 @@ export const reportAbuse = async(req,res,next) => {
 export const viewUserPlanDetails = async(req,res,next) => {
 try {
   const userId = req.params.id; 
-  console.log(userId)
-  console.log("userId")
-
   const subscription = await Subscription.aggregate([
     {
       $match: { 
